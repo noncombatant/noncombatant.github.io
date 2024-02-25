@@ -1,0 +1,9 @@
+<h1>New C++ Features</h1>
+
+<p><em>Coming Soon In <span id="version"></span>...</em></p>
+
+<p><strong><span id="horror"></span></strong></p>
+
+<button id="tryAgain">That’s too awful, try again</button>
+
+<script src="cpp.js" type="module"></script>

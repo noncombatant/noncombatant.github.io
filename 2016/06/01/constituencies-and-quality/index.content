@@ -1,0 +1,54 @@
+<h1>To Make Good Software, Make Software For People</h1>
+
+<p><time>1 June 2016</time></p>
+
+<p>Reading the new <a
+href="https://duo.com/assets/pdf/out-of-box-exploitation_oem-updaters.pdf">Duo
+Labs report on Windows OEM bloatware vulnerabilities, “Out-Of-Box
+Exploitation”</a>, I was struck by a thought: the reason Apple hardware does not
+have the vulnerable bloatware problem is that Apple does not have a bloatware
+problem at all. And the reason for that is that Apple prioritizes the customer’s
+happiness above all, and the out-of-box experience in particular. So much so, in
+fact, that people fetishize taking the product out of its packaging. This video,
+one of who-knows-how-many, has 737,414 views on YouTube:</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LzEi3aJtde0"
+frameborder="0" allowfullscreen loading="lazy"></iframe>
+
+<p>So although Microsoft employs very good engineers, including very good
+security engineers, the end result is awful. What went wrong?</p>
+
+<p>Microsoft famously (historically, and apparently still) catered first to
+application developers (independent software vendors, or ISVs) and to OEMs.
+Microsoft saw, or sees, OEMs and large enterprises as their true customers;
+Apple sees individuals as their true customers. Apple wants to make money by
+making you love their machines, while Microsoft wants to make money by helping
+OEMs make money.</p>
+
+<p>Obviously, both approaches work great, even though the results are wildly
+different and have huge implications for software security internet-wide.
+Interesting to note is that when you can be Microsoft’s direct customer, such as
+when you are buying thousands of MSDN seats or large IIS and SQL Server
+deployments, you do in fact get Apple-level care and quality.</p>
+
+<p>One way of understanding that is to observe that, of course, paying customers
+get the quality they want. But I don’t think that fully explains what’s going
+on; after all, Dell’s and Acer’s customers paid money. Is it simply a matter of
+margins?</p>
+
+<p>I’m not sure it is, because Duo Labs found the same problems even with the
+premium Microsoft Signature Edition machines, even the premium-/business-grade
+Lenovos. I think Microsoft baked the security and user-experience quality
+problems into the platform when they decided to prioritize the needs and
+preferences of OEMs and large enterprises over those of individual people using
+the systems.</p>
+
+<p>Especially now that we increasingly live in a <a
+href="https://en.wikipedia.org/wiki/Bring_your_own_device">mixed
+enterprise/personal computing environment</a> — BYOD started because executives
+wanted to use their fancy iDevices at work, because the devices were so good! —
+<a
+href="https://www.w3.org/TR/html-design-principles/#priority-of-constituencies">prioritizing
+the needs and preferences of the people actually using the systems</a> to actually
+do work seems increasingly like a fundamentally good decision for security, user
+experience, and quality generally.

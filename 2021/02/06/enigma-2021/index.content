@@ -1,0 +1,51 @@
+<h1>Enigma 2021</h1>
+
+<p><time>6 February 2021</time></p>
+
+<p>Every year, the Enigma conference is enjoyable and interesting. I’m a huge
+fan of the wide-ranging scope and single-track structure. I hope we all get
+vaccinated in time to have the conference in person again next year. The
+conference organizers did a great job making the virtual conference work as well
+as possible, and the Slack was fun, but you know… nothing beats in-person
+hooting in the hallway track.</p>
+
+<p>I was super fortunate to have my talk proposal accepted. I spoke about <a
+href="https://www.usenix.org/conference/enigma2021/presentation/palmer">The
+Limits Of Sandboxing, And Next Steps</a>, which is about my work on the Chrome
+Platform Security Team the past few years. (If you want to read the slides, <a
+href="https://docs.google.com/presentation/d/1U60ycn3iW5MOB_xJUc09fsS1KXY2i68m9eVJoG4loWk/edit#slide=id.gb726919370_0_12">the
+original Google presentation</a> has all the speaker notes and working links to
+citations. Spoiler Alert: the “next steps” are to adopt memory-safe
+languages.</p>
+
+<p>Alex Gaynor and I sort of collaborated to make the same point from 2
+different perspectives. His presentation, <a
+href="https://www.usenix.org/conference/enigma2021/presentation/gaynor">Quantifying
+Memory Unsafety And Reactions To It</a>, is a great synthesis of empirical data
+and emotional realness. Likely the biggest difficulty we face in migrating away
+from memory-unsafe languages is people’s emotional attachments to the status
+quo. Change is hard.</p>
+
+<p>As always, there were a whole bunch of high-quality talks this year. Some
+stand-outs (in no particular order):</p>
+
+<ul>
+
+<li><a
+href="https://www.usenix.org/conference/enigma2021/presentation/starbird">Online
+Rumors, Misinformation And Disinformation: The Perfect Storm Of Covid-19 And
+Election2020</a>, by Kate Starbird</li>
+
+<li><a
+href="https://www.usenix.org/conference/enigma2021/presentation/mou">Building
+E2EE And User Identity</a>, by Merry Ember Mou</li>
+
+<li><a
+href="https://www.usenix.org/conference/enigma2021/presentation/stone">The State
+Of 0-Day In-The-Wild Exploitation</a>, by Maddie Stone</li>
+
+<li><a href="https://www.usenix.org/conference/enigma2021/presentation/negus">No
+Data, No Problem—Giving Nuclear Inspectors Better Tools Without Revealing State
+Secrets</a>, by Mitch Negus</li>
+
+</ul>

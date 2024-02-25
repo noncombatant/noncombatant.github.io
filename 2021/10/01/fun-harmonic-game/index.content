@@ -1,0 +1,43 @@
+<style>
+iframe {
+  width: 100%;
+  height: 40em;
+}
+</style>
+
+<h1>A Fun Harmonic Game</h1>
+
+<p><time>1 October 2021</time></p>
+
+<aside><p>Update: A friend, whose brother is a composer, pointed out that this
+is known as <a href="https://en.wikipedia.org/wiki/Neo-Riemannian_theory">an “L”
+transformation in neo-Riemannian theory</a>. TIL! Every so often, the internet
+actually delivers on its promise. 🤓🥳</p></aside>
+
+<p>The other day I discovered a fun harmonic game. It’s a bit like <a
+href="https://www.thejazzpianosite.com/jazz-piano-lessons/jazz-chord-progressions/line-cliches/">the
+line cliché</a>, but (I think) a bit more challenging. Here are the rules:</p>
+
+<ol>
+
+<li>Use only the 4 basic triads (major, minor, augmented, diminished). Start
+with any triad.</li>
+
+<li>To get the next triad, move only 1 note of the chord up or down 1 half
+step.</li>
+
+<li>Each chord change must change its root. (For example, E major → E minor is
+not allowed. Don’t cheat by using enharmonic names! 😉)</li>
+
+</ol>
+
+<p>That’s it! It’s simple, but the limitations are tight. I find it’s a bit hard
+to end up with a progression that works, but you can surprise yourself, and
+perhaps come up with something you would not have otherwise.
+
+<p>You can make it significantly easier and generate richer changes by removing
+rule 1 or rule 3.</p>
+
+<p>Here are some ideas I like. (Note that example 🄱 breaks rule 3.)</p>
+
+<iframe src="2021-09-30 Study.pdf" loading="lazy"></iframe>

@@ -1,0 +1,13 @@
+<h1>Illustrations From TrustyCon</h1>
+
+<figure><img loading="lazy" width="1024" height="1024" src="zookos-triangle.png"
+alt="Zooko’s Triangle."/><figcaption>Zooko’s Triangle.</figcaption></figure>
+
+<figure><img loading="lazy" width="1024" height="1024" src="web-origin.png"
+alt="Secure web origins need to mash x.509 onto DNS. It’s not an ideal
+fit."/><figcaption>Secure web origins need to mash x.509 onto DNS. It’s not an
+ideal fit.</figcaption></figure>
+
+<figure><img loading="lazy" width="1024" height="1024" src="x509.png" alt="x.509
+mashes 2 triangles together."/><figcaption>x.509 mashes 2 triangles
+together.</figcaption></figure>

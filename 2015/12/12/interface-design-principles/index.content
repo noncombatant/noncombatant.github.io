@@ -1,0 +1,31 @@
+<h1>Interface Design Principles</h1>
+
+<p><time>12 December 2015</time></p>
+
+<p>For any kind of interface. See also: <a
+href="/2014/08/10/security-as-a-class-of-interface-guarantee/">Security As A
+Class Of Interface Guarantee</a>.</p>
+
+<ul>
+
+<li>Provide choices — not warnings or notifications.</li>
+
+<li>Provide contextually-relevant choices —
+
+  <ul>
+  <li>but not relying on context that only a strong AI could perceive;</li>
+  <li>don’t confuse mere statistics for strong AI;</li>
+  <li>don’t use implicit context to take away relevant choices.</li>
+  </ul></li>
+
+<li>Make the interface as simple as possible — but no simpler.</li>
+
+<li>Assume that the people using the interface are intelligent and motivated —
+but busy and focused on their ultimate goal.</li>
+
+<li>Promise only computable guarantees.</li>
+
+<li>Prefer to surface all guarantees in the primary interface definition —
+callers are unlikely to consult secondary definitions.</li>
+
+</ul>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Test Demo</title>
+<link rel="stylesheet" href="test.css"/>
+
+<h1>hello</h1>
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
+
+<form id="goat">
+    <table>
+        <tr>
+            <th>Name</th>
+            <td><input type="text" name="name" autocomplete="cc-name"/></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td><input type="email" name="email" required/></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td><input type="address" name="address" required/></td>
+        </tr>
+        <tr>
+            <th>State</th>
+            <td><input type="text" name="province" required/></td>
+        </tr>
+        <tr>
+            <th>Zip</th>
+            <td><input type="text" name="zip" autocomplete="postal-code" required/></td>
+        </tr>
+        <tr>
+            <th>Credit Card</th>
+            <td><input type="text" name="cc-number" autocomplete="cc-number" required/></td>
+        </tr>
+        <tr>
+            <th>Expiration</th>
+            <td><input type="text" name="cc-exp" autocomplete="cc-exp" required/></td>
+        </tr>
+        <tr>
+            <th>CSC</th>
+            <td><input type="text" size="3" autocomplete="cc-csc" required/></td>
+        </tr>
+        <tr>
+            <th>Phone</th>
+            <td><input type="tel" name="telephone" required/></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td><input type="submit" value="Buy Now"/></td>
+        </tr>
+    </table>
+</form>
+
+<form>
+    <label for="cc-num">Credit Card Number</label>
+    <input type="text" id="cc-num" autocomplete="cc-number" x-autocompletetype="cc-number" pattern="\d*">
+    
+    <label for="cc-exp-month">Expiration Month</label>
+    <input type="number" id="cc-exp-month" name="cc-exp-month" autocomplete="cc-exp-month" x-autocompletetype="cc-exp-month">
+    
+    <label for="cc-exp-year">Expiration Year</label>
+    <input type="number" id="cc-exp-year" name="cc-exp-year" autocomplete="cc-exp-year" x-autocompletetype="cc-exp-year">
+    
+    <label for="cvv2">CVV</label>
+    <input type="text" id="cvv2" name="cvv2" autocomplete="cc-csc">
+    
+  </form>
+  

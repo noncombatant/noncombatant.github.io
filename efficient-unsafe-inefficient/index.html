@@ -1,0 +1,70 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>DRAFT —  please do not redistribute —  Efficient &#43; Unsafe = Inefficient</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>DRAFT —  please do not redistribute —  Efficient + Unsafe = Inefficient</h1><p><time>20 September 2022</time><p>Consider the aspects of computation that we want to economize:<dl><dt>Human time, attention, effort, and well-being<dd>We must conserve the
+time, attention, effort, and well-being of everyone involved in computation: the
+people who develop the system, the people who use it, and the people who are
+affected by its use.<dt>Run time<dd>Computation should be time-efficient: people shouldn’t
+wait unduly long for results. Exact deadlines vary by application.<dt>Run space<dd>Computation should be space-efficient: people should get
+good results even on small machines. Needless to say, a ‘small’ machine in 2022
+is likely to be larger than a supercomputer was 20 years ago.<dt>Energy<dd>Computation should be energy-efficient, whether it’s
+electricity and carbon costs in a data center, or battery life on a phone.<dt>Die space<dd>Machines with fewer transistors are cheaper and easier to
+build. Die space is precious and there are many potential productive uses for
+every square millimeter.<dt>Object code size<dd>The size of software as deployed can matter: not
+every machine is a high-powered workstation or laptop, and size limits can
+surprise us. This is especially true for software that is dynamically loaded
+from a network, such as web and mobile applications.<dt>Build and test infrastructure<dd>It costs money and burns carbon to
+develop, build, and test software. It requires human time and effort to build
+infrastructure and tooling.</dl><p>A key argument in favor of using languages like assembly, C, and C++ is that
+their unsafety unlocks high efficiency —  usually primarily run time, but also
+run space, energy, and (less so for C++) object code size. The argument goes:
+You don’t have to bloat and slow down your software with such frippery as
+spatial safety checks, type checks, temporal safety checks, and so on. The
+argument often comes with <a href=https://twitter.com/danluu/status/885214004649615360>a noisome whiff of
+toxic garbage</a>.<p>(For the moment, we’ll set aside the fact that unsafety precludes parallelism
+with a low bug count, and that parallelism is the primary way to improve
+software run time. We’ll also set aside the fact that manual resource management
+is very difficult and most manually-managed programs exhibit substantial
+resource leakage.)<p>A similar argument has been applied to shared caches, whether
+micro-architectural, network, storage, or other. Cache memory is expensive but
+critical to high performance, so historically people have shared caches across
+principals or privilege domains (such as EL0/EL3, different web origins, root
+and user, and so on).<p>This being 2022, however, we now have high and increasing safety requirements
+for our computation systems. For example, <a href=https://www.atlanticcouncil.org/content-series/buying-down-risk/memory-safety/>memory
+unsafety is now (and has long been) a topic of national security interest</a>.
+The nerdiest nerdery is now serious shit. There’s also the matter of <a href=https://ethics.acm.org/code-of-ethics/software-engineering-code/>professional
+ethics</a>.<p>Given that we have to somehow attempt to meet a modern standard of safety
+while still working with the vast volume of unsafe code that we have, software
+developers have been resorting to increasingly desperate measures to mitigate
+risks. Applying these mitigations lands us in a sad and bad place: we get
+neither full efficiency, nor full safety. In some cases, we end up with systems
+that can be less efficient than if they had been developed safely to begin with,
+while still not being safe.<p>(A note on terminology: Some people use <i>mitigate</i> as a rough synomym of
+<i>solve</i>, but I use it in the sense of <i>exploit mitigations</i>. That is,
+an exploit mitigation (such as stack canaries) does not <b>solve</b> the
+underlying bug (such as stack buffer overflow), but it ‘hopefully’ makes it
+‘harder’ for an attacker to successfully exploit the bug. The cost in efficiency
+of these mitigations is often quantifiable, but the safety benefit is often not —  and can trend toward 0 as attack research and techniques continually improve.
+By contrast, a <i>solution</i> (such as array bounds checking) actually makes
+the bug go away and precludes exploitation.)<p>Consider some specific risk mitigations and their costs to efficiency.<ul><li>Human time and effort: Shortcuts like memory unsafety, weak typing, and
+shared caches cause bugs that require people to spend massive amounts of time to
+discover, understand, repair, and mitigate.<li>Run time: Exploit mitigations slow the program down. Transient execution
+exploit mitigations like retpoline, et c. massively slow down execution. They
+can asymptotically approach elimintation of the benefit of the shared cache. MTE
+takes time https://source.android.com/docs/security/test/memory-safety/arm-mte
+when used as a real defense (SYNC mode).<li>Run space: MTE uses up like 3% of RAM just for the tags
+https://www.arm.com/blogs/blueprint/securing-software. ASLR reduces the
+efficiency of page tables in some (or most) operating systems.<li>Die space: There’s a claim TODO get cite that memory tagging will ‘solve’
+memory unsafety, rendering C/C++ viable again.
+(https://security.googleblog.com/2019/08/adopting-arm-memory-tagging-extension.html
+and
+https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhancing-memory-safety)
+However, features like ARM MTE require substantial space on the CPU/SoC die.
+This space could be used for many other things: more GPU cores, more memory, et
+c.<li>Object code size: CFI, stack canaries, shadow stack, and exploit
+mitigations generally increase the size of the machine code. This can be a
+limiting factor more often than people realize.<li>Build and test infrastructure costs: Fuzzing, sanitizers, et c. are very
+expensive to develop, deploy, and use.<li>zeroing https://twitter.com/marcoarment/status/1572291258386903040</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

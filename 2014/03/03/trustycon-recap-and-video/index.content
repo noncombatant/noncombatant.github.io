@@ -1,0 +1,27 @@
+<h1>TrustyCon Recap And Video</h1>
+
+<p><time>3 March 2014</time></p>
+
+<p>Last Thursday we had a great time at <a
+href="https://trustycon.org/">TrustyCon</a>, the trustworthy <a
+href="http://arstechnica.com/information-technology/2014/01/trustycon-security-counter-convention-planned-for-rsa-refusniks/">alternative
+to the RSA Conference</a>. Many thanks are due to the conference <a
+href="https://trustycon.org/sponsors/">sponsors</a> and organizers: iSEC
+Partners, EFF, and DEFCON. My old iSEC boss <a
+href="http://unhandled.com/about/">Alex Stamos</a>, and lots of EFF employees,
+put in a lot of volunteer hours to make the conference a success. Thank you!</p>
+
+<p>I really like single-track conferences. Everyone has a shared experience, and
+there is much less of the “lobby-con” or “bar-con” phenomenon, which I don’t
+enjoy much. This only works if all the talks are good, and at TrustyCon they
+sure were. My favorite was <a href="http://www.cs.princeton.edu/~felten/">Ed
+Felten</a>’s talk that closed out the day. Annalee Newitz has <a
+href="http://io9.com/this-lecture-is-the-one-primer-you-need-on-nsa-surveill-1533564028">a
+good write-up of it on io9</a>.</p>
+
+<p>The <a href="https://www.youtube.com/watch?v=lkO8SNiDSw0">entire conference
+is on YouTube</a>. My talk, co-presented with <a
+href="http://crypto.stanford.edu/~dabo/">Dan Boneh</a>, starts at about 4:33:00
+— yes, 4 hours 33 minutes; the entire conference is 1 long video. The sound cuts
+out at the beginning but then it comes back quickly, don’t worry. Boneh’s topic,
+cryptographic software obfuscation, should amuse and disturb you equally. :)</p>

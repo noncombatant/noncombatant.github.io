@@ -1,0 +1,1521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software security engineering, music, and feelings</description><language>en-US</language><lastBuildDate>Sat, 24 Feb 2024 16:02:33 GMT</lastBuildDate><generator>rfeed v1.0.0</generator><docs>https://github.com/svpino/rfeed/blob/master/README.md</docs><item><title>More Fun With The Known Exploited Vulnerabilities Catalog</title><link>https://noncombatant.org/2023/12/29/more-fun-with-kev</link><description>More Fun With The Known Exploited Vulnerabilities Catalog</description><author>chris@noncombatant.org (Chris Palmer)</author><pubDate>Fri, 29 Dec 2023 00:00:00 GMT</pubDate><guid isPermaLink="true">https://noncombatant.org/2023/12/29/more-fun-with-kev</guid><content:encoded>&lt;h1&gt;More Fun With The Known Exploited Vulnerabilities Catalog&lt;/h1&gt;
+
+&lt;p&gt;&lt;time&gt;29 December 2023&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;Happily, &lt;a
+href="https://cwe.mitre.org/top25/archive/2023/2023_kev_insights.html"&gt;MITRE has
+analyzed and characterized the bugs in the Known Exploited Vulnerabilities (KEV)
+Catalog of 2023&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;In 2021, the &lt;a
+href="https://www.dhs.gov/cisa/cybersecurity-division"&gt;Cybersecurity and
+Infrastructure Security Agency (CISA)&lt;/a&gt;
+began publishing the “&lt;a
+href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog"&gt;Known
+Exploited Vulnerabilities (KEV) Catalog&lt;/a&gt;.” Entries in this catalog are
+vulnerabilities that have been reported through the &lt;a
+href="https://www.cve.org/"&gt;Common Vulnerabilities and Exposures (CVE®)&lt;/a&gt;
+program and are observed to be (or have been) actively exploited.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;I think this part in particular is important for software engineers and
+management to be aware of:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;CISA recommends that organizations monitor the KEV catalog and
+use its content to help prioritize remediation activities in their systems to
+reduce the likelihood of compromise.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Last year I did &lt;a href="/2022/04/22/itw-taxonomy/"&gt;a similar thing&lt;/a&gt; (see
+also &lt;a
+href="https://docs.google.com/spreadsheets/d/1JeN3F8EG6A_ckb7PDCHIuAocR8W-6UEu9kKoctJaF08/edit#gid=1509787727"&gt;the
+spreadsheet&lt;/a&gt;), with a substantially different classification system but with
+essentially the same outcome.&lt;/p&gt;
+
+&lt;p&gt;Hand-waving away the differences in the bug classification for a moment, we
+see that MITRE got a similar result as I did: they got 46% memory unsafety (with
+use-after-free (UAF) leading), while my (incomplete) result was 40% memory
+unsafety. So we’re in the same ballpark, which is nice.&lt;/p&gt;
+
+&lt;p&gt;Of the various kinds of memory unsafety, why should UAF be so prominent in
+known exploitation in 2023? My take is that for arbitrarily complex object
+graphs, &lt;a href="/2023/05/29/complexities-of-allocation/"&gt;nothing but
+heap-walking garbage collection is reliable for achieving temporal safety&lt;/a&gt;.
+(GC; as opposed to less expensive lifetime management approaches like reference
+counting, arena allocation, and so on.) Temporal safety is much harder in
+general to fix efficiently than is spatial unsafety.&lt;/p&gt;
+
+&lt;p&gt;Moreover, browsers — which by definition must have complex object graphs (due
+to for example the HTML DOM, JavaScript, and cross-process IPC with entangled
+object lifetimes) — are naturally a big focus of exploit developers’ attention.
+For efficiency reasons, browsers tend not to use GC for much of the browser’s
+own internals. I think that accounts for the prominence of UAF in the 2023
+catalog.&lt;/p&gt;
+
+&lt;p&gt;Let’s consider MITRE’s classification system, though.&lt;/p&gt;
+
+&lt;h2&gt;Taxonomic Tangles&lt;/h2&gt;
+
+&lt;p&gt;At its core, I find &lt;a href="https://cwe.mitre.org/"&gt;the Common Weaknesses
+Enumeration taxonomy&lt;/a&gt; (CWE) to be trying for more precision than we can get
+or even need, and that it obscures more than it enlightens. (&lt;a
+href="/2022/07/10/fraught-vdbs/"&gt;I find the same is true of the Common
+Vulnerability Scoring System&lt;/a&gt; (CVSS).)&lt;/p&gt;
+
+&lt;p&gt;For example, consider the 2nd- and 3rd-most prevalent bug classes, &lt;a
+href="https://cwe.mitre.org/data/definitions/122.html"&gt;CWE-122 heap-based buffer
+overflow&lt;/a&gt; and &lt;a
+href="https://cwe.mitre.org/data/definitions/787.html"&gt;CWE-787 out-of-bounds
+write&lt;/a&gt;. It’s not immediately clear what the important differences between
+these 2 taxa are. After reading their definiitons, I find it even less clear.
+Were the heap-overflows all reads, not writes? Were the OOB writes all on the
+stack?&lt;/p&gt;
+
+&lt;p&gt;At the high level of analysis we are doing here — that is, helping managers
+and engineers allocate their time and attention most effectively — the read vs.
+write distinction matters, but I’m not sure the heap vs. stack (vs. &lt;a
+href="https://en.wikipedia.org/wiki/.bss"&gt;BSS&lt;/a&gt;) part is the biggest deal. It
+matters to exploit developers, but the solutions look similar and have similar
+costs to develop.&lt;/p&gt;
+
+&lt;p&gt;There is also a &lt;a
+href="https://cwe.mitre.org/data/definitions/788.html"&gt;CWE-788 access of memory
+location after end of buffer&lt;/a&gt; taxon. Where does that fit in?&lt;/p&gt;
+
+&lt;p&gt;This is important, because it might be that the 2nd- and 3rd-most significant
+categories actually outrank UAF, if you treat them as essentially the same: as
+spatial unsafety. That might significantly impact an engineering team’s
+cost/benefit analysis: solving temporal safety is very hard (expensive), while
+solving spatial safety is typically much easier (cheaper). Consider &lt;a
+href="https://github.com/abseil/abseil-cpp/blob/lts_2023_08_02/absl/container/inlined_vector.h#L363"&gt;a
+C++ &lt;code&gt;vector&lt;/code&gt; type&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;
+// `InlinedVector::operator[](...)`
+//
+// Returns a `reference` to the `i`th element of the inlined vector.
+reference operator[](size_type i) ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    &lt;b&gt;ABSL_HARDENING_ASSERT(i &amp;lt; size());&lt;/b&gt;
+    return data()[i];
+}
+&lt;/pre&gt;
+
+&lt;p&gt;If the biggest security problem of 2023 can be solved by sprinkling 1 line of
+code in the right places in core libraries, that’s a very different story than
+if the biggest problem requires fancy allocation and deallocation strategies, as
+solving UAF typically does. Allocation and deallocation necessarily have a much
+greater impact on software efficiency and development cost than does the spatial
+safety fix above.&lt;/p&gt;
+
+&lt;p&gt;Similarly, the 4th-biggest problem of 2023 in MITRE’s analysis is &lt;a
+href="https://cwe.mitre.org/data/definitions/20.html"&gt;CWE-20 improper input
+validation&lt;/a&gt;. As defined, that could be a key contributing factor to all of
+the other top 9 problems — and often is. (That
+&lt;code&gt;ABSL_HARDENING_ASSERT&lt;/code&gt; above is proper input validation, for
+example.)&lt;/p&gt;
+    
+&lt;p&gt;Along the same lines, type confusion (#8) could lead to spatial unsafety,
+could be an exploitable outcome of UAF, and could be part of the exploitation of
+deserialization of untrusted data (#6).&lt;/p&gt;
+
+&lt;h2&gt;Keep Calm And Engineer On&lt;/h2&gt;
+
+&lt;p&gt;Although CWE is Kind Of A Lot, MITRE’s analysis is, at a high level, correct
+and useful in directing our work:&lt;/p&gt;
+
+&lt;ol&gt;
+
+&lt;li&gt;memory unsafety is the biggest problem
+(#1, #2, #3, and at least some of #4 and #8)&lt;/li&gt;
+
+&lt;li&gt;the next biggest class of problem is what I called &lt;code&gt;eval&lt;/code&gt; bugs
+(#5, #6, possibly #8)&lt;/li&gt;
+
+&lt;li&gt;after that, it’s all about what I called logic and configuration bugs (#7,
+#9, #10)&lt;/li&gt;
+
+&lt;/ol&gt;
+
+&lt;p&gt;Our goal should be to get things to where logic and (rarely) configration
+bugs are our biggest problems. To get there, we gotta hammer on memory unsafety
+and &lt;code&gt;eval&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, if spatial unsafety really is the current biggest problem, that is
+great news. Time to go write a bunch of 1-liners, and &lt;a
+href="https://research.swtch.com/testing"&gt;write tests&lt;/a&gt;! 🙂&lt;/p&gt;
+
+&lt;p&gt;And, as I am reminded, turn all those pointers into &lt;code&gt;span&lt;/code&gt;s.
+😉&lt;/p&gt;
+</content:encoded></item><item><title>Comments On Comments</title><link>https://noncombatant.org/2023/08/27/comments</link><description>Comments On Comments</description><author>chris@noncombatant.org (Chris Palmer)</author><pubDate>Sun, 27 Aug 2023 00:00:00 GMT</pubDate><guid isPermaLink="true">https://noncombatant.org/2023/08/27/comments</guid><content:encoded>&lt;h1&gt;Comments On Comments&lt;/h1&gt;
+
+&lt;p&gt;&lt;time&gt;27 August 2023&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;Programmers sometimes argue about whether comments are good, or bad, or bad
+but necessary, or better than no comments, and so on. It’s one of those debates
+where everyone is right part of the time, and nobody really convinces anybody,
+and then we do it again next month.&lt;/p&gt;
+
+&lt;p&gt;Maybe a year or so ago, some colleagues and I were going around this
+merry-go-round again, and Drew Fisher actually shed some light on the discussion
+that I hadn’t seen before. He said, “Comments should explain why, not what.” I
+realized it’s the &lt;i&gt;what&lt;/i&gt; comments that I dislike — they are redundant at
+best, and contradict the actual code at worst (which happens frequently, in my
+experience). It’s the &lt;i&gt;why&lt;/i&gt; comments that I like, and I bet most of us
+do.&lt;/p&gt;
+
+&lt;p&gt;There seem to be at least 3 kinds of comments in software code:&lt;/p&gt;
+
+&lt;dl&gt;
+
+&lt;dt&gt;&lt;i&gt;should&lt;/i&gt; comments&lt;/dt&gt; &lt;dd&gt;that talk about what the code should do, or
+what callers should do;&lt;/dd&gt;
+
+&lt;dt&gt;&lt;i&gt;what&lt;/i&gt; comments&lt;/dt&gt; &lt;dd&gt;that talk about what code does; and&lt;/dd&gt;
+
+&lt;dt&gt;&lt;i&gt;why&lt;/i&gt; comments&lt;/dt&gt; &lt;dd&gt;that explain why the code does what it does, or
+why or when callers should call it.&lt;/dd&gt;
+
+&lt;/dl&gt;
+
+&lt;p&gt;The state of comments in many codebases is not ideal. Often, we can and
+should&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;replace &lt;i&gt;should&lt;/i&gt; comments with code that checks;&lt;/li&gt;
+&lt;li&gt;replace &lt;i&gt;what&lt;/i&gt; comments with meaningful identifiers; and&lt;/li&gt;
+&lt;li&gt;explain &lt;i&gt;why&lt;/i&gt; more often and more thoroughly.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Code examples in this post are in Go, since I work in a Go shop these
+days.&lt;/p&gt;
+
+&lt;h2&gt;Replace Should Comments With Code&lt;/h2&gt;
+
+&lt;p&gt;Here’s an example of a &lt;i&gt;should&lt;/i&gt; comment (that also does not explain
+why):&lt;/p&gt;
+
+&lt;pre&gt;
+// RunCommand runs command with the correct arguments for our application.
+//
+// The command should be one of "pumpkin", "noodle", or "tootle".
+func RunCommand(command string) error {
+	cmd := exec.Command(command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;command&lt;/code&gt; argument is a shell command, so we can imagine that
+the &lt;i&gt;why&lt;/i&gt; is that we need to restrict the commands to 1 of a few known-safe
+commands — we don’t want to create a shell injection vulnerability! But it’s not
+great to make the reader imagine or guess. We should tell them.&lt;/p&gt;
+
+&lt;p&gt;This code enforces the should and avoids the vulnerability — it’s safe even
+if the authors of callers didn’t read the comment:&lt;/p&gt;
+
+&lt;pre&gt;
+var SafeCommands = []string{
+	"pumpkin",
+	"noodle",
+	"tootle",
+}
+
+// RunCommand runs command (which must be one of the SafeCommands) with the
+// correct arguments for our application.
+func RunCommand(command string) error {
+	if !slices.Contains(SafeCommands, command) {
+		return fmt.Errorf("%q is not in SafeCommands", command)
+	}
+	cmd := exec.Command(command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Explaining why commands must be safe is a good idea, too:&lt;/p&gt;
+
+&lt;pre&gt;
+// SafeCommands limits the commands that RunCommand will run. This limit is
+// necessary because we must prevent shell injection vulnerabilities and
+// because even without injection, some commands are dangerous to run. Before
+// you change this list, get approval from the SREs.
+var SafeCommands = []string{
+	"pumpkin",
+	"noodle",
+	"tootle",
+}
+&lt;/pre&gt;
+
+&lt;p&gt;This is now pretty good: we’ve replaced a should comment with an assertion
+that stops bad things from happening, and we explain why it’s necessary to stop
+bad things and why commands can be bad.&lt;/p&gt;
+
+&lt;p&gt;Personally, I’m still not entirely satisfied with this for 2 reasons:&lt;/p&gt;
+
+&lt;ol&gt;
+
+&lt;li&gt;I’d like for attempted invocations of unsafe commands to fail early, at
+compile time rather than at run time.&lt;/li&gt;
+
+&lt;li&gt;The comments are duplicative, and will need to be updated if the names
+&lt;code&gt;RunCommand&lt;/code&gt; or &lt;code&gt;SafeCommands&lt;/code&gt; change. People don’t always
+remember to do this when making changes, and then the comments refer to things
+that no longer exist.&lt;/li&gt;
+
+&lt;/ol&gt;
+
+&lt;p&gt;This code, which creates a type that callers outside the current package
+can’t construct a meaningful instance of, gets closer to that ideal:&lt;/p&gt;
+
+&lt;pre&gt;
+// SafeCommands limits the commands that RunCommand will run. This limit is
+// necessary because we must prevent shell injection vulnerabilities and
+// because even without injection, some commands are dangerous to run.
+type SafeCommand struct {
+	command string
+}
+
+// Before you change or add to these SafeCommands, get approval from the SREs.
+var Pumpkin SafeCommand = SafeCommand{command: "pumpkin"}
+var Noodle SafeCommand = SafeCommand{command: "noodle"}
+var Tootle SafeCommand = SafeCommand{command: "tootle"}
+
+// RunCommand runs command with the correct arguments for our application.
+func RunCommand(command SafeCommand) error {
+	cmd := exec.Command(command.command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Callers outside this package cannot construct a meaningful, non-zero instance
+of &lt;code&gt;SafeCommand&lt;/code&gt; because all 1 of its fields, &lt;code&gt;command&lt;/code&gt;,
+begins with a lower-case letter. In Go, identifiers that begin with lower-case
+letters are visible only from inside the package.&lt;/p&gt;
+
+&lt;p&gt;Note that I removed the assertion &lt;code&gt;slices.Contains(SafeCommands,
+command)&lt;/code&gt;. Now we use the &lt;code&gt;SafeCommand&lt;/code&gt; type to enforce that
+commands are safe.&lt;/p&gt;
+
+&lt;aside&gt;Update 28 August 2023: Jacob Hoffman-Andrews pointed out that we could
+even make the type private, by naming it &lt;code&gt;safeCommand&lt;/code&gt;. But having a
+public function that takes a private type feels weird to me. I slightly prefer
+having the zero-value of &lt;code&gt;SafeCommand&lt;/code&gt; be meaningless and hence
+safe.&lt;/aside&gt;
+
+&lt;p&gt;From inside the package, it is still possible to create an arbitrary
+&lt;code&gt;SafeCommand&lt;/code&gt;. Depending on the situation, dynamic safety checking
+may also still be necessary. Even if it is, I like the inherent
+documentation-like quality of the new type name and the named global instances.
+If you create a minimal package such that all callers are outside the package,
+you may be able to leave the dynamic check out.&lt;/p&gt;
+
+&lt;p&gt;This way of doing things is a bit outside the Go cultural norm, but I hope
+it’s not too far outside.&lt;/p&gt;
+
+&lt;h2&gt;Replace What Comments With Names&lt;/h2&gt;
+
+&lt;p&gt;Type names, variable names, function names, and so on (identifiers) are all
+documentation. Many or most what comments are obviated by carefully chosen,
+meaningful identifiers. This is the Javadoc problem: Most Javadoc tediously
+repeats information that is already present in the identifiers themselves.&lt;/p&gt;
+
+&lt;p&gt;What comments are the most likely to get out of sync with the actual code,
+which is often worse than not having comments at all. Readers easily get
+confused as to whether the comment or the code is correct, especially in the
+absence of tests.&lt;/p&gt;
+
+&lt;p&gt;I often see long functions broken up into sections headed with what comments.
+It’s often better to replace the sections with calls to smaller (usually)
+private functions that do the job, and whose names do the work of the what
+comment.&lt;/p&gt;
+
+&lt;p&gt;Code full of what comments, like this:&lt;/p&gt;
+
+&lt;pre&gt;
+func DownloadAndVerifyThing(path string) error {
+	// Build the URL for the thing
+	...
+
+	// Fetch the URL
+	...
+
+	// Now verify the file
+	...
+}
+&lt;/pre&gt;
+
+&lt;p&gt;can become:&lt;/p&gt;
+
+&lt;pre&gt;
+func DownloadAndVerifyThing(path string) error {
+	url := buildURL(path)
+	pathname, err := fetchURL(url)
+	if err != nil {
+		return error
+	}
+	return verifyFile(pathname)
+}
+
+func buildURL(path string) *URL {
+	return &amp;amp;URL{
+		...
+	}
+}
+
+func fetchURL(u *URL) (string, error) {
+	...
+}
+
+func verifyFile(pathname string) error {
+	...
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Now, &lt;code&gt;DownloadAndVerifyThing&lt;/code&gt; is shorter, contains less state, and
+is more obviously a composition of several tasks.&lt;/p&gt;
+
+&lt;h2&gt;Explain Why Thoroughly&lt;/h2&gt;
+
+&lt;p&gt;Depending on the situation, there may be many questions starting with “Why?”
+that the reader of your code might have. Try to anticipate and answer them. Here
+are some ideas:&lt;/p&gt;
+
+&lt;ul&gt;
+
+&lt;li&gt;Why is it necessary?&lt;/li&gt;
+
+&lt;li&gt;Why is it implemented this way and not in some other way?&lt;/li&gt;
+
+&lt;li&gt;Why is it so complicated? Are all these special cases/fancy
+algorithms/complex data structures necessary?&lt;/li&gt;
+
+&lt;li&gt;Why is it so simple? Don’t we need high efficiency/to handle more error
+conditions/to be more generic/et c.?
+
+&lt;li&gt;Why is it here and not somewhere else?&lt;/li&gt;
+
+&lt;li&gt;Why is it important to fix/refactor/change/not change?&lt;/li&gt;
+
+&lt;/ul&gt;
+</content:encoded></item><item><title>Ergonomics, Resource Lifetimes, And Object Graphs</title><link>https://noncombatant.org/2023/05/29/complexities-of-allocation</link><description>Ergonomics, Resource Lifetimes, And Object Graphs</description><author>chris@noncombatant.org (Chris Palmer)</author><pubDate>Mon, 29 May 2023 00:00:00 GMT</pubDate><guid isPermaLink="true">https://noncombatant.org/2023/05/29/complexities-of-allocation</guid><content:encoded>&lt;h1&gt;Ergonomics, Resource Lifetimes, And Object Graphs&lt;/h1&gt;
+
+&lt;p&gt;&lt;time&gt;29 May 2023&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;This is a smol thought on how resource acquisition and release strategies
+affect the ergonomics of object lifetimes and the complexity of object graphs.
+&lt;i&gt;Resource&lt;/i&gt; generally means any or all of: memory, objects, files, locks,
+sockets, et c.&lt;/p&gt;
+
+&lt;p&gt;Whenever a program requires complex object graphs, complex lifetimes, or
+deterministic release of resources, but the language does not make those things
+ergonomic to express, bugs will inevitably ensue. Examples include (but are not
+limited to) trying to manage cyclic graphs with &lt;a
+href="https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization"&gt;RAII&lt;/a&gt;
+(e.g. classic HTML DOM and JavaScript binding implementations); any language
+with explicit release (e.g. any C program that allocates on the heap, opens
+files, or holds locks); and programs for which deterministic resource release is
+critical to correctness but when automatic release is non-deterministic (e.g.
+Java’s &lt;code&gt;finalize&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;The kinds of bugs you might ‘enjoy’ if your language cannot ergonomically
+express the relationships between your resources vary according to the kinds of
+resources you need to acquire and release. Examples:&lt;/p&gt;
+
+&lt;dl&gt;
+
+&lt;dt&gt;memory&lt;/dt&gt; &lt;dd&gt;Space inefficiency; use-after-free bugs&lt;/dd&gt;
+
+&lt;dt&gt;locks&lt;/dt&gt; &lt;dd&gt;Deadlocks; time inefficiency (holding a lock too long);
+forgetting to release a lock&lt;/dd&gt;
+
+&lt;dt&gt;files and handles&lt;/dt&gt; &lt;dd&gt;File descriptor and handle exhaustion due to
+keeping them open too long; data loss due to failing to synchronize a write
+before program exit&lt;/dd&gt;
+
+&lt;/dl&gt;
+
+&lt;p&gt;&lt;a
+href="https://noncombatant.org/2016/01/30/everyone-needs-secure-usability/"&gt;Everyone
+needs secure usability&lt;/a&gt;, if we hope to consistently produce correct and safe
+software.&lt;/p&gt;
+
+&lt;p&gt;For simple examples of what I mean by these strategies (except for GC, which
+hopefully everyone is familiar with from experience in Go, Python, Java, et c.;
+and global static analysis, which you can read about &lt;a
+href="https://doc.rust-lang.org/1.8.0/book/references-and-borrowing.html"&gt;as it
+is used in Rust&lt;/a&gt;), see &lt;a href="examples.cc"&gt;examples.cc&lt;/a&gt;. These examples
+use memory as the resource, but keep in mind the same idea applies to other
+kinds of resources.&lt;/p&gt;
+
+&lt;table&gt;
+
+&lt;tr&gt;
+&lt;th&gt;Allocation Strategy&lt;/th&gt;
+&lt;th&gt;Brief Characterization&lt;/th&gt;
+&lt;th&gt;Ergonomic For Lifetimes&lt;/th&gt;
+&lt;th&gt;Ergonomic for Object Graph Complexities&lt;/th&gt;
+&lt;th&gt;Guarantee Of Resource Release&lt;/th&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;caller acquires, caller releases implicitly&lt;/td&gt;
+&lt;td&gt;Static or stack storage, released on termination or &lt;code&gt;return&lt;/code&gt;
+(respectively)&lt;/td&gt;
+&lt;td&gt;static, stack-local&lt;/td&gt;
+&lt;td&gt;plain old data (no references); or possible references to objects of same or
+longer lifetimes&lt;/td&gt;
+&lt;td&gt;typically deterministic&lt;sup&gt;†&lt;/sup&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;caller acquires, caller releases explicitly&lt;/td&gt;
+&lt;td&gt;Heap or other external resource released with an explicit call
+(&lt;code&gt;free&lt;/code&gt;, &lt;code&gt;delete&lt;/code&gt;, &lt;code&gt;close&lt;/code&gt;, et c.)&lt;/td&gt;
+&lt;td&gt;not ergonomic&lt;sup&gt;＊&lt;/sup&gt;&lt;/td&gt;
+&lt;td&gt;not ergonomic&lt;/td&gt;
+&lt;td&gt;deterministic; subject to programmer error&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;callee acquires, caller releases implicitly&lt;/td&gt;
+&lt;td&gt;Types (e.g. &lt;code&gt;string&lt;/code&gt;, &lt;code&gt;vector&lt;/code&gt;, &lt;a
+href="https://en.cppreference.com/w/cpp/thread/scoped_lock"&gt;&lt;code&gt;scoped_lock&lt;/code&gt;&lt;/a&gt;,
+et c.) that manage resources internally and release them in their destructors,
+which are implicitly called at the end of the scope&lt;/td&gt;
+&lt;td&gt;static, stack-local&lt;/td&gt;
+&lt;td&gt;acyclic graph; possible references to objects of same or longer
+lifetimes&lt;/td&gt;
+&lt;td&gt;typically deterministic&lt;sup&gt;†&lt;/sup&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;callee acquires, caller releases explicitly&lt;/td&gt;
+&lt;td&gt;Functions and types that wrap resource acquisition but still require
+explicit release, e.g. &lt;code&gt;asprintf&lt;/code&gt;/&lt;code&gt;free&lt;/code&gt;, &lt;a
+href="https://www.gnu.org/software/libc/manual/html_node/Controlling-Buffering.html#index-setvbuf"&gt;&lt;code&gt;setvbuf&lt;/code&gt;&lt;/a&gt;,
+&lt;code&gt;open&lt;/code&gt;/&lt;code&gt;close&lt;/code&gt;, et c.&lt;/td&gt;
+&lt;td&gt;not ergonomic&lt;sup&gt;＊&lt;/sup&gt;&lt;/td&gt;
+&lt;td&gt;not ergonomic&lt;/td&gt;
+&lt;td&gt;deterministic&lt;sup&gt;‡&lt;/sup&gt;; subject to programmer error&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;anyone acquires, anyone releases when ref count is 0&lt;/td&gt;
+&lt;td&gt;Reference-counting smart pointers, like &lt;code&gt;shared_ptr&lt;/code&gt;, &lt;a
+href="https://doc.rust-lang.org/std/rc/struct.Rc.html"&gt;&lt;code&gt;Rc&lt;/code&gt;&lt;/a&gt;, and
+&lt;a
+href="https://doc.rust-lang.org/std/sync/struct.Arc.html"&gt;&lt;code&gt;Arc&lt;/code&gt;&lt;/a&gt;.&lt;/td&gt;
+&lt;td&gt;any&lt;/td&gt;
+&lt;td&gt;acyclic graph; possible references to objects of same or longer
+lifetimes&lt;/td&gt;
+&lt;td&gt;typically deterministic when thread-local; subject to leaks via cyclic
+references&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;anyone acquires, global garbage collection&lt;/td&gt;
+&lt;td&gt;Languages with a garbage collector in its runtime, such as Lisp, JavaScript,
+Python, Go, et c.&lt;/td&gt;
+&lt;td&gt;any&lt;/td&gt;
+&lt;td&gt;arbitrary graph of objects of arbitrary lifetimes&lt;/td&gt;
+&lt;td&gt;non-deterministic; subject to leaks if program terminates before collection
+completes&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;anyone acquires, global static analysis ensures implicit release&lt;/td&gt;
+&lt;td&gt;Languages that statically analyze explicit and/or deduced lifetime
+annotations that become part of an object’s type (see e.g. &lt;a
+href="https://en.wikipedia.org/wiki/Substructural_type_system#Linear_type_systems"&gt;linear
+typing&lt;/a&gt;).&lt;/td&gt;
+&lt;td&gt;inversely proportional to the complexity of entangled lifetimes&lt;/td&gt;
+&lt;td&gt;arbitrary graph of objects with references to objects of same or longer
+lifetimes&lt;/td&gt;
+&lt;td&gt;typically deterministic when thread-local&lt;sup&gt;†&lt;/sup&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;/table&gt;
+
+&lt;small&gt;
+
+&lt;p&gt;† Although one can imagine implicit but non-deterministic release, I don’t
+know of a language that has it in a static or stack-local context (but see GC).
+RAII is the generalized form of these strategies.&lt;/p&gt;
+
+&lt;p&gt;‡ Go’s &lt;code&gt;defer&lt;/code&gt; is a special case: an explicit expression of
+non-deterministic release.&lt;/p&gt;
+
+&lt;p&gt;＊ Arena acquisition and release (when resources acquired during a given
+epoch are released together) can ease the difficulty that arises when objects of
+different lifetimes become entangled in a graph. The costs are that resource
+release within an arena might not be deterministic, and that some resources may
+have longer lifetimes than strictly necessary.&lt;/p&gt;
+
+&lt;/small&gt;
+
+&lt;aside&gt;
+
+&lt;p&gt;Thanks to David Adrian and Jon Callas for reading earlier drafts of this post
+and nudging me to make it less unclear. If it’s still too gnomic, drop me a
+line. ☺️&lt;/p&gt;
+
+&lt;/aside&gt;
+</content:encoded></item><item><title>Protel, SOS, And The DMS-100</title><link>https://noncombatant.org/2023/05/21/protel-sos-dsm-100</link><description>Protel, SOS, And The DMS-100</description><author>chris@noncombatant.org (Chris Palmer)</author><pubDate>Sun, 21 May 2023 00:00:00 GMT</pubDate><guid isPermaLink="true">https://noncombatant.org/2023/05/21/protel-sos-dsm-100</guid><content:encoded>&lt;h1&gt;Protel, SOS, And The DMS-100&lt;/h1&gt;
+
+&lt;p&gt;&lt;time&gt;21 May 2023&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Protel"&gt;Protel&lt;/a&gt;, the The PRocedure
+Oriented Type Enforcing Language, and the operating system SOS (for the Digital
+Multiplex Switch, DMS-100) that was built with it, give us an interesting
+snapshot of the early history of software engineering (as opposed to
+programming, and as opposed to computing science: programming integrated over
+time). Naturally, my focus is on the safety affordances of the language, but the
+Nortel engineers had a whole lot of modern design going on.&lt;/p&gt;
+
+&lt;p&gt;The language was in use starting in 1975, so it’s almost as old as C, and
+also used for systems programming. It’s a familiar ALGOL derivative. The
+official papers I could find (so far) are short and serve only to tantalize:&lt;/p&gt;
+
+&lt;ul&gt;
+
+&lt;li&gt;&lt;a href="https://ieeexplore.ieee.org/document/762490"&gt;Protel: a high level
+language for telephony&lt;/a&gt; by Foxall, Joliat, Kamel, and Miceli, 1979&lt;/li&gt;
+
+&lt;li&gt;&lt;a href="https://dl.acm.org/doi/pdf/10.5555/800078.802525"&gt;Experience With A
+Modular Typed Language: Protel&lt;/a&gt; by Cashin, Joliat, Kamel, and Lasker (&lt;a
+href="cashin-experience-with-protel.pdf"&gt;local copy&lt;/a&gt;), 1981&lt;/li&gt;
+
+&lt;/ul&gt;
+
+&lt;p&gt;I also found some useful reminiscences from a former Nortel engineer, Frazer
+Clement:&lt;/p&gt;
+
+&lt;ul&gt;
+
+&lt;li&gt;&lt;a href="https://messagepassing.blogspot.com/2009/04/protel-i.html"&gt;Protel
+I&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href="https://messagepassing.blogspot.com/2009/04/protel-ii.html"&gt;Protel
+II&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href="https://messagepassing.blogspot.com/2008/12/what-is-sos.html"&gt;What
+Is SOS?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a
+href="https://messagepassing.blogspot.com/2009/01/what-is-sos-part-ii.html"&gt;What
+Is SOS? Part II&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a
+href="https://messagepassing.blogspot.com/2009/03/what-is-sos-part-iii.html"&gt;What
+Is SOS? Part III&lt;/a&gt;&lt;/li&gt;
+
+&lt;/ul&gt;
+
+&lt;p&gt;There are more (offline, sadly) citations at &lt;a
+href="https://museum.eecs.yorku.ca/collections/show/18"&gt;The York University
+Computer Museum&lt;/a&gt;. Searching the web for some of the citations can get you
+closer, but the holy grails that I haven’t found yet are H. Johnson, “PROTEL: A
+programming Language for Large Real-Time Applications” (1984); and &lt;i&gt;Protel
+Technical Notes, BNR, Language Development Group&lt;/i&gt;; issues: vol. 1, nr. 1 – 7,
+1980.&lt;/p&gt;
+
+&lt;p&gt;The broad view these sources provide of Protel and SOS is of a type-checked
+and spatially memory-safe systems programming language, compiled into
+dynamically linkable and swappable shared objects, which all run as real-time,
+pre-emptively scheduled threads in a single shared address space.&lt;/p&gt;
+
+&lt;p&gt;The systems ran with volatile storage as their primary storage, rather than
+treating volatile storage as a fast cache for non-volatile storage. Instead,
+production systems had redundant power supplies and battery-backed power, and
+used an explicit delineation of memory types for reliability and recovery.
+Certain memories were explicitly temporary, while others would be restored from
+disk or tape only in escalated outages. See &lt;a
+href="https://messagepassing.blogspot.com/2008/12/what-is-sos.html"&gt;Clement,
+especially “Multiple memory types”&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Protel’s type system was somewhat richer than C; from Foxall, et al.:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+TYPE digit-value, terminal-id {0 TO 9}
+    status_condition {busy, idle, blocked, ready},
+    out_of_service BOOL,
+    protocol_ptr PTR TO status_condition;
+
+TYPE digit_register TABLE [0 TO 19] OF digit_value,
+    special_feature SET {abbreviated_dial, add_on,
+                  call_transfer, do_not_disturb},
+    time_interval
+       STRUCT
+          amount {0 TO 255},
+          unit {ten_ms, secs, mins, hours}
+       ENDSTRUCT;
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;I find ranged integers notable; &lt;a
+href="https://github.com/google/integers/blob/main/ranged.h"&gt;even now, we have
+to roll our own&lt;/a&gt;, but I suspect their ergonomic definition could have
+prevented many bugs.&lt;/p&gt;
+
+&lt;p&gt;Foxall, et al. describe descriptors:&lt;/p&gt;
+
+&lt;blockquote&gt;A descriptor consists of two parts: a descriptor part and a table
+part. The descriptor part contains the table element count, the size of these
+elements, and a pointer to the base of the table part. The table part contains
+the elements of the current array. At execution time a descriptor may be made to
+point at any table of the correct type. This results in modification of the
+element count and pointer fields of the descriptor part.&lt;/blockquote&gt;
+
+&lt;p&gt;The area type seems to provide a form of abstract class inheritance via
+C-&lt;code&gt;union&lt;/code&gt;-like structured type punning:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+TYPE daddy AREA (6 * byte-width)
+   i integer
+ENDAREA;
+
+TYPE son AREA REFINES daddy
+   t TABLE [0 TO 15] OF BOOL
+ENDAREA;
+
+TYPE daughter AREA REFINES daddy
+   j integer,
+   k BOOL
+ENDAREA;
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;I don’t see discussion of down-casting safety with areas, though. As for C
+&lt;code&gt;union&lt;/code&gt;s and C++ without RTTI, areas may be unsafe.&lt;/p&gt;
+
+&lt;p&gt;Protel also had function types:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+TYPE get_channel PROC (terminal terminal_id)
+     RETURNS integer;
+TYPE transfer PROC (REF t time_interval,
+     UPDATES feature_table DESC OF BOOL);
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;h2&gt;Early Modern Engineering&lt;/h2&gt;
+
+&lt;p&gt;Although that method of operation is different from what we use now, we can
+see from these sources that Protel, SOS, and the DMS-100 embodied very early
+forms of what we now consider a baseline for modern software engineering and
+site reliability engineering culture. Some examples:&lt;/p&gt;
+
+&lt;ul&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;A complete suite of language support tooling (the Protel Library System, PLS
+and PLS-II), including &lt;a
+href="https://en.wikipedia.org/wiki/Source_Code_Control_System"&gt;a source code
+control system (SCCS)&lt;/a&gt;/software configuration management system (SCM). From
+Cashin, et al.:&lt;/p&gt;
+
+&lt;blockquote&gt;In a production environment, however, the need for parallel support
+of both old and new software is a fact of life. Therefore, a successor, PLS-II,
+was designed to simplify the handling of multiple versions of both source code
+and system structure. A tool called source manager, similar in spirit to SCCS
+[DHM 78], is used to simplify maintenance and reduce storage for nearly
+identical source versions. Compatible lineups of system versions are maintained
+in the PLS database which refers to the named issues kept by source
+manager.&lt;/blockquote&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Recognition of interfaces as executable, enforceable documentation and
+automated discovery of dependencies at compile- and run-time (Cashin, et al.,
+“Interfaces as Documentation”).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Technical structures aligned with social structures (“Modularity as a
+Project Manager’s Tool”, Cashin et al.). This is perhaps more arguable and more
+fluid, now.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;Recognition of the need to ‘shift bugs left’, preferably discovering them
+during type-checking (Cashin, et al.):&lt;/p&gt;
+
+&lt;blockquote&gt;By performing strict type checking on intermodule references, we
+have found that many of the errors which, in other languages, would have been
+detected at run time are flagged by the compiler. This permits easy repair early
+in the development process when bugs can be fixed cheaply.&lt;/blockquote&gt;
+
+&lt;/li&gt;
+
+&lt;p&gt;&lt;li&gt;The familiar pain of long compilation times, exacerbated by thorough
+type checking, in section “Building Systems”, Cashin et al. But: “We feel that
+the difficulty inherent in this process is preferable to the mammoth debugging
+sessions which are required when analogous changes are made to programs written
+in more loosely typed languages.”&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;Access control enforced by the type system (as seen in the JVM and the .NET
+CLR, for example) (Cashin, et al.):&lt;/p&gt;
+
+&lt;blockquote&gt;We have found multiple interfaces to be an extremely useful concept.
+They allow the separation of module functions by user. Thus, functions intended
+for general users may be separated from those intended for more ‘privileged’
+users. For example, a file system may have a general user interface which
+supports operations such as &lt;code&gt;OPEN&lt;/code&gt;, &lt;code&gt;CLOSE&lt;/code&gt;,
+&lt;code&gt;GET&lt;/code&gt; and &lt;code&gt;PUT&lt;/code&gt;. A second, more privileged, interface may
+support operations which are only used by maintenance and audit
+software.&lt;/blockquote&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;Dynamic configuration via function pointers (which Cashin, et al. call
+“procedure variables”; see “Modularity
+as a Tool for Flexible Configuration”). This includes the possibility of
+selecting implementations at run-time:&lt;/p&gt;
+
+&lt;blockquote&gt;Since interface specifications allow a clear distinction between
+what a module provides and how it provides it, it is possible to design a single
+interface and several implementations for the same module. Any of these
+implementations can then be used transparently in different system
+configurations.&lt;/blockquote&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Recognition of the complexity of dependency management, even in purely
+1st-party codebases (see “Type Transitivity” in Cashin, et al.).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;An early form of &lt;a href="https://semver.org/"&gt;semantic versioning&lt;/a&gt;.
+From “Configuration Control” in Cashin, et al.:&lt;/p&gt;
+
+&lt;blockquote&gt;A version code consists of two parts: A major number that is
+incremented when non-upwards compatible changes are made and a minor number
+incremented when upwards compatible changes are made. Many, but by no means all,
+interface changes are upwards compatible. The check used for consistency is as
+follows: when a module is loaded, the major number of each module in its
+&lt;code&gt;USES&lt;/code&gt; list is compared with that of the version of the module
+already existing in the system. If they are not equal, the configuration is
+inconsistent. If they are, then compare the minor numbers. If the minor number
+in the &lt;code&gt;USES&lt;/code&gt; list is greater than that of an existing module then it
+is possible that the module to be loaded relies on features not yet implemented
+in the existing module and the configuration is inconsistent.&lt;/blockquote&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Early understanding of &lt;a href="https://www.hyrumslaw.com/"&gt;Hyrum’s
+Law&lt;/a&gt;. From Cashin, et al.: “Although implementation sections are hidden from
+the outside world, there is a fundamental problem in ensuring that an
+implementation change has not altered the semantics of the interface, even when
+there is no direct change to the interface itself. The detailed implications of
+changes to all users requires careful consideration which is not encouraged by
+the knowledge that most changes really are well hidden and do not compromise
+system integrity.”&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;
+
+&lt;p&gt;The &lt;code&gt;DESC&lt;/code&gt; (“descriptor”) type was what we now call
+&lt;code&gt;span&lt;/code&gt; or &lt;code&gt;slice&lt;/code&gt;: A pointer to a (sub-)region of
+elements, together with the number of elements in that (sub-)region. This
+provided spatial safety — the bounds were checked. They also recognized that
+built-in mechanisms for safety can yield efficiency improvements. From
+Clement:&lt;/p&gt;
+
+&lt;blockquote&gt;A Protel &lt;code&gt;DESC&lt;/code&gt;riptor is used to refer to a range of
+elements in an array of &amp;lt;type&amp;gt;. It is used in the same way [as] an array —
+with a subs[c]ript as an lvalue or rvalue to an expression (though the usual
+meaning of those terms is confused by &lt;a
+href="https://en.wikipedia.org/wiki/Protel#GAZINTA"&gt;the Gozinta operator&lt;/a&gt;!).
+The compiler is aware of the of the slice being &lt;code&gt;DESC&lt;/code&gt;ribed, and by
+inference the size of the elements. In the storage allocated to the
+&lt;code&gt;DESC&lt;/code&gt; itself, it stores a pointer to the zeroth element and an
+upperbound in terms of elements. In this way it can provide bounds checking on
+accesses through the &lt;code&gt;DESC&lt;/code&gt;. When an out-of-bounds exception is hit,
+the actual upperbound and the supplied subscript are available in the exception
+report, often allowing debugging straight from the trace. The array slice
+abstraction can be a nice way to deal with zero-copy in a protocol
+stack.&lt;/blockquote&gt;
+
+&lt;p&gt;Thus it would seem that Canadian telecommunications systems programming
+language designers were, as usual, more polite than their cousins a little to
+the south.&lt;/p&gt;
+
+&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;An A/B update scheme not entirely unlike what we now use in e.g. Android
+and ChromiumOS; see &lt;a
+href="https://messagepassing.blogspot.com/2009/03/what-is-sos-part-iii.html"&gt;the
+“One Night(mare) Process” in Clement&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;/li&gt;
+
+&lt;/ul&gt;
+
+&lt;h2&gt;Musings&lt;/h2&gt;
+
+&lt;p&gt;I used to think (&lt;a
+href="https://en.wikipedia.org/wiki/Singularity_(operating_system)#Security_design"&gt;and
+so did the designers of Microsoft’s Singularity operating system&lt;/a&gt;, so at
+least I was in good company) that language safety could obviate protected memory
+(as mediated by a privileged supervisor). Clearly, the SOS designers were hoping
+for that, too, and like the Singularity designers they really wanted to get rid
+of the overhead of context switching and virtual memory. (The overhead is
+amazingly high! We’ve just come to accept it as normal, which really &lt;a
+href="https://alexgaynor.net/2019/apr/21/modern-c++-wont-save-us/"&gt;puts
+micro-performance concerns into perspective&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;p&gt;Similarly, &lt;a
+href="https://www.usenix.org/conference/enigma2021/presentation/palmer"&gt;it’s
+obvious (even to me) now&lt;/a&gt; that memory protection alone can never suffice:
+untrustworthy programs can call and corrupt a program even from outside its
+protection zone (and even, of course, from other machines entirely). Add to that
+side-channels and the practical difficulty of maximally reducing the privilege
+of programs in real-world systems, and you have a recipe for sadness.&lt;/p&gt;
+
+&lt;p&gt;Having no memory protection does make language safety paramount — clearly, we
+must have at least one of language safety and protected memory. But we also know
+that there will always be unavoidable zones of language un-safety, even if they
+are few and small. (Although it’s worth noting that, according to Foxall, et
+al., “Furthermore, it was decided that PROTEL should be the only implementation
+language — no assembly language was provided for DMS-100.”) In the end, even
+Singularity had to provide virtual memory protection. I do think, though, that
+strong language safety provides trustworthiness that can allow us to reduce the
+proliferation of memory protected address spaces, and hence to regain some
+efficiency.&lt;/p&gt;
+
+&lt;p&gt;Here’s a simple example of scripting in the DMS-100 shell — it was still in
+use at least as late as 2012:&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/6r151EuVlfQ"
+title="YouTube video player" frameborder="0" allow="accelerometer; autoplay;
+clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p&gt;And, finally, your moment of Zen (Cashin, et al.):&lt;/p&gt;
+
+&lt;blockquote&gt;Rather than increasing complexity by allowing module nesting as in
+ADA, our experience leads us to believe that even our current structure may be
+more complex than necessary. Instead, it may be sufficient to have a structure
+consisting of a linear chain of interface sections and a single implementation
+section. This would increase the efficiency of the support system since symbolic
+information would no longer need to be placed in implementation section object
+files thus eliminating the need for a linker. &lt;/blockquote&gt;
+</content:encoded></item><item><title>size_t Is Not int</title><link>https://noncombatant.org/2023/02/12/int-size-t</link><description>size_t Is Not int</description><author>chris@noncombatant.org (Chris Palmer)</author><pubDate>Sun, 12 Feb 2023 00:00:00 GMT</pubDate><guid isPermaLink="true">https://noncombatant.org/2023/02/12/int-size-t</guid><content:encoded>&lt;h1&gt;&lt;code&gt;size_t&lt;/code&gt; Is Not &lt;code&gt;int&lt;/code&gt;&lt;/h1&gt;
+
+&lt;p&gt;&lt;time&gt;12 February 2023&lt;/time&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Update, 13 February:&lt;/b&gt; I made an amusing and instructive error, detailed
+below!&lt;/p&gt;
+
+&lt;p&gt;Many C and C++ programmers write code as if they believe that
+&lt;code&gt;size_t&lt;/code&gt; is a &lt;code&gt;typedef&lt;/code&gt; for, or otherwise equivalent to,
+&lt;code&gt;signed int&lt;/code&gt;. Such code is unnecessarily buggy and unsafe, because
+that belief is not true. It never could have been true, and never has been. Yet
+classes of bugs are pervasive because the false belief persists.&lt;/p&gt;
+
+&lt;h2&gt;Definitions&lt;/h2&gt;
+
+&lt;p&gt;Let’s look at the first real C standard, C89. (Well, &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html"&gt;a copy of the draft&lt;/a&gt;,
+since that’s all we can get for free.) Modern C and C++ standards documents
+state matters somewhat more completely (and sometimes more clearly), but I want
+to show that the distinction between &lt;code&gt;size_t&lt;/code&gt; and &lt;code&gt;int&lt;/code&gt;
+goes back 2 generations. In any case it is fair to say that code written after
+1989 must show awareness of this crucial distinction.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://port70.net/~nsz/c/c89/c89-draft.html#4.1.5"&gt;Section
+4.1.5&lt;/a&gt; defines the type &lt;code&gt;size_t&lt;/code&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;code&gt;size_t&lt;/code&gt;[,] which is the unsigned integral type of the
+result of the &lt;code&gt;sizeof&lt;/code&gt; operator;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href="https://port70.net/~nsz/c/c89/c89-draft.html#3.3.3.4"&gt;Section
+3.3.3.4, The &lt;code&gt;sizeof&lt;/code&gt; operator&lt;/a&gt;, explains what &lt;code&gt;sizeof&lt;/code&gt;
+is all about:&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;sizeof&lt;/code&gt; operator yields the size (in bytes) of its operand,
+which may be an expression or the parenthesized name of a type. The size is
+determined from the type of the operand, which is not itself evaluated. The
+result is an integer constant.&lt;/p&gt;
+
+&lt;p&gt;[...] When applied to an operand that has array type, the result is the total
+number of bytes in the array. When applied to an operand that has structure or
+union type, the result is the total number of bytes in such an object, including
+internal and trailing padding.&lt;/p&gt;
+
+&lt;p&gt;The value of the result is implementation-defined, and its type (an unsigned
+integral type) is &lt;code&gt;size_t&lt;/code&gt; defined in the &amp;lt;stddef.h&amp;gt;
+header.&lt;/p&gt;
+
+&lt;p&gt;[...] A principal use of the &lt;code&gt;sizeof&lt;/code&gt; operator is in communication
+with routines such as storage allocators and I/O systems. A storage-allocation
+function might accept a size (in bytes) of an object to allocate and return a
+pointer to void. For example:&lt;/p&gt;
+
+&lt;pre&gt;
+extern void *alloc();
+double *dp = alloc(sizeof *dp);
+&lt;/pre&gt;
+
+&lt;p&gt;[...] Another use of the &lt;code&gt;sizeof&lt;/code&gt; operator is to compute the
+number of members in an array:&lt;/p&gt;
+
+&lt;pre&gt;
+sizeof array / sizeof array[0]
+&lt;/pre&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;In the example, &lt;code&gt;alloc&lt;/code&gt; is a hypothetical memory allocation
+function, but we find also that C89’s actual allocation functions,
+&lt;code&gt;calloc&lt;/code&gt;, &lt;code&gt;malloc&lt;/code&gt;, and &lt;code&gt;realloc&lt;/code&gt;, also use
+&lt;code&gt;size_t&lt;/code&gt; for their size arguments&lt;a name="fn1_back"&gt;&lt;/a&gt;&lt;a
+href="#fn1"&gt;①&lt;/a&gt;. For example, from &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#4.10.3.3"&gt;section
+4.10.3.3&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+void *malloc(size_t size);
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;and similarly, &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#4.10.3.1"&gt;&lt;code&gt;calloc&lt;/code&gt;
+is defined as&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+void *calloc(size_t nmemb, size_t size);
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Although &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#3.3.2.1"&gt;section 3.3.2.1,
+Array subscripting&lt;/a&gt;, says only vaguely that a subscript of an array “shall
+have integral type”, we know from the above that that integral type must
+ultimately be &lt;code&gt;size_t&lt;/code&gt;. This is for 2 reasons.&lt;/p&gt;
+
+&lt;p&gt;First, &lt;code&gt;size_t&lt;/code&gt; must be an unsigned integral value with the width
+of a machine word, so that it can be possible for a C program to index any
+position in the machine’s address space. (See &lt;a
+href="#practical-implications"&gt;Practical Implications&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;p&gt;Second, since it’s unsigned, &lt;code&gt;size_t&lt;/code&gt; may have twice (or more) the
+positive range of a &lt;code&gt;signed int&lt;/code&gt;. So if the subscript type were
+&lt;code&gt;signed int&lt;/code&gt;, it might be possible to allocate (using
+&lt;code&gt;size_t&lt;/code&gt;) an array with more elements than can be indexed (using
+&lt;code&gt;int&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Therefore, we must conclude that &lt;code&gt;size_t&lt;/code&gt; is the only correct
+type for all sizes, lengths, object counts, and indices/subscripts.&lt;/b&gt; C89 and
+its standard library use it pervasively for these purposes; not just in
+allocation functions but in functions like &lt;code&gt;strlen&lt;/code&gt;,
+&lt;code&gt;memset&lt;/code&gt;, &lt;code&gt;memcpy&lt;/code&gt; — &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12"&gt;all those old
+friends&lt;/a&gt;.&lt;/p&gt;
+
+&lt;a name="practical-implications"&gt;&lt;/a&gt;
+&lt;h2&gt;Practical Implications&lt;/h2&gt;
+
+&lt;p&gt;I have a 64-bit machine with 32 GiB of memory. On this system,
+&lt;code&gt;int&lt;/code&gt; is 32 bits and &lt;code&gt;size_t&lt;/code&gt; is 64. Using C++ to get
+access to &lt;code&gt;std::is_signed&lt;/code&gt;, we see:&lt;/p&gt;
+
+&lt;pre&gt;
+% &lt;b&gt;cat &lt;a href="types.cc"&gt;types.cc&lt;/a&gt;&lt;/b&gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;limits&amp;gt;
+#include &amp;lt;type_traits&amp;gt;
+
+using namespace std;
+
+int main() {
+  constexpr bool is_int_signed = is_signed&amp;lt;int&amp;gt;::value;
+  printf("sizeof(int): %zu; signed: %d\n", sizeof(int), is_int_signed);
+  printf("largest int value: %d\n", numeric_limits&amp;lt;int&amp;gt;::max());
+
+  constexpr bool is_uint_signed = is_signed&amp;lt;unsigned&amp;gt;::value;
+  printf("sizeof(unsigned): %zu; signed: %d\n", sizeof(unsigned), is_uint_signed);
+  printf("largest unsigned value: %u\n", numeric_limits&amp;lt;unsigned&amp;gt;::max());
+
+  constexpr bool is_size_t_signed = is_signed&amp;lt;size_t&amp;gt;::value;
+  printf("sizeof(size_t): %zu; signed: %d\n", sizeof(size_t), is_size_t_signed);
+  printf("largest size_t value: %zu\n", numeric_limits&amp;lt;size_t&amp;gt;::max());
+}
+% &lt;b&gt;make types &amp;&amp; ./types&lt;/b&gt;
+clang++ -Weverything -Werror -std=c++20 types.cc -o types
+sizeof(int): 4; signed: 1
+largest int value: 2147483647
+sizeof(unsigned): 4; signed: 0
+largest unsigned value: 4294967295
+sizeof(size_t): 8; signed: 0
+largest size_t value: 18446744073709551615
+&lt;/pre&gt;
+
+&lt;p&gt;As you can see, if &lt;code&gt;malloc&lt;/code&gt; and friends took &lt;code&gt;int&lt;/code&gt;
+arguments, it would be possible to allocate only 2 GiB (2,147,483,647 bytes).
+Even if these functions took &lt;code&gt;unsigned int&lt;/code&gt; arguments, it would be
+possible to allocate only 4 GiB (4,294,967,295 bytes). For my fancy modern
+machine, these would be unacceptable limitations.&lt;/p&gt;
+
+&lt;p&gt;On a 32-bit machine, which can only address 4 GiB, &lt;code&gt;size_t&lt;/code&gt; is
+indeed equivalent to &lt;code&gt;uint32_t int&lt;/code&gt;. But on a 64-bit machine,
+&lt;code&gt;size_t&lt;/code&gt; must be equivalent to &lt;code&gt;uint64_t&lt;/code&gt;, and so it is.
+That is why this works:&lt;/p&gt;
+
+&lt;pre&gt;
+% &lt;b&gt;cat &lt;a href="large.c"&gt;large.c&lt;/a&gt;&lt;/b&gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+int main() {
+  size_t gib = 1 &amp;lt;&amp;lt; 30;
+  size_t ten_gib = 10 * gib;
+  printf("About to allocate %zu bytes\n", ten_gib);
+  char* large = malloc(ten_gib);
+  memset(large, 'A', ten_gib);
+  printf("The last byte is: %c\n", large[ten_gib - 1]);
+}
+% &lt;b&gt;make large &amp;&amp; time ./large&lt;/b&gt;
+clang -Weverything -Werror -std=c2x large.c -o large
+About to allocate 10737418240 bytes
+The last byte is: A
+./large  2.49s user 3.40s system 90% cpu 6.540 total
+&lt;/pre&gt;
+
+&lt;p&gt;Even on a 32-bit machine, where &lt;code&gt;size_t&lt;/code&gt; is &lt;code&gt;uint32_t&lt;/code&gt;,
+i.e. there is no difference in width, the difference in signedness still
+matters. You might think that, on machines of this era, since the kernel used up
+half of the 4 GiB the address space and userland got the other half, it would be
+OK for &lt;code&gt;size_t&lt;/code&gt; to be a signed 32-bit type — you can only allocate at
+most 2 GiB anyway, right?&lt;/p&gt;
+
+&lt;p&gt;Well, no. First, it is possible, desirable, and commonplace for &lt;a
+href="https://www.kernel.org/doc/html/v5.0/vm/highmem.html"&gt;the kernel to use 1
+GiB of the address space, leaving 3 GiB for userland&lt;/a&gt; on 32-bit systems. If
+you want to write a program to operate on 2.5 GiB of data, &lt;code&gt;size_t&lt;/code&gt;
+being unsigned makes that possible.&lt;/p&gt;
+
+&lt;p&gt;Second, you might not be writing code for a traditional operating system that
+puts the kernel and userland in the same address space (albeit with different
+page protections). You might be writing code for a special system for which even
+the application runs in kernel mode and needs to access all 4 GiB of the address
+space. Again, &lt;code&gt;size_t&lt;/code&gt; being unsigned makes that possible.&lt;/p&gt;
+
+&lt;h2&gt;Bugs&lt;/h2&gt;
+
+&lt;p&gt;Using &lt;code&gt;int&lt;/code&gt; as the type for sizes and subscripts would in
+principle lead not just to unnecessary limitations, but &lt;b&gt;actually does&lt;/b&gt;
+lead to unnecessary bugs.&lt;/p&gt;
+
+&lt;p&gt;To see why and how, first remember that signed integer overflow is undefined
+behavior (UB) in C and C++. From &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#A.6.2"&gt;appendix 6.2&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+&lt;p&gt;The behavior in the following circumstances is undefined:&lt;/p&gt;
+
+&lt;p&gt;[...]&lt;/p&gt;
+
+&lt;li&gt;An arithmetic operation is invalid (such as division or modulus by 0) or
+produces a result that cannot be represented in the space provided (such as
+overflow or underflow) (3.3).&lt;/li&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;That is, an expression such as &lt;code&gt;INT_MAX + n&lt;/code&gt; (where &lt;var&gt;n&lt;/var&gt;
+is an &lt;code&gt;int&lt;/code&gt; greater than 0) has no particular meaning, and the
+compiler can therefore interpret it to mean anything. Usually this means the
+compiler will optimize away code that ‘cannot’ happen, or make other assumptions
+that might not match your own. Therefore, statements and expressions that
+exercise UB cannot in general be correct. Even if code with UB &lt;b&gt;appears&lt;/b&gt; to
+work, the people affected by that code are just getting lucky. For now. New
+inputs, or new compilers, might change the program’s behavior.&lt;/p&gt;
+
+&lt;p&gt;However, in &lt;a
+href="https://port70.net/~nsz/c/c89/c89-draft.html#3.1.2.5"&gt;section 3.1.2.5&lt;/a&gt;,
+C89 provides a carve-out for unsigned arithmetic:&lt;/p&gt;
+
+&lt;blockquote&gt;A computation involving unsigned operands can never overflow,
+because a result that cannot be represented by the resulting unsigned integer
+type is reduced modulo the number that is one greater than the largest value
+that can be represented by the resulting unsigned integer type.&lt;/blockquote&gt;
+
+&lt;p&gt;That is, arithmetic on unsigned types is modular arithmetic: &lt;code&gt;UINT_MAX
++ 1&lt;/code&gt; is defined to wrap back around to 0, like the odometer in a car.&lt;/p&gt;
+
+&lt;p&gt;This has important implications for correctness in memory allocation and
+subscripting. For example, this code has several bugs:&lt;/p&gt;
+
+&lt;pre&gt;
+  int count = ...;
+
+  // Implicit cast from `size_t` to `int`; possible (though not in this case)
+  // truncation.
+  int size = sizeof(Thing);
+
+  // The signed multiplication could overflow and is technically UB. If
+  // you’re lucky, your implementation might define it to be modular, and
+  // to wrap. But then you’re allocating a region that cannot hold `count`
+  // `Thing`s — it will have wrapped around to a too-small value.
+  //
+  // In any case, the result of the multiplication is cast to `size_t` for
+  // the call to `malloc`, which may result in &lt;a href="https://en.wikipedia.org/wiki/Sign_extension"&gt;sign extension&lt;/a&gt;, which
+  // might result in even more weirdness.
+  Thing* things = malloc(count * size);  
+
+  // At this point, if the allocation succeeded and if `things` points to a
+  // region of memory large enough to hold `count` `Thing`s, it’s pure luck.
+  // This code is incorrect, even if it ‘seems to work’.
+
+  for (int i = 0; i &amp;lt; count; i++) {
+    things[i] = ...;
+  }
+&lt;/pre&gt;
+
+&lt;p&gt;Code like this is widespread; I’ve seen it in the wild many times. Especially
+when the value of &lt;code&gt;count&lt;/code&gt; and/or the data that get copied into
+&lt;code&gt;things&lt;/code&gt; come from an untrustworthy source (like the network), such
+code is often straightforwardly exploitable&lt;a name="fn2_back"&gt;&lt;/a&gt;&lt;a
+href="#fn2"&gt;②&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can make code like this less incorrect by doing something like this:&lt;/p&gt;
+
+&lt;pre&gt;
+#include &amp;lt;stdckdint.h&amp;gt;
+
+// ...
+
+  const size_t count = ...;
+  const size_t size = sizeof(Thing);
+  size_t total;
+  if (ckd_mul(&amp;amp;total, count, size)) {
+    return ENOMEM;
+  }
+  Thing* things = malloc(total);
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;ckd_mul&lt;/code&gt; is a standard C23 function that returns true if the
+multiplication overflowed. Yes, &lt;a
+href="https://gustedt.wordpress.com/2022/12/18/checked-integer-arithmetic-in-the-prospect-of-c23/"&gt;C
+will introduce checked arithmetic in November 2023&lt;/a&gt;, 51 entire years after
+the language was born. Until then, you can (and should) use &lt;a
+href="https://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins"&gt;non-standard
+compiler intrinsics&lt;/a&gt;, or you can try to roll your own check:&lt;/p&gt;
+
+&lt;pre&gt;
+#include &amp;lt;stdbool.h&amp;gt;
+#include &amp;lt;stddef.h&amp;gt;
+
+// &lt;b&gt;Update:&lt;/b&gt; This is wrong! See below.
+bool check_mul(size_t* result, size_t x, size_t y) {
+  size_t r = x * y;
+  if (r &amp;lt; x || r &amp;lt; y) {
+    return true;
+  }
+  *result = r;
+  return false;
+}
+
+// ...
+
+  const size_t count = ...;
+  const size_t size = sizeof(Thing);
+  size_t total = 0;
+  if (check_mul(&amp;amp;total, count, size)) {
+    return ENOMEM;
+  }
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;s&gt;Note that you &lt;b&gt;must&lt;/b&gt; use unsigned types in functions like
+&lt;code&gt;check_mul&lt;/code&gt; above! (I.e. the ‘check if result was smaller’
+style.)&lt;/s&gt; If you use signed types, the multiplication may overflow and will
+thus be undefined, and the compiler will therefore typically assume that
+overflow cannot happen. Then it will likely ‘optimize’ the code by removing your
+‘dead’ &lt;code&gt;if&lt;/code&gt; block — removing your safety check.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Update:&lt;/b&gt; Inevitably, sigh 😅, I got this wrong, which I would have
+noticed if I had done an exhaustive check of &lt;code&gt;uint32_t&lt;/code&gt; as I did for
+another problem, below. (There’s a lesson there!) Jann Horn points out that “you
+can get a multiplication overflow and still have a result that is bigger than
+the two operands”, e.g. 0x10000 * 0x11000 = 0x110000000. Thank you, Jann! Let’s
+stick with stdckdint.h or compiler intrinsics.&lt;/p&gt;
+
+&lt;p&gt;If you need to check signed arithmetic, you must check limits before doing
+the potentially undefined operation. For example:&lt;/p&gt;
+
+&lt;pre&gt;
+#include &amp;lt;stdbool.h&amp;gt;
+#include &amp;lt;stddef.h&amp;gt;
+
+bool checked_mul(int* result, int x, int y) {
+  if (x == 0 || y == 0) {
+    *result = 0;
+    return false;
+  }
+  if (x &amp;lt; 0 || y &amp;lt; 0) {
+    // TODO: You have even more work to do. See e.g.
+    // https://github.com/coreutils/gnulib/blob/master/lib/intprops-internal.h#L370
+    // for a type-generic macro that handles all cases. `ckd_mul` and the
+    // non-standard intrinsics are lookin’ pretty good right about now... 😉
+    abort(); 
+  }
+  if (INT_MAX / x &amp;lt; y || INT_MAX / y &amp;lt; x) {
+    return true;
+  }
+  *result = x * y;
+  return false;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;If that all sounds like a pain in the ass (because it is), you can use
+&lt;code&gt;calloc&lt;/code&gt;. In C23 (see section 7.24.3.2 of &lt;a
+href="https://open-std.org/JTC1/SC22/WG14/www/docs/n3054.pdf"&gt;the C23
+draft&lt;/a&gt;), and in responsible implementations going back 15+ years,
+&lt;code&gt;calloc&lt;/code&gt; is defined to check the &lt;code&gt;count * size&lt;/code&gt;
+multiplication and to return &lt;code&gt;NULL&lt;/code&gt; if the product is too
+large&lt;a name="fn3_back"&gt;&lt;/a&gt;&lt;a href="#fn3"&gt;③&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Basically, do not use &lt;code&gt;malloc&lt;/code&gt; directly. Idiomatic usage is
+typically incorrect and unsafe. Security reviewers like to find some easy
+pickins by looking at a codebase, running &lt;code&gt;grep -ri alloc *&lt;/code&gt;, and
+looking for overflowing arithmetic expressions. They can find a lot of fun
+stuff. (Try it yourself! You can do much more along these lines with &lt;a
+href="https://github.com/weggli-rs/weggli"&gt;weggli by Felix Wilhelm et
+al&lt;/a&gt;.)&lt;/p&gt;
+
+&lt;h3&gt;These Bugs Are Old And Subtle&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a
+href="https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html"&gt;Extra,
+Extra - Read All About It: Nearly All Binary Searches and Mergesorts are
+Broken&lt;/a&gt;, by Joshua Bloch in 2006, we learn that even the simple binary search
+turns out to be buggy due to the use of the wrong subscript type. In 2
+languages, no less! Java was defined to use &lt;code&gt;int&lt;/code&gt; as its array index
+type, and &lt;code&gt;int&lt;/code&gt; is defined as a signed 32-bit integer. Unlike C, Java
+&lt;code&gt;int&lt;/code&gt; is defined to have modular behavior on overflow, like C’s
+unsigned types.&lt;/p&gt;
+
+&lt;p&gt;The buggy line is in finding a new midpoint for the search:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+int mid = (low + high) / 2;
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;In C, this is UB and there are no guarantees whatsoever. (Bloch says that “In
+C this causes an array index out of bounds with unpredictable results”, but
+spatial unsafety is the outcome only if the people affected by your program are
+‘lucky’ and the arithmetic overflow is implemented to have modular behavior. But
+there’s no guarantee of that, so the C version of this program has extra bonus
+UB: arithmetic overflow and buffer overflow.)&lt;/p&gt;
+
+&lt;p&gt;In Java, the code is incorrect but safe, because the arithmetic overflow is
+defined and the invalid array access is defined. This is why I like to say,
+“Java actually is what people imagine C to be.” What is UB in C is very often
+well-defined in Java.&lt;/p&gt;
+
+&lt;p&gt;That said, Java is still wrong to have used &lt;code&gt;int&lt;/code&gt; as the array
+index type, even if only because it is an unnecessary limitation on program data
+size (as discussed above). But it also leads to this incorrectness problem — in
+Java, the program will &lt;code&gt;throw&lt;/code&gt; when it actually could have
+successfully completed the binary search. Bloch notes that 1 way to fix it is to
+use (you guessed it) unsigned arithmetic:&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+&lt;p&gt;Probably faster, and arguably as clear is:&lt;/p&gt;
+
+&lt;pre&gt;
+int mid = (low + high) &amp;gt;&amp;gt;&amp;gt; 1;
+&lt;/pre&gt;
+
+&lt;p&gt;In C and C++ (where you don’t have the &lt;code&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/code&gt; operator),
+you can do this:&lt;/p&gt;
+
+&lt;pre&gt;
+mid = ((unsigned int)low + (unsigned int)high)) &amp;gt;&amp;gt; 1;
+&lt;/pre&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;Those approaches will work when &lt;code&gt;low&lt;/code&gt; and &lt;code&gt;high&lt;/code&gt; are
+&lt;code&gt;int&lt;/code&gt;s and thus their sum will always fit in &lt;code&gt;unsigned
+int&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;But if we used the correct index type, &lt;code&gt;size_t&lt;/code&gt;, we don’t have the
+extra headroom of &lt;code&gt;unsigned&lt;/code&gt; — it’s already unsigned — so we need to
+actually ensure that the overflow does not happen. Bloch’s first solution,&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;pre&gt;
+int mid = low + ((high - low) / 2);
+&lt;/pre&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;is the only one that yields the correct midpoint in all cases.&lt;/p&gt;
+
+&lt;p&gt;To see why, consider an extreme case, in which we are indexing a giant array
+of bytes that holds all bytes in the address space. We can see that calculating
+the true midpoint requires care in modular arithmetic, both for 32- and 64-bit
+sizes. (For the 64-bit case, pretend for the moment that we can afford that much
+RAM, and that we have a machine that actually does use all 64 bits for
+addressing bytes.)&lt;/p&gt;
+
+&lt;pre&gt;
+% &lt;b&gt;cat &lt;a href="midpoint.c"&gt;midpoint.c&lt;/a&gt;&lt;/b&gt;
+#include &amp;lt;assert.h&amp;gt;
+#include &amp;lt;inttypes.h&amp;gt;
+#include &amp;lt;limits.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+
+int main() {
+  {
+    static_assert(sizeof(unsigned) == sizeof(uint32_t),
+                  "Assuming `unsigned` is `uint32_t`");
+    printf("32-bit:\n");
+    const uint32_t low = UINT_MAX - 2;
+    const uint32_t high = UINT_MAX;
+    uint32_t mid = (low + high) / 2;
+    printf("(%" PRIu32 " + %" PRIu32 ") / 2 = %" PRIu32 "\n", low, high, mid);
+
+    mid = low + ((high - low) / 2);
+    printf("%" PRIu32 " + ((%" PRIu32 " - %" PRIu32 ") / 2) = %" PRIu32 "\n",
+           low, high, low, mid);
+  }
+
+  {
+    static_assert(sizeof(size_t) == sizeof(uint64_t),
+                  "Assuming `size_t` is `uint64_t`");
+    printf("64-bit:\n");
+    const uint64_t low = SIZE_T_MAX - 2;
+    const uint64_t high = SIZE_T_MAX;
+    uint64_t mid = (low + high) / 2;
+    printf("(%" PRIu64 " + %" PRIu64 ") / 2 = %" PRIu64 "\n", low, high, mid);
+
+    mid = low + ((high - low) / 2);
+    printf("%" PRIu64 " + ((%" PRIu64 " - %" PRIu64 ") / 2) = %" PRIu64 "\n",
+           low, high, low, mid);
+  }
+}
+% &lt;b&gt;make midpoint &amp;&amp; ./midpoint&lt;/b&gt;
+clang -Weverything -Werror -std=c2x midpoint.c -o midpoint
+32-bit:
+(4294967293 + 4294967295) / 2 = 2147483646
+4294967293 + ((4294967295 - 4294967293) / 2) = 4294967294
+64-bit:
+(18446744073709551613 + 18446744073709551615) / 2 = 9223372036854775806
+18446744073709551613 + ((18446744073709551615 - 18446744073709551613) / 2) = 18446744073709551614
+&lt;/pre&gt;
+
+&lt;p&gt;Obviously, on a 64-bit machine, we are highly unlikely to find ourselves
+exercising this edge case. ☺️  (Although &lt;a
+href="https://www.qualys.com/2020/05/19/cve-2005-1513/remote-code-execution-qmail.txt"&gt;don’t
+get &lt;b&gt;too&lt;/b&gt; complacent&lt;/a&gt;.) But as you can see, with 32-bit
+&lt;code&gt;size_t&lt;/code&gt;, we are well within range of trouble. (See demo below.)&lt;/p&gt;
+
+&lt;p&gt;In any case, I would rather have such foundational functions as binary search
+be correct because they are correct, rather than ‘good enough‘ contingent on the
+limitations of the platform the program runs on.&lt;/p&gt;
+
+&lt;p&gt;That said, on a 64-bit machine, we can emulate and exhaustively test what
+would happen in a 32-bit machine if we were to use &lt;code&gt;uint32_t&lt;/code&gt; to
+emulate &lt;code&gt;size_t&lt;/code&gt; as the index type. My example program, &lt;a
+href="exhaustive.c"&gt;exhaustive.c&lt;/a&gt;, creates an array with 4 billion elements,
+and then attempts to use binary search to find all of them. It shows that if you
+use an unsigned index type, you have to use (as midpoint.c suggests) the
+&lt;code&gt;low + ((high - low) / 2)&lt;/code&gt; method to get a correct program. Using the
+correct arithmetic takes about 6 minutes on my laptop:&lt;/p&gt;
+
+&lt;pre&gt;
+% &lt;b&gt;date ; time ./exhaustive c ; date&lt;/b&gt;
+Sat Feb 11 22:35:47 PST 2023
+Created sorted array of `uint32_t` values.
+./exhaustive c  347.17s user 8.99s system 95% cpu 6:13.90 total
+Sat Feb 11 22:42:01 PST 2023
+&lt;/pre&gt;
+
+&lt;p&gt;The incorrect arithmetic gets stuck in an infinite loop, unable to find a
+valid midpoint (as midpoint.c suggested will happen). In this example, I gave up
+after 18 minutes:&lt;/p&gt;
+
+&lt;pre&gt;
+% &lt;b&gt;date ; time ./exhaustive i ; date&lt;/b&gt;
+Sat Feb 11 22:42:29 PST 2023
+Created sorted array of `uint32_t` values.
+^C
+./exhaustive i  1031.42s user 18.88s system 95% cpu 18:22.13 total
+&lt;/pre&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Types matter. That ‘everything is an &lt;code&gt;int&lt;/code&gt; in C’ is no more true
+than that ‘everything is a list in Lisp’ — and we should be glad of that! &lt;a
+href="https://en.wikipedia.org/wiki/B_(programming_language)"&gt;The nearly
+typeless B language&lt;/a&gt;, and the untyped lambda calculus, are insufficient as
+programming tools. Application-domain types clearly matter, but primitive types
+matter too — perhaps especially, since higher-level types and functions are
+built on the primitives.&lt;/p&gt;
+
+&lt;p&gt;Proofs of correctness of binary search are valid only on the assumption that
+languages can easily express correct integer arithmetic. (&lt;a
+href="https://www.cs.cornell.edu/courses/cs211/2006sp/Lectures/L06-Induction/binary_search.html"&gt;See
+this one, for example&lt;/a&gt;.) In fact, of course, our programming languages make
+expressing even simple arithmetic incredibly difficult and unwieldy. A complete
+proof must take the failures of real-world language design into account. This
+gap between theory and practice, between computing science and software
+engineering, is wider than people sometimes realize&lt;a name="fn4_back"&gt;&lt;a
+href="#fn4"&gt;④&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;As for the not-fully-correct solution being ”probably faster”, that is
+unlikely to be significant. The practical performance difference between
+&lt;code&gt;mid = ((unsigned int)low + (unsigned int)high)) &amp;gt;&amp;gt; 1&lt;/code&gt; and
+&lt;code&gt;int mid = low + ((high - low) / 2)&lt;/code&gt; is 1 additional subtraction
+operation on registers, i.e. 1 machine cycle. (&lt;a
+href="https://godbolt.org/z/sPqTG96fd"&gt;The &lt;code&gt;/ 2&lt;/code&gt; gets optimized to
+&lt;code&gt;&amp;gt;&amp;gt; 1&lt;/code&gt; on a modern optimizing compiler&lt;/a&gt;.) In a loop
+involving non-local accesses to main memory — you’re jumping around in the
+array, not processing it in a linear, cache-friendly way — that fraction of a
+nanosecond is not going to make or break the performance-fitness of your
+program.&lt;/p&gt;
+
+&lt;p&gt;Assuming we’re already using the best available data structures and
+algorithms, the most significant way to make programs faster is by increasing
+parallelism. In general, correctness and safety are crucial to achieving
+parallelism. Observing the distinctions between types is a particularly
+effective way to improve program correctness and safety.&lt;/p&gt;
+
+&lt;p&gt;In any case, we’ve been living with unnecessarily buggy C/C++ programs since
+1989, even accounting for all the other kinds of bugs inherent and special to
+C/C++. 33 years of entirely preventable bugs and exploitable vulnerabilities,
+all because it’s too hard to express the 1 thing computers actually do:
+arithmetic.&lt;/p&gt;
+
+&lt;p&gt;A good engineer never blames their tools. But a good engineer is always
+searching for the best available tools.&lt;/p&gt;
+
+&lt;hr/&gt;
+
+&lt;p&gt;&lt;a name="fn1"&gt;&lt;/a&gt;&lt;a href="#fn1_back"&gt;&lt;b&gt;1.&lt;/b&gt;&lt;/a&gt; K&amp;amp;R, 2nd edition,
+page 187 shows a version of &lt;code&gt;malloc&lt;/code&gt; taking &lt;code&gt;unsigned&lt;/code&gt;,
+while p. 167 has it correct as &lt;code&gt;size_t&lt;/code&gt;. It seems likely that K&amp;amp;R
+just forgot to update the example on p. 187 when updating the book for the 2nd
+edition, which was updated to describe C89.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name="fn2"&gt;&lt;/a&gt;&lt;a href="#fn2_back"&gt;&lt;b&gt;2.&lt;/b&gt;&lt;/a&gt; When interviewing
+security-focused engineers, I often ask them to spot the bugs in code like this,
+and to explain how it could be exploited.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name="fn3"&gt;&lt;/a&gt;&lt;a href="#fn3_back"&gt;&lt;b&gt;3.&lt;/b&gt;&lt;/a&gt; If application-specific
+macro-benchmarks and testing show that &lt;code&gt;calloc&lt;/code&gt;’s zeroing memory
+makes the program too slow for its purpose, you can define your own allocation
+function that checks the multiplication and then passes the result to
+&lt;code&gt;malloc&lt;/code&gt;. Of course, this point only applies if your application has
+performance fitness tests. Unless you have such tests, &lt;code&gt;calloc&lt;/code&gt; is
+not too slow.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name="fn4"&gt;&lt;/a&gt;&lt;a href="#fn4_back"&gt;&lt;b&gt;4.&lt;/b&gt;&lt;/a&gt; It reminds me a bit of
+how with big-O notation, we ignore constant factors because in principle they
+don’t matter — but in practice, for actual inputs to algorithms implemented on
+actual computers, the constant factors can be decisive.&lt;/p&gt;
+</content:encoded></item></channel></rss>

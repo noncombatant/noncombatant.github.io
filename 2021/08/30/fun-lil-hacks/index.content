@@ -1,0 +1,72 @@
+<h1>Fun Lil Hacks</h1>
+
+<p><time>30 August 2021</time></p>
+
+<p>Here are some fun hacks I’ve been working on lately.</p>
+
+<h2>Run Python</h2>
+
+<p><a href="https://github.com/noncombatant/run-python">Published on
+GitHub</a>.</p>
+
+<p>This little snippet of Python and a macOS Automator workflow allow me to run
+Python code in almost any text input widget of almost any application on my Mac.
+(Gmail’s message compose window is not a regular text input, sadly. Everything
+else works, though, including vim in Terminal.</p>
+
+<p>I’ve bound it to the global hotkey ⌘-\. I just select any text, hit that
+hotkey, and the selection is replaced with the result of evaluating the text as
+Python 3 code. I have it run a Python imterpreter that has a lot of extra
+modules imported so that I have easy access to common functionality.</p>
+
+<p>You take this:</p>
+
+<figure><img src="run-python-01.png" width="556" height="155" alt="A screen shot
+of the text “Hey Bob, what’s up. When the nurse said my body temperature was
+u.Quantity(98.6, u.degF).to('degC'), I just about frrrreaked out. But it turns
+out that’s normal.” in a message compose window in Slack."
+loading="lazy"/><figcaption>Python code in any text area.</figcaption></figure>
+
+<p>Select the Python expression, hit ⌘-\, and get this:</p>
+
+<figure><img src="run-python-02.png" width="557" height="159" alt="A screen shot
+of the text “Hey Bob, what’s up. When the nurse said my body temperature was
+<Quantity(37.0, 'degree_Celsius')>, I just about frrrreaked out. But it turns
+out that’s normal.”" loading="lazy"/><figcaption>Evaluating
+Python.</figcaption></figure>
+
+<h2>HTTP Nowhere</h2>
+
+<p><a
+href="https://chrome.google.com/webstore/detail/http-nowhere/bjaonomdmphjeieijhhjpcdekcdahlpl/related?hl=en&authuser=0">Published
+in the Chrome Web Store</a> and <a
+href="https://github.com/noncombatant/http-nowhere">on GitHub</a>.</p>
+
+<p>This browser extension upgrades all HTTP and WS requests to HTTPS and WSS,
+respectively. It then blocks HTTP and WS. Ideally, with this extension, no
+plaintext web requests will ever hit the wire. You can (and should) verify this
+with <a href="https://www.wireshark.org/download.html">Wireshark</a>.</p>
+
+<p>HTTP Nowhere cannot turn on DNS-over-HTTPS for you, however, because there is
+currently no extension API to do that. You’ll have to enable secure DNS
+manually, in Settings (chrome://settings/security) Definitely turn this on!</p>
+
+<p>This extension might soon be obviated or partially obviated by the coming
+HTTPS First mode. (HTTPS First is currently available in Chrome Canary behind a
+flag: chrome://flags/#https-only-mode-setting.)</p>
+
+<h2>Uncover UI</h2>
+
+<p><a
+href="https://chrome.google.com/webstore/detail/uncover-ui/gjjmcgdmihdajcgogajilcpollahpkgf?hl=en&authuser=0">Published
+in the Chrome Web Store</a> and <a
+href="https://github.com/noncombatant/uncover-ui">on GitHub</a>.</p>
+
+<p>This browser extension removes unnecessary UI elements that cover up
+necessary UI elements. For some reason I do not understand, UI designers seem to
+really like covering up their own UI with other UI.</p>
+
+<p>Uncover UI currently only works in Gmail and Google Docs. I am thinking about
+extending it to remove all those pop-up screens that news and shopping sites
+like to use to stop you from reading their content and buying their
+products.</p>

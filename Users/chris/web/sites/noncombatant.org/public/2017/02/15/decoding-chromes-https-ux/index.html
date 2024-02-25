@@ -1,0 +1,182 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content="same-origin"><meta name=author content="Chris Palmer"><title>Decoding Chrome’s HTTPS UX</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>"><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Decoding Chrome’s HTTPS UX</h1><p><time>15 February 2017</time><aside><p>Update, 26 August 2017: My colleague <a href=https://textslashplain.com/2017/05/02/inspecting-certificates-in-chrome/>Eric
+Lawrence has replaced your cheese</a>.</aside><div id=toc></div><h2>Introduction</h2><p>In this post I’ll try to illuminate and explain Chrome’s HTTPS-, TLS-, and
+X.509-related security UX surfaces. They are a bit complicated, and they’ve
+changed recently, and <a href=https://en.wikipedia.org/wiki/Public_key_infrastructure>the Web PKI</a>
+is very weird, so I think they bear some explanation.<p>(People who already know this stuff might want to skim through this section.
+The more contentious/fun stuff comes after the basics.)<p>As <a href=https://security.googleblog.com/2016/09/moving-towards-more-secure-web.html>Emily
+Schechter explains</a>, we’ve recently made some changes in Chrome to make
+non-secure web pages look markedly non-secure, rather than merely ‘neutral’.
+And, we’ve made HTTPS pages actually say “Secure”. Here’s a secure page in
+Chrome 56:<figure><img loading=lazy src=facebook-location-bar.png alt="Facebook.com is
+labeled “Secure” in Chrome’s Location Bar, because it uses valid HTTPS." width=273 height=42><figcaption>Facebook.com is labeled “Secure” in
+Chrome’s Location Bar, because it uses valid HTTPS.</figcaption></figure><p>If you click on the lock icon or on the word “Secure”, you get more
+information in a pop-up view we call the Origin Info Bubble. (Or, at least,
+<em>I</em> call it that. Most other people on my team call it the Page Info
+Bubble, or PIB.)<p>The first thing it says is, “Secure connection. Your information (for
+example, passwords or credit card numbers) is private when it is sent to this
+site.”<figure><img loading=lazy src=facebook-secure.png alt="Chrome’s PIB
+explaining that the connection to Facebook.com is secure." width=336 height=141><figcaption>Chrome’s PIB explaining that the connection to
+Facebook.com is secure.</figcaption></figure><p>But for non-secure sites, it has a somewhat sad message: “Your connection to
+this site is not secure. You should not enter any sensitive information on this
+site (for example, passwords or credit cards), because it could be stolen by
+attackers.”<figure><img loading=lazy src=cnn-not-secure.png alt="Chrome’s PIB
+explaining that the connection to CNN.com is not secure." width=330 height=153><figcaption>Chrome’s PIB explaining that the connection to CNN.com
+is not secure.</figcaption></figure><p>The PIB actually has a bunch of controls in it that let you manage the site’s
+access to special permissions and features of the web platform. You can turn
+these on or off with the click of a button:<figure><img loading=lazy src=inbox-oib.png alt="Chrome’s PIB, showing the
+permission settings for inbox.google.com." width=162 height=327><figcaption>Chrome’s PIB, showing the permission settings for
+inbox.google.com.</figcaption></figure><h2>Site Security Details</h2><p>Experienced Chrome nerds will notice that something else has changed: where
+the PIB now shows a link that says “Learn more”, there used to be a button
+saying Show Certificate that would open up Chrome’s Certificate Viewer UX.<p>We didn’t remove the button; we just moved it to the new Security tab in
+Chrome’s Developer Tools UX. Emily Stark, Lucas Garron, Max Walker, and Paul
+Irish worked hard to design and implement the Security tab. It’s pretty cool
+because we have more room there to show you more details than there was room for
+in the PIB. Here you can see the Security tab for inbox.google.com.<figure><img loading=lazy src=inbox-security-tab-dt.png alt="Chrome’s
+Security tab in Developer Tools shows that inbox uses modern ciphers and the
+QUIC secure transport protocol." width=659 height=581><figcaption>Chrome’s
+Security tab in Developer Tools shows that inbox uses modern ciphers and the
+QUIC secure transport protocol.</figcaption></figure><p>For sites with sub-resources from several different origins, we can show you
+that, and the security details for each different origin. Sometimes they are not
+all secure. Yikes!<p>(Chrome will not evaluate or execute code —  <em>script content</em> —  from
+non-secure origins when they are included in a page that is from an origin that
+is otherwise secure. Chrome will, however, show you images and other <em>display
+content</em> from non-secure origins in an a page from a secure origin. It would
+be strictly better to also not show non-secure display content, but we have had
+to make a trade-off for web site compatibility: some origins simply have to
+include non-secure display content.)<h2>“You Moved My Cheese!”</h2><p>Some people really like using the Certificate Viewer (CV), and have been
+unpleasantly surprised that we moved it. <a href=https://textslashplain.com/>Eric Lawrence</a> says that we “moved
+people’s cheese”, and I really feel that because if someone moved my cheese I’d
+be unpleasantly surprised, too.<p>I feel very strongly about cheese.<p>Most people are mostly happy once they find out that the View Certificate
+button still exists, although there is some understandable grumbling about how
+it now takes more clicks to get to it.<p>We made that trade-off knowingly, on the belief that the PIB is a ‘primary’
+UX surface —  it has that juicy permissions control panel, after all  —  and hence
+it should be optimized to serve a more mainstream audience. By contrast, the
+people who want to do things like examine the X.509 certificate details are most
+likely engineers and network administrators, and they’d be better served by a UI
+that shows more detail than just the CV. So, Emily, Lucas, Max, and Paul built
+that.<h2>X.509 Certificates And HTTPS Authentication</h2><p>However, it raises a question: What value is there in the full certificate
+details, and who needs or wants those details?<p>First, let’s take a look at an example certificate.<figure><img loading=lazy src=inbox-cv-01.png alt="Chrome’s CV, showing lots
+of details." width=297 height=489><figcaption>Chrome’s CV, showing lots of
+details.</figcaption></figure><p>Oh, it keeps going, all right:<figure><img loading=lazy src=inbox-cv-02.png alt="Even more detail in the
+CV." width=294 height=486><figcaption>Even more detail in the
+CV.</figcaption></figure><p>In these views we can see that the certificate for inbox.google.com was
+issued by “Google Internet Authority G2”, which in turn was issued by “GeoTrust
+Global CA”. We can see that the certificate has serial number 483316...382, what
+algorithm it was signed with and what kind of public key cryptography it uses,
+and so on. And if we selected “Google Internet Authority G2” or “GeoTrust Global
+CA” in the top pane, we’d see the information for those certificates, too.<h3>“But what does it all <em>mean</em>, Basil?”</h3><p>(As Austin Powers famously asked.)<p>It means a few surprisingly limited (and even fraught) things:<ul><li>Your computer’s operating system trusts a company that calls itself
+“GeoTrust Global CA” to issue (cryptographically sign) certificates that can
+issue certificates for any site on the internet.<li>Whether or not your computer’s (operating system’s) vendor was wise to trust
+these <em>root certificates</em> (or <em>trust anchors</em>) is an entirely
+different issue. (Indeed, historically there has been some <a href=/2015/02/21/superfish-round-up/><em>trust rancor...</em></a>)<li>GeoTrust has issued a certificate to an organization calling itself “Google
+Internet Authority G2” (GIA2).<li>GIA2 has issued a certificate for names that end in characters that look on
+your screen like “.google.com”, with at most 1 label before the “.google.com”.
+(DNS hostnames are subdivided into <em>labels</em>. The name “inbox.google.com”
+has 3 labels: “inbox”, “google”, and “com”.)<li>Chrome has verified that the certificate is allowed (by GIA2) to be used
+with the hostname in the URL, which appears on my screen as
+“https://inbox.google.com/”.<li>The certificate you’re viewing is from the browser’s current connection to
+the server —  but that can include revalidating a cached resource. It can happen
+that the resource as cached is still live, but that it was previously retrieved
+on a connection validated by a different certificate chain! So although you can
+check the certificate chain for every connection involved in fetching a page’s
+resources, that is super tedious —  and it can’t mean what one might hope it
+means.</ul><p>And the CV pointedly does <em>not</em> mean a few other things:<ul><li>Not all strings of text that look the same on the screen are actually the
+same byte values underneath. This is terrible and bad, and is due to the fact
+that <a href=https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/>there
+are many <em>character sets</em> in the world</a>, and some of them have
+<em>characters</em> that are very similar, and some of them are displayed with
+similar or identical <a href=https://en.wikipedia.org/wiki/Glyph><em>glyphs</em></a> by design, and
+sometimes even not by design due to limitations in your operating system’s font
+libraries. And, even if they were always visually distinct, you wouldn’t
+necessarily be able to tell them apart at a glance. This is called the <em><a href=https://en.wikipedia.org/wiki/IDN_homograph_attack>homograph
+attack</a></em>. For an example, compare the Latin ‘A’ (byte value 0x29) to the
+Cyrillic ‘А’ (byte values 0xd090). On my machine, they are pixel-for-pixel
+identical.<li>Thus, a certificate issuer might issue a certificate that is perfectly valid
+for a name that looks to humans like, but is not equal to, some other name.<li>Not all of the information in an X.509 certificate, such as Organization,
+Country, Locality, and so on is necessarily true. Many fields in an X.509
+certificate are under the control of attackers trying to forge certificates that
+look good but aren’t. Issuers generally control or validate the many DNS Name
+sub-fields in the Subject Alternative Name field, and the public key is the pair
+of a private key that is computationally infeasible for the attacker to fake.
+(That is, it is not feasible to make a fake public key that would match
+google.com’s real private key.) But the rest... no guarantees.<li>If a certificate chain is valid according to the browser’s validation
+process, that does not actually mean that it is the chain that the true site
+operator intends to use at this time. For example, perhaps 1 of the issuers in
+the chain has been hacked, and attackers are issuing valid but false
+certificates. Or perhaps the certificate chain was valid yesterday, but the site
+operator rotated their keys after a server compromise —  and the attacker now
+has, and is using, the old one. Thus, even if you have memorized that
+PayPal.com’s certificate has historically been issued by “Symantec Class 3 EV
+SSL CA - G3”, that doesn’t necessarily mean that’s what PayPal intends
+today.</ul><a name=what-about-extended-validation-certificates></a><h4>What About Extended Validation Certificates?</h4><p>Some web sites use a special mode called Extended Validation (EV), and some
+people believe (not without reason) that the EV process results in an X.509
+certificate in which all the information is true, or at least more true. Or at
+least the Organization and Country fields.<p>And, on desktop platforms (only — not mobile), Chrome will show those fields
+in the Location Bar. For example, here is Twitter’s EV certificate:<figure><img loading=lazy src=twitter-ev.png alt="Twitter.com uses an EV
+certificate calling itself “Twitter, Inc. [US]”." width=330 height=139><figcaption>Twitter.com uses an EV certificate calling itself
+“Twitter, Inc. [US]”.</figcaption></figure><p>Surely, this is good? It indicates a stronger relationship between the DNS
+name “twitter.com” and the Delaware corporation “Twitter, Inc.”?<p>Well, yes and no. First, it’s a <em>Delaware</em> corporation —  hence the
+“[US]”. In other legal jurisdictions, some other entity may call itself
+“Twitter, Inc.”. So, no guarantees. But also, what are we to think when there is
+no obvious relationship between the DNS name and the Organization name?<figure><img loading=lazy src=yell-ev-hibu.png alt="Yell.com is owned by
+something called “Hibu”, which is located either in the United Kingdom or in
+Great Britain." width=353 height=140><figcaption>Yell.com is owned by
+something called “Hibu”, which is located either in the United Kingdom or in
+Great Britain.</figcaption></figure><p>I enjoy the irony that yell.com is “the UK’s leading online business
+directory” —  an organization that should have this name-mapping problem
+solved. Right?<p>In addition to having less-than-ideal security UX implications, EV
+certificates do not create a new technical security boundary. The <a href=https://tools.ietf.org/html/rfc6454>web origin</a> is the primary
+defensible security boundary in the open web platform, and <em>it does not
+include any aspect of the certificate</em>: not the public keys, not the
+Organization name, and not the issuance criteria (EV or other). The origin
+consists only of the scheme, host, and port number that the browser uses to
+connect to the server. For example, for Twitter the tuple is (https,
+twitter.com, 443).<h2>So What Does HTTPS Definitely Do?</h2><p>At this point, you might be doubting every pixel on your screen and every
+data field in the obscure 1980s military-grade kludgefest we lovingly call
+“X.5ohgodtheburning”. What can you do to know if you’re connecting to the web
+site you really want to? People don’t have to, <em>and shouldn’t have to</em>,
+do a whole lot.<p>Assuming you have a modern web browser that is up-to-date, you can be
+reasonably certain of some basic facts when you use HTTPS sites:<ul><li>If there were anything truly horrible about the server’s TLS protocol
+version, ciphersuites negotiated, or certificate signature crypto, the browser
+would have rejected the connection. (This does happen, and periodically we
+tighten the screws as old crypto dies. Other times, <a href=https://blog.chromium.org/2014/09/gradually-sunsetting-sha-1.html>we
+cause the old crypto to die</a>.)<li>The certificate was issued for a name that matches the hostname in the
+URL.<li>The site’s cookies, local storage, and JavaScript are evaluated in a context
+(the origin) that is more-or-less tied to that hostname. (Sometimes the rules
+are loosened, such that example.com can mix in with foo.example.com. <a href=https://code.google.com/archive/p/browsersec/wikis/Part2.wiki>The
+particulars are complicated</a>.)<li>Also, the site may have included script content from any number of other
+sites. Unfortunately, you must simply assume that the site’s operators verified
+that doing so was safe. (It often isn’t. A really secure site will pull in
+resources only from its own origin.)<li>However, as mentioned above, the browser will not execute script from
+non-secure origins on a page that is otherwise secure.<li>And, as always, sites that do not use HTTPS provide no guarantees at all.
+When there is an active attacker on the network — <a href=https://arstechnica.com/tech-policy/2014/09/why-comcasts-javascript-ad-injections-threaten-security-net-neutrality/>and
+when isn’t there, really?</a> —  all non-secure sites are essentially evaluated
+in the same privilege domain: the anonymous, unauthenticated, surveillable
+origin.</ul><p>The good news is that most people have nothing to learn from, and thus no
+need for, the level of technical security detail I’ve described in this post.
+Indeed, all this detail is pretty hard even for experts to interpret. It’s
+pretty much only useful to the people actually developing and deploying the web
+site —  which is why we moved it to the Developer Tools.<h2>The Future</h2><p>There is still the problem that phishing is real (even prevalent), and is a
+highly effective mode of attack. I’m not convinced, at all, that phishing is a
+problem that we can solve with labels, indicators, or icons in an application’s
+UX. Instead, <a href=https://www.facebook.com/notes/facebook-security/security-key-for-safer-logins-with-a-touch/10154125089265766/>we
+now have nice origin-bound 2-factor authentication</a>, and hopefully more and
+more sites will start supporting such very-hard-to-phish credentials.<p>In the meantime, we also have the Safe Browsing service (which Safari and
+Firefox also use; it’s open) and Microsoft’s browsers use a similar technology
+called SmartScreen. These services are basically rapidly-updated blacklists of
+known phishing domains. Browsers consult the lists on each page-load.<p>To detect certificate misissuance, we have the growing <a href=https://www.certificate-transparency.org/>Certificate Transparency</a>
+(CT) system, in which issuers publicly announce each certificate they’ve issued.
+Site operators who are worried about misissuance for their sites can scan the
+public CT logs (using nifty front-ends like <a href=https://crt.sh/>crt.sh</a>, or a service like <a href=https://sslmate.com/certspotter/>Cert Spotter</a> that does it for you).
+Eventually, we want to get to where browsers refuse to validate a certificate
+chain that cannot prove that its issuance was announced publicly. We hope this
+will significantly curtail misissuance, possibly including homograph attacks (as
+the log scanners get more sophisticated).<aside><p>Thanks to Adrienne Porter Felt, Emily Stark, and Eric Lawrence for
+comments that improved this post! The remaining errors are my fault, of
+course.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

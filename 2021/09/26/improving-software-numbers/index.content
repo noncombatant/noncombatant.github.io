@@ -1,0 +1,225 @@
+<h1>Improving Software ‘Numbers’</h1>
+
+<p><time>26 September 2021</time></p>
+
+<aside><p>Update: Thanks again to Saleem Rashid, this time for pointing me at <a
+href="https://stdrs.dev/nightly/x86_64-unknown-linux-gnu/core/num/struct.Saturating.html"><code>Saturating</code>
+in Rust Nightly</a>.</p></aside>
+
+<p>Programming languages should expose a flexible variety of explicit types and
+operators for handling arithmetic overflow and related problems. As language
+design problems go, this might be relatively less difficult to achieve. Rust is
+closest to where programming languages need to be, but not all the way there
+yet.</p>
+
+<p>I believe that software should be able to reliably compute arithmetic
+expressions. You may say I’m a dreamer, but I’m not the only one.</p>
+
+<p>To represent an infinite set in finite space is problematic. This is not news
+to most software engineers. We always need a coherent policy for how to deal
+with our inability to represent some elements of infinite sets, or expressions
+that would evaluate to representable elements if only we had space.</p>
+
+<p>We can consistently apply some policy (whatever it may be) using the
+language’s type system: by encoding policy in the set’s type, and operators on
+and functions of it, we can get (if nothing else) consistent representation of
+and behavior in error states. (I’ll call them <i>representation errors</i>
+generically.)</p>
+
+<p>Surely, we can all agree that this is the minimum necessary for
+program correctness.</p>
+
+<p>Surely, we can all agree that correctness is the minimum necessary for
+program safety.</p>
+
+<p>Surely, we can all agree that providing people correct and safe software is
+our duty as engineers.</p>
+
+<p>Even the most fundamental objects of computation, the reals and the integers
+and arithmetic on them, require some policy for unrepresentable values — even if
+it is simply to crash when no more memory is available to an arbitrary-precision
+arithemtic library (for example).</p>
+
+<p>Machine words are more limited still, and have far less range to represent
+the reals and integers than do arbitrary-precision types. Even so, for practical
+efficiency, we typically use machine words to represent elements of these sets.
+For many circumstances, this is not a problem.</p>
+
+<p>The machines we typically use implement reasonable error policies, at least
+for the integer types. For example, ARM’s and Intel’s policy is to make
+arithmetic modular, and to indicate carry, borrow, and overflow in a status
+register. (See e.g. <a
+href="https://developer.arm.com/documentation/dui0801/g/Condition-Codes/Carry-flag">carry
+flag</a>, <a
+href="https://developer.arm.com/documentation/dui0801/g/Condition-Codes/Overflow-flag">overflow
+flag</a>, and <a
+href="https://developer.arm.com/documentation/dui0068/b/ARM-Instruction-Reference/Conditional-execution">conditional
+execution</a>.)
+
+<p>Unfortunately, most of the programming languages that aim for machine-level
+efficiency — e.g. C, C++, and Rust — do not provide a standard way to access the
+machine status register directly, or otherwise indicate representation errors.
+(Rust does provide indirect access, however; see below.) Programmers must switch
+to machine language, or must use non-standard, implementation-specific features
+such as <a
+href="https://clang.llvm.org/docs/LanguageExtensions.html"><code>__builtin_add_overflow</code></a>.</p>
+
+<p>It would be helpful if these languages’ developers defined standardized
+syntax and semantics for accessing the error state that the machine provides.
+(If the programmer uses such a mechanism, but compiles for a machine that
+doesn’t signal representation errors, the compiler could emulate such a signal,
+otherwise attempt to accommodate the programmer, or raise a compilation
+error.)</p>
+
+<p>However, some languages often violate and obscure the clear and simple policy
+that most machines define.
+
+<style>
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0.5em;
+}
+tr:nth-child(even) {
+  background-color: #eee;
+}
+</style>
+
+<table>
+
+<tr>
+<th>Language</th>
+<th>Unrepresentable Signed Integer Behavior</th>
+<th>Unrepresentable Unsigned Integer Behavior</th>
+</tr>
+
+<tr>
+<td>C, C++</td>
+<td>Undefined behavior</td>
+<td>Modular arithmetic</td>
+</tr>
+
+<tr>
+<td>Rust<br/>(default Release configuration)</td>
+<td>Modular arithmetic</td>
+<td>Modular arithmetic</td>
+</tr>
+
+<tr>
+<td>Rust<br/>(default Debug configuration)</td>
+<td>Machine trap</td>
+<td>Machine trap</td>
+</tr>
+
+<tr>
+<td>Java, Go</td>
+<td>Modular arithmetic</td>
+<td>Modular arithmetic</td>
+</tr>
+
+</table>
+
+<p>There are a number of problems with this state of affairs:</p>
+
+<ul>
+
+<li><p><b>Undefined behavior is hard or impossible to test for, and leads to increased
+cognitive load for the programmer.</b> The programmer has to divine the behavior
+that the compiler will choose to generate, including in different build
+configurations and at different optimization levels.</p>
+
+<p>This can lead to situations where what programmers test (e.g. debug builds)
+is not the same as the code that runs in production, and the production behavior
+differs from what was tested.</p>
+
+<p>Needless to say, when the ultimate behavior of the program is not predicted,
+intended, or tested by the programmer, bugs inevitably ensue — sometimes
+including exploitable vulnerabilities.</p></li>
+
+<li><p><b>Having different policies for signed and unsigned integer types
+exposes the quirks of obsolete and special-use machines, and increases cognitive
+load on the programmer.</b> In fact, many programmers are unaware of the policy
+difference. It is necessary and good to expose machine-specific behavior in
+machine languages, but it’s undesirable in higher-level languages.</p></li>
+
+<li><p><b>Trapping is a rather rigid policy</b>, and programmers may not expect
+it as the default, at least at first. It has the benefit of exposing the
+representation problem early in the development process, though. In a language
+that offers many policy choices, trapping might be the best default.</p></li>
+
+<li><p><b>Rust has the problem that the tested behavior is not the production
+behavior</b>, unless the programmer takes the somewhat unusual step of changing
+the default build configurations. This might be an unwelcome surprise after
+trapping behavior during testing.</p>
+
+<p>I suppose the theory is that the trapping behavior will shake out all the
+bugs, but it can definitely be the case that program inputs seen during testing
+differ from those seen in production — especially in the case where the program
+must handle intentionally hostile input.</p>
+
+<p>People often say that since Rust provides array bounds checking (in all
+builds), not trapping on integer overflow in production is OK. That is true as
+far as it goes, but invalid array access is not the only possible consequence of
+integer overflow.</p></li>
+
+<li><p><b>The set of policy options is incomplete, and insufficient for the full
+range of program requirements.</b> For all languages, it would be useful to have
+a suite of standardized policies available, including at least wrapping, trapping,
+clamping/saturation, undefined behavior, and promotion to <code>BigInt</code> or
+other arbitrary precision type.</p></li>
+
+<li><p><b>Only Rust programmers have easy access to choice.</b> If the
+language’s policy is not right for the program requirements, the programmer must
+go to <a
+href="https://source.chromium.org/chromium/chromium/src/+/main:base/numerics/">extraordinary
+lengths</a> to implement the right policy — typically without any help from
+standard mechanisms to observe the machine’s error state.</p>
+
+<p>Rust is closest to where we need to be. If a program requires a different
+policy, Rust provides <a
+href="https://doc.rust-lang.org/std/num/struct.Wrapping.html">a
+<code>Wrapping</code> type</a> and operators like <a
+href="https://doc.rust-lang.org/std/primitive.i32.html#method.wrapping_add"><code>wrapping_add</code></a>,
+<a
+href="https://doc.rust-lang.org/std/primitive.i32.html#method.overflowing_add"><code>overflowing_add</code></a>,
+<a
+href="https://doc.rust-lang.org/std/primitive.i32.html#method.saturating_add"><code>saturating_add</code></a>,
+<a
+href="https://doc.rust-lang.org/std/primitive.i32.html#method.checked_add"><code>checked_add</code></a>,
+and <a
+href="https://doc.rust-lang.org/std/primitive.i32.html#method.unchecked_add"><code>unchecked_add</code></a>.</p></li>
+
+</ul>
+
+<p>The usual reason given for the use of undefined behavior is that it can
+enable certain micro-optimizations. This is potentially useful and a legitimate
+policy option. (Language designers hesitate to pay the micro-cost of overflow
+checking <a href="https://github.com/rust-lang/rfcs/pull/2635">even in special
+cases</a>. But to me it seems like <code>unchecked_add</code> is available for
+the few people whose application is unacceptably affected by a check.)</p>
+
+<p>In any case, and in any language, “potentially (but untestably) fast, hard to
+predict, possibly wrong, and possibly unsafe”, even if occasionally desirable,
+should not be the default policy, as it is for signed arithmetic in C and
+C++.</p>
+
+<p>Fortunately, all of the languages in mainstream use have active standards
+committees and change processes. They could define ways to access the machine
+state, and could define standard types and operators implementing a wide range
+of reasonable representation error policies. (In addition to the suite of
+special policy operators that Rust provides, it’d help to have types whose
+default operators implement each of those policies, as well — not just
+<code>Wrapping</code>.)</p>
+
+<p>In some cases, it may even be possible to change the default policies. I
+think language designers and standardizers should do so.<p>
+
+<p>(Perhaps something similar could be done for the error modes of
+floating-point arithmetic, too.)</p>
+
+<aside><p>Thanks to Saleem Rashid for pointing out some gaps, and to Alex Gaynor
+for pointing out an inaccuracy!</p></aside>

@@ -1,0 +1,123 @@
+<h1>DRAFT — please do not redistribute — Efficient + Unsafe = Inefficient</h1>
+
+<p><time>20 September 2022</time></p>
+
+<p>Consider the aspects of computation that we want to economize:</p>
+
+<dl>
+
+<dt>Human time, attention, effort, and well-being</dt> <dd>We must conserve the
+time, attention, effort, and well-being of everyone involved in computation: the
+people who develop the system, the people who use it, and the people who are
+affected by its use.</dd>
+
+<dt>Run time</dt> <dd>Computation should be time-efficient: people shouldn’t
+wait unduly long for results. Exact deadlines vary by application.</dd>
+
+<dt>Run space</dt> <dd>Computation should be space-efficient: people should get
+good results even on small machines. Needless to say, a ‘small’ machine in 2022
+is likely to be larger than a supercomputer was 20 years ago.</dd>
+
+<dt>Energy</dt> <dd>Computation should be energy-efficient, whether it’s
+electricity and carbon costs in a data center, or battery life on a phone.</dd>
+
+<dt>Die space</dt> <dd>Machines with fewer transistors are cheaper and easier to
+build. Die space is precious and there are many potential productive uses for
+every square millimeter.</dd>
+
+<dt>Object code size</dt> <dd>The size of software as deployed can matter: not
+every machine is a high-powered workstation or laptop, and size limits can
+surprise us. This is especially true for software that is dynamically loaded
+from a network, such as web and mobile applications.</dd>
+
+<dt>Build and test infrastructure</dt> <dd>It costs money and burns carbon to
+develop, build, and test software. It requires human time and effort to build
+infrastructure and tooling.</dd>
+
+</dl>
+
+<p>A key argument in favor of using languages like assembly, C, and C++ is that
+their unsafety unlocks high efficiency — usually primarily run time, but also
+run space, energy, and (less so for C++) object code size. The argument goes:
+You don’t have to bloat and slow down your software with such frippery as
+spatial safety checks, type checks, temporal safety checks, and so on. The
+argument often comes with <a
+href="https://twitter.com/danluu/status/885214004649615360">a noisome whiff of
+toxic garbage</a>.</p>
+
+<p>(For the moment, we’ll set aside the fact that unsafety precludes parallelism
+with a low bug count, and that parallelism is the primary way to improve
+software run time. We’ll also set aside the fact that manual resource management
+is very difficult and most manually-managed programs exhibit substantial
+resource leakage.)</p>
+
+<p>A similar argument has been applied to shared caches, whether
+micro-architectural, network, storage, or other. Cache memory is expensive but
+critical to high performance, so historically people have shared caches across
+principals or privilege domains (such as EL0/EL3, different web origins, root
+and user, and so on).</p>
+
+<p>This being 2022, however, we now have high and increasing safety requirements
+for our computation systems. For example, <a
+href="https://www.atlanticcouncil.org/content-series/buying-down-risk/memory-safety/">memory
+unsafety is now (and has long been) a topic of national security interest</a>.
+The nerdiest nerdery is now serious shit. There’s also the matter of <a
+href="https://ethics.acm.org/code-of-ethics/software-engineering-code/">professional
+ethics</a>.</p>
+
+<p>Given that we have to somehow attempt to meet a modern standard of safety
+while still working with the vast volume of unsafe code that we have, software
+developers have been resorting to increasingly desperate measures to mitigate
+risks. Applying these mitigations lands us in a sad and bad place: we get
+neither full efficiency, nor full safety. In some cases, we end up with systems
+that can be less efficient than if they had been developed safely to begin with,
+while still not being safe.</p>
+
+<p>(A note on terminology: Some people use <i>mitigate</i> as a rough synomym of
+<i>solve</i>, but I use it in the sense of <i>exploit mitigations</i>. That is,
+an exploit mitigation (such as stack canaries) does not <b>solve</b> the
+underlying bug (such as stack buffer overflow), but it ‘hopefully’ makes it
+‘harder’ for an attacker to successfully exploit the bug. The cost in efficiency
+of these mitigations is often quantifiable, but the safety benefit is often not
+— and can trend toward 0 as attack research and techniques continually improve.
+By contrast, a <i>solution</i> (such as array bounds checking) actually makes
+the bug go away and precludes exploitation.)</p>
+
+<p>Consider some specific risk mitigations and their costs to efficiency.</p>
+
+<ul>
+
+<li>Human time and effort: Shortcuts like memory unsafety, weak typing, and
+shared caches cause bugs that require people to spend massive amounts of time to
+discover, understand, repair, and mitigate.</li>
+
+<li>Run time: Exploit mitigations slow the program down. Transient execution
+exploit mitigations like retpoline, et c. massively slow down execution. They
+can asymptotically approach elimintation of the benefit of the shared cache. MTE
+takes time https://source.android.com/docs/security/test/memory-safety/arm-mte
+when used as a real defense (SYNC mode).</li>
+
+<li>Run space: MTE uses up like 3% of RAM just for the tags
+https://www.arm.com/blogs/blueprint/securing-software. ASLR reduces the
+efficiency of page tables in some (or most) operating systems.</li>
+
+<li>Die space: There’s a claim TODO get cite that memory tagging will ‘solve’
+memory unsafety, rendering C/C++ viable again.
+(https://security.googleblog.com/2019/08/adopting-arm-memory-tagging-extension.html
+and
+https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/enhancing-memory-safety)
+However, features like ARM MTE require substantial space on the CPU/SoC die.
+This space could be used for many other things: more GPU cores, more memory, et
+c.</li>
+
+<li>Object code size: CFI, stack canaries, shadow stack, and exploit
+mitigations generally increase the size of the machine code. This can be a
+limiting factor more often than people realize.
+
+<li>Build and test infrastructure costs: Fuzzing, sanitizers, et c. are very
+expensive to develop, deploy, and use.</li>
+
+<li>zeroing https://twitter.com/marcoarment/status/1572291258386903040
+
+</ul>
+

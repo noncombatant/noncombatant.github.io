@@ -1,0 +1,518 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content="same-origin"><meta name=author content="Chris Palmer"><title>Pipsqueak: Simple Game Mechanics</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>"><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><link rel=stylesheet href=style.css><h1>Pipsqueak: Simple Game Mechanics</h1><p>Small and simple game mechanics for fast and fun tabletop roleplaying games.
+By <a href=https://noncombatant.org/>Chris Palmer</a>. Version 2022-09-27.<div id=toc></div><h2>Introduction</h2><p>Pipsqueak is a suite of rules and mechanics for tabletop roleplaying games
+that emphasizes ease of learning, speed of play, and adaptability to a wide
+range of roleplaying settings. It aims to help you play challenging, cinematic
+games with a minimum of time spent researching finer points and lawyering.<p>A key design principle of Pipsqueak is <i>continuity</i> over
+<i>discreteness</i>: that is, characters grow gradually instead of in sudden
+leaps of ability, as in systems with levels and feats. Small actions cause small
+effects, and actions of gradually increasing power have gradually increasing
+effects. There are no hard boundaries between character classes, as in other
+games: any character can grow in any direction their player chooses. Nothing
+stops a warrior from picking up a few tricks of the rogue’s trade, just as any
+farm-hand or scavenger can learn to quiet their mind and feel the Force
+flow.<p>Pipsqueak also aims to use a minimum of tools and gear. To play you need only
+some 6-sided dice, pencil and paper, and this book. (Miniature figurines and
+paper maps can also be a big help.) When running as a live web page, this book
+contains simple calculators to ease the flow of arithmetic during play. And, of
+course, emulated dice, should you need them.<h3>Acknowledgements</h3><p>Pipsqueak borrows heavily from and generalizes <i>Star Wars: The Roleplaying
+Game</i> by Greg Costikyan, et al., published by West End Games in 1987 (and <a href=https://en.wikipedia.org/wiki/D6_System>the D6 System</a> generally). As
+a kid I loved that game, and my friends and I played the hell out of it. Thank
+you, Greg and everyone!<p>Pipsqueak also borrows from Dungeons & Dragons 5e, by Mike Mearls, Jeremy
+Crawford, et al. Thank you!<p>Thanks to TODO for helping me develop and play-test Pipsqueak!<h3>Complications</h3><div class=complication><p><b>Complications</b> are additional, optional rules that you can adopt or
+ignore as you see fit. The GM decides which Complications are in use in the
+games they run, and tells the players. Complications are marked in this book
+with a light grey background and an orange border on the left, like this.</div><h3>Examples</h3><div class=example><p>We try to keep the rules of the game as simple as we can, but sometimes an
+example really helps. Examples are marked in this book with a light grey
+background and a green border on the left, like this.</div><h2>Attributes And Skills</h2><p>What a character can do in the game, and how well they perform at it, is
+determined by their <b>skill scores</b>. In turn, each <b>skill</b> is governed
+by 1 of the 6 fundamental <b>attributes</b>. Every character has some base score
+for each of the 6 attributes, which is the basis for their ability to use skills
+governed by those attributes.<p>When players have their characters attempt to achieve feats in the game,
+there is always an element of chance. Attributes and skills are rated with
+numeric scores that indicate the character’s ability to achieve their goals in
+different skill areas, by indicating how many dice the player is to roll and sum
+up. (Higher sums are better.) <a href=#TheCoreMechanics>The Core Mechanics</a>
+explains these scores and how to use them in gameplay.<h3>Attributes That Define A Character</h3><p>There are 6 attributes that define a character’s mental and physical
+aptitudes for various skills.<dl><dt>Agility<dd>represents a character’s physical flexibility,
+coordination, speed, and balance.<dt>Constitution<dd>represents not only a character’s raw muscle power in
+various parts of their body, but also resistance to pain, endurance, and overall
+health.<dt>Knowledge<dd>represents a character’s aptitude for learning the raw
+facts of things in the world: languages, art, history, cultures, nature, and
+more.<dt>Perception<dd>represents a character’s ability to perceive the world
+around them, their attentiveness to what they see, and their ability to
+understand and predict the behavior of other beings.<dt>Mechanical<dd>represents a character’s ability to understand the
+mechanical interactions and relationships between physical things such as
+machines, animals and people, construction and buildings, vehicles, and so
+on.<dt>Technical<dd>represents a character’s ability to understand the
+logical interactions and relationships between notional things such as
+mathematics, magical entities and powers, software, circuits, and so on.</dl><p>Each attribute governs various skills. For example, Acrobatics is governed by
+Agility, and Piloting is governed by Mechanical. A character with no special
+training in a given skill uses the dice score of the governing attribute as
+their skill score for any rolls using that skill.<div class=example><p>Bug, a very Technical being (4D) with Security skill score of 6D and
+Repulsorlift Craft Repair of 4D, has easily broken into and hotwired a
+landspeeder and gleefully hopped into the driver’s seat. However, Bug does not
+have very high Mechanical aptitude — just 2D — and has no additional skill in
+Piloting (Repulsorlift). “Do you know how to drive this thing?” Serai asked,
+skeptically.<p>“Learn by doing, I say!” cackled Bug, and turned on the ignition. Bug will
+roll 2D for Piloting (Repulsorlift).<p>“I have a bad feeling about this,” sighed Serai.</div><p>Characters that represent normal, everyday people in the game typically have
+dice scores of 2D on all their attributes, and 3D to 6D in whatever skills they
+specialize in. Heroes and villains are special, and typically have an average of
+3D on their attributes. Their skills may have very high scores.<h3>The Basic Skills</h3><p>For a rough guide to how difficult it is to achieve tasks with skills, see <a href=#BasicSkillDifficultyChart>the Basic Skill Difficulty Chart</a>. Where
+appropriate, some skills described below will have more specific difficulty
+charts.<p>Each skill description below includes a <b>skill time</b>, which is the
+amount of in-game time required to use the skill. Some skills have several
+times; the gamemaster will tell players which one applies based on the nature of
+the skill use and the game context.<p>Some skills have “reaction” as their skill time, which means that they happen
+instantaneously, and in reaction to some other skill use. Typically, these
+<b>reaction skills</b> are defensive skills like Dodge and Melee Parry.<h4>Agility</h4><p>Agility represents a character’s physical flexibility, coordination, speed,
+and balance.<h5>Acrobatics</h5><p>Spin, turn, twist, and balance.<p>Time: 1 action segment.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Acrobatics difficulty.</figcaption></figure><h5>Bow Weapon Attack</h5><p>Aim and fire an arrow or a bolt from a bow, crossbow, or similar weapon.<p>Time: 1 action segment.<p>Difficulty: See <a href=#BasicSkillDifficultyChart>the Basic Skill
+Difficulty Chart</a>.<h5>Dance</h5><p>Time: 1 action round to 1 hour.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Dance difficulty.</figcaption></figure><h5>Dodge</h5><p>Dodge ranged weapon attacks, thrown items, and so on.<p>Time: Reaction.<p>Difficulty: The roll increases the attacker’s difficulty.<h5>Firearms (Heavy)</h5><p>Aim and fire a heavy firearm, such as a machine gun or heavy blaster cannon
+mounted on a tripod.<p>Time: 1 action segment.<p>Difficulty: See <a href=#BasicSkillDifficultyChart>the Basic Skill
+Difficulty Chart</a>.<h5>Firearms (Light)</h5><p>Aim and fire a light firearm, such as a hand-held pistol, rifle, blaster, or
+the like.<p>Time: 1 action segment.<p>Difficulty: See <a href=#BasicSkillDifficultyChart>the Basic Skill
+Difficulty Chart</a>.<h5>Melee Attack</h5><p>Attack with hand-to-hand combat weapons such as swords, clubs, and
+pole-arms.<p>Time: 1 action segment.<h5>Melee Defense</h5><p>Parry with a hand-to-hand combat weapon against another such weapon or an
+unarmed attacker.<p>Time: Reaction.<p>Difficulty: The roll increases the attacker’s difficulty.<h5>Throw</h5><p>Throw any item: knife, grenade, rock, ball, et c. See <a href=#ThrownWeapons>Thrown Weapons</a> for information about the range of
+various thrown items.<p>Time: 1 action segment.<p>Difficulty: See <a href=#BasicSkillDifficultyChart>the Basic Skill
+Difficulty Chart</a>.<h5>Unarmed Attack</h5><p>Attack without a weapon, using hands, feet, limbs, grappling, claws, teeth,
+as appropriate for the being’s species.<p>Time: 1 action segment.<p>Difficulty: 5.<h5>Unarmed Defense</h5><p>Defend against an unarmed attack by blocking, avoiding, or grappling.<p>Time: Reaction.<p>Difficulty: The roll increases the attacker’s difficulty.<h4>Constitution</h4><p>Constitution represents not only a character’s raw muscle power in various
+parts of their body, but also resistance to pain, endurance, and overall
+health.<h5>Athletics (Air)</h5><p>Fly and maneuver in the air. (Applies only to species that can fly.)<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Athletics (Air) difficulty.</figcaption></figure><h5>Athletics (Land)</h5><p>Lift, run, climb, and jump. (Applies only to species that can move on land.)<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Athletics (Land) difficulty.</figcaption></figure><h5>Athletics (Water)</h5><p>Swim, float, and dive. (Applies only to species that can move in water.)<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Athletics (Water) difficulty.</figcaption></figure><h5>Endurance</h5><p>Avoid the effects of fatigue and pain during and after strenuous effort. See
+<a href=#Fatigue>Fatigue</a> for more information on the effects of
+fatigue.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Endurance difficulty.</figcaption></figure><h5>Unarmed Attack</h5><p>Attack without a weapon, using hands, feet, limbs, grappling, claws, teeth,
+as appropriate for the being’s species.<p>Time: 1 action segment.<p>Difficulty: 5.<h5>Unarmed Defense</h5><p>Defend against an unarmed attack by blocking, avoiding, or grappling.<p>Time: Reaction.<p>Difficulty: The roll increases the attacker’s difficulty.<h4>Knowledge</h4><p>Knowledge represents a character’s aptitude for learning the raw facts of
+things in the world: languages, art, history, cultures, nature, and more.<h5>Bureaucracy</h5><p>Navigate official systems of written and unwritten law, custom, and
+expectations.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Bureaucracy difficulty.</figcaption></figure><h5>Cultures</h5><p>Know the history, art, religion, practices, assumptions, and beliefs embedded
+in different cultures.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Cultures difficulty.</figcaption></figure><h5>Ecology</h5><p>Understand ecosystems, plants, and animals.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Ecology difficulty.</figcaption></figure><h5>Languages</h5><p>Speak, hear, write, and read all kinds of languages. Know the relationships
+between and histories of languages.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Languages difficulty.</figcaption></figure><h5>Streetwise</h5><p>Bureaucracy of the underworld.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Streetwise difficulty.</figcaption></figure><h5>Survival</h5><p>Eat, drink, make shelter, start a fire, et c. in wild settings, terrains, and
+climates.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Survival difficulty.</figcaption></figure><h5>Technology</h5><p>Know about the state of technology, machinery, crafts, and trades.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Technology difficulty.</figcaption></figure><h5>Species</h5><p>Know about the biology, native environment, and other properties of species
+other than the character’s own.<p>Time: 1 action round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Species difficulty.</figcaption></figure><h4>Perception</h4><p>Perception represents a character’s ability to perceive the world around
+them, their attentiveness to what they see, and their ability to understand
+and predict the behavior of other beings.<h5>Bargain</h5><p>Bargain, persuade, cajole. This is always an opposed roll (against the other
+characters’ Bargain).<p>Time: 1 action segment to a few minutes.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Bargain difficulty.</figcaption></figure><h5>Command</h5><p>Convince or order 1 or more other characters to do something. This may even
+be an opposed roll, depending on the relationship between the characters.<p>See also <a href=#CollaborativeRolls>Collaborative Rolls</a>.<p>Time: 1 action segment to a few minutes.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5<td>The heroes, working together<br>A simple task<tr><td>10<td>Stormtroopers with good morale<br>A common task<tr><td>15<td>Stormtroopers with poor morale<br>A complex task<tr><td>20<td>Strangers unclear on the goal or unused to cooperation<br>A difficult task<tr><td>30<td>Mortal enemies<br>A heroically difficult task</table><figcaption>Command difficulty.</figcaption></figure><h5>Lie</h5><p>Lie, cheat, trick. This may be an opposed roll, depending on the
+situation.<p>Time: 1 action segment to a few minutes.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Lie difficulty.</figcaption></figure><h5>Gambling</h5><p>Win ‘fair and square’ 😉, through skill, luck, and manipulating the
+rules.<p>Time: 1 action segment to a few minutes.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Gambling difficulty.</figcaption></figure><h5>Hide/Sneak</h5><p>Hide without being seen, move silently, and otherwise go unnoticed. May be
+opposed by Search.<p>Time: 1 action segment to a few minutes.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Hide/Sneak difficulty.</figcaption></figure><h5>Search</h5><p>Search for an item or character, search an area, or otherwise engage in an
+active hunt for something.<p>Time: 1 action segment to a few minutes to a few hours.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Search difficulty.</figcaption></figure><h4>Mechanical</h4><p>Mechanical represents a character’s ability to understand the mechanical
+interactions and relationships between physical things such as machines,
+animals and people, construction and buildings, vehicles, and so on.<h5>Beast Riding</h5><p>Convince an animal to carry you, and control its direction and speed.<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Beast Riding difficulty.</figcaption></figure><h5>Small Machinery</h5><p>Use hand tools, power tools, plumbing, electrical work, and other small
+machines.<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Small Machinery difficulty.</figcaption></figure><h5>Piloting</h5><p>Pilot a vehicle: starting, stopping, turning, reversing, taking evasive
+action, et c.<p>Use a separate instance of this skill for each type of vehicle propulsion,
+e.g. Piloting (Repulsorlift), Piloting (Jet), Piloting (Propeller), Piloting
+(Sail), Piloting (Internal Combustion), Piloting (Draft), et c.<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Piloting difficulty.</figcaption></figure>TODO: The rest of the Mechanical skills<h4>Technical</h4><p>Technical represents a character’s ability to understand the logical
+interactions and relationships between notional things such as mathematics,
+magical entities and powers, software, circuits, and so on.<h5>Computer Programming/Repair</h5><p>Program, repair, and break into computers and automation systems
+generally.<p>Time: 1 action segment to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Computer Programming/Repair difficulty.</figcaption></figure><h5>Demolition</h5><p>Use and plan the use of explosives.<p>Time: 1 minute (small job) to 1 or more days (large structures). Planting
+charges in less time increases the difficulty.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Demolition difficulty.</figcaption></figure><h5>Droid Programming/Repair</h5><p>Program and repair droids.<p>Time: 15 mintues to 1 or more days, depending on the scale of the task. Quick
+repairs may take as few as 15 minutes, while building or rebuilding a droid from
+parts may take a week.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Droid Programming/Repair difficulty.</figcaption></figure><h5>Medicine</h5><p>Knowledge of anatomy, pharmaceuticals, clinical and surgical techniques, and
+so on, and the ability apply this knowledge. This skill covers everything from
+first aid to heroic life-saving surgery.<p>In some game settings, it may make sense to use a separate instance of this
+skill for different life forms, species, or taxa, e.g. Medicine (Earth Mammal),
+Medicine (Pan-Human), Medicine (Idiran), et c.<p>Time: 1 action segment to 1 or more minutes (first aid); 1 or more hours
+(surgery); 1 or more days (major surgery and recuperation).<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Medicine difficulty.</figcaption></figure><h5>Repulsorlift Craft Repair</h5><p>Repair and rebuild repulsorlift vehicles for land, sea, and air, including
+improving their statistics.<p><p>Time: From 15 minutes to several days, depending on the complexity of the
+job.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Repulsorlift Craft Repair difficulty.</figcaption></figure><h5>Security</h5><p>Understanding of locks, alarms, surveillance, and monitoring systems. This
+includes the ability to build and break them.<p>Time: 1 round to 1 day.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Security difficulty.</figcaption></figure><h5>Starship Repair</h5><p>Repair and rebuild starships, including improving their statistics.<p>Time: From 15 minutes to several days, depending on the complexity of the
+job.<figure><table><tr><th>Difficulty<th>Examples<tr><td>5 (Very Easy)<td>TODO<tr><td>10 (Easy)<td>TODO<tr><td>15 (Moderate)<td>TODO<tr><td>20 (Difficult)<td>TODO<tr><td>30 (Heroic)<td>TODO</table><figcaption>Starship Repair difficulty.</figcaption></figure><h2>The Core Mechanics</h2><p>Much of a roleplaying game involves players declaring that they want their
+characters to perform various actions, like piloting a starfighter, duelling
+with pirates, or doing an emergency field repair on a crashed airspeeder.
+Different characters have different aptitudes and abilities, and hence different
+likelihoods of success at different tasks.<p>For each action they can perform, each character has a <b>dice score</b> or
+<b>skill score</b>, expressed as a number of dice the player should roll. For
+example, 3D means to roll 3 6-sided dice and sum the total, and 8D means to roll
+8 6-sided dice and sum the total. (Pipsqueak uses 6-sided dice exclusively.)
+Higher totals indicate a greater likelihood of success.<p>Each roll is compared to a <b>difficulty rating</b>, with higher ratings
+indicating more difficult actions. The action succeeds if the roll total is
+equal to or greater than the difficulty rating.<h3>Dice And Pips</h3><p>The dice score may also have an additional modifier, such as −1, −2, +1, or
++2. (But not lower than −2 or higher than +2, for reasons discussed below.) For
+example, 4D−1 means to roll 4 dice, sum the total, and then subtract one. 5D+2
+means to roll 5 dice, sum the total, and then add 2.<p>The dots on dice are called <b>pips</b>, so we sometimes pronounce “6D+2” as
+“roll 6 dice and add 2 pips”. Just as we abbreviate “3 dice” with “3D”, “1p”
+means “1 pip”.<h4>Die And Pip Arithmetic</h4><p>Sometimes we add or subtract dice scores together when calculating a
+character’s effective ability to perform an action. For example, wearing
+Stormtrooper armor increases a character’s Constitution (only for the purpose of
+resisting damage) by +1D, while at the same time reducing all of the character’s
+Agility skill rolls by −1D. (See <a href=#AttributesAndSkills>Attributes And
+Skills</a> and <a href=#WeightAndEncumbrance>Weight And Encumbrance</a>.)<p>When the dice scores are simple, without any pip modifiers, the arithmetic is
+simple. For example, most Stormtroopers have a Firearms (Light) skill code of
+4D, and they subtract 1D from that when wearing armor to get an effective score
+of 4D − 1D = 3D. Similarly, their Constitution is usually 2D, and their
+effective ability to resist the Rebels’ blaster fire is thus 2D + 1D = 3D.<p>It’s still pretty easy when 1 of the scores has a pip modifier. For example,
+a swashbuckling pirate with 5D+2 in <a href=#MeleeAttack>Melee Attack</a>
+would have an effective score of 5D+2 − 1D = 4D+2 if they wore Stormtrooper
+armor.<p>But what if more than 1 of the scores involves pips? For example, Gimli the
+dwarf has Constitution 3D+2, and he wields a great axe in combat. The great axe
+does Constitution + 1D+2 damage when Gimli hits his foe. To calculate Gimli’s
+effective damage, we add the dice and then we add the pips: 3D+2 + 1D+2 = 4D+4.
+However, as we saw above, no pip modifier is ever greater than +2 or less than
+−2 —  a third pip is equivalent to an additional die. To resolve this, subtract 3
+pips and ‘carry the 1’ over to the number before the D: 4D+4 → 5D+1.<p class=example>Math nerds might recognize this as base-3 arithmetic. Why 3?
+Because we’re using 6-sided dice: on average, we should expect to roll about 3.5
+on a 6-sided die. (For more detail on dice probabilities, see e.g. <a href=https://wizardofodds.com/gambling/dice/2/>The Wizard Of Odds</a>.) So
+once you get that 3rd pip, you’ve come pretty close, on average, to receiving
+the benefit (or penalty, if the modifier is negative) of a whole new die.<p>A dice score can never go below 1D in any case. Every character can always
+roll at least 1D to perform an action — and since <a href=#TheWildDie>that die
+is wild</a>, they may even succeed against all odds!<h3>Difficulty Rolls</h3><p>Some actions require the player to roll equal to or greater than a given
+number to succeed in their goal. The more difficult the task, the higher the
+number. The gamemaster will decide how difficult the task is and what its
+difficulty score will be. For some guidelines and examples, see <a href=#BasicSkillDifficultyChart>the Basic Skill Difficulty Chart</a>.<h3>Opposed Rolls</h3><p>Sometimes a character actively opposes the actions of another character. In
+these cases, a single set difficulty rating does not suffice. As a simple
+example, consider 2 characters arm-wrestling. There is no single difficulty;
+it’s a contest of strength against strength. In a situation like this, each
+character would roll their Constitution score, and the high roller would win. In
+case of a tie, the characters would roll again.<p>In other cases, there may be a set difficulty, but a character may perform
+some action to try to make the difficulty higher for their adversary.<div class=example><p>The bounty hunter Jane has a Dodge skill score of 5D. She’s at medium range
+from the Stormtroopers blasting at her, so the Stormtroopers have difficulty 15.
+With 5D, there’s a good probability that Jane can roll higher than 15. She rolls
+and gets a 20, so now the Stormtroopers need to roll 20. If Jane had rolled
+lower, she would actually <i>decrease</i> the difficulty for the Stormtroopers —  unfortunately, it’s possible to stumble into fire!</div><div class=complication><h3>The Wild Die</h3><p>Sometimes a character will have a dice score for an action that is too low to
+ever roll high enough to meet a given difficulty rating. For example, the
+gamemaster might declare that to jump across a chasm requires a roll of 20 with
+the Athletics (Land) skill, but your character only has a score of 3D —  it is
+impossible to roll more than 18 with 3D.<p>However, to account for the mysteries of the universe, incredible luck, and
+plucky heroism, it is always just barely possible, however unlikely, to succeed.
+We model this with the <b>wild die</b>: identify 1 of your dice as the wild die,
+and if you roll a 6 on it, you get to roll it again and add that number to your
+total. If that roll is also a 6, roll again and add it again! And so on.<div class=example><p>Kate is playing a character named Serai, a noblewoman and Rebel spy. For
+Serai to leap across the chasm, Kate needs to roll 20, but Serai’s Athletics
+(Land) score is only 3D. But the Stormtroopers are right behind her, so it’s
+certain death either way! Serai runs and desperately leaps. Kate rolls 4, 2, and
+then 6 on her wild die, for a total of 12. Rolling the wild die again, Kate
+rolls a 6 again! Rolling the wild die yet again, Kate rolls a 3. Her total is 4
++ 2 + 6 + 6 + 3 = 21. Serai just barely lands on the other side, her foot almost
+slipping off the edge of the ground. She takes a deep breath and then keeps
+running!</div><p>To reliably identify your wild die, consider using a dedicated die that looks
+different from your other dice.<p>The wild die applies only to skill rolls, not other rolls (such as damage
+rolls).<h4>When Things Go South...</h4><p>When you roll a 1 on <i>all</i> your dice, that represents a <b>critical
+failure</b>: not only does your character fail at their task, some effect
+counter to their goal happens. That might be just when your character’s weapon
+runs out of ammunition, their sonic screwdriver breaks, they open their pouch of
+spell components and find it empty, or they suffer a moment of total confusion
+at the sheer complexity when trying to slice into the computer network at
+Scarif.<p>Critical failures happen even if the total roll is equal to or greater than
+the task’s difficulty. It is always possible, however unlikely, that Darth Vader
+will trip on a rock and drop his lightsaber.</div><h3>Preparing Rolls</h3><p>Characters can spend 1 action round to <b>prepare</b> their next action:
+concentrating on a problem, drawing a bead on a target, or otherwise preparing
+to do better than usual. If they manage to prepare for the entire action round
+without being disrupted in any way and without performing any other actions or
+reactions, the player adds 1D to the skill roll in the next action round for the
+action the character prepared.<p>It is not possible to get more than 1D of advantage through preparation, no
+matter how many action rounds the character prepares.<p>What counts as a disruption is up to the gamemaster’s discretion, but
+certainly includes the character being successfully attacked and the character
+taking any reactive action skill rolls (such as Dodge). In noisy or hectic
+circumstances, the gamemaster might require the character to make a Perception
+roll to maintain concentration. (This would not count as a reactive action for
+the purposes of disruption, of course.)<div class=example><p>Jessica, a brash pilot with a Piloting (Repulsorlift) score of 7D, is going
+to try to lose the Imperial Police by flying her swoop bike at full throttle
+through the narrow alleys of Coruscant. One wrong move, and <i>splat!</i> The
+gamemaster sets the difficulty of the roll at 25. Jessica circles around the
+University Arcology and lets her bike just coast, hoping against hope that the
+police miss her if they fire. Their blaster bolts whiz past, but the Force is
+with her today! She zeroes in on an alley entrance, takes a deep breath, and
+slams down the pedal. She rolls 8D.</div><div class=complication><h3>Called Shots</h3><p>A character who is particularly skilled (or lucky) can make a <b>called
+shot</b>: they can specify what particular part of their target they want to
+hit. To attempt this, the player must announce the intent ahead of time. To
+succeed, they must roll equal to or greater than <i>twice</i> the difficulty
+rating for the action.<p>A called shot that misses does not ‘degrade’ to a regular hit or skill
+success; it is a miss or failure.<div class=example><p>A Stormtrooper in the distance has foolishly taken off his helmet, and Jane
+the bounty hunter would like to shoot him in the head — negating the usual
+Stormtrooper armor advantage of 1D. Jane’s Firearms (Light) skill score is 6D,
+and she has also spent the previous action round <a href=#PreparingRolls>preparing a shot</a> against this Stormtrooper. She thus
+has an effective skill score of 7D for this action. At medium range, the base
+difficulty is 15. Jane must roll 15 × 2 = 30 or better for the called shot to
+succeed!</div><p>Called shots are not limited to combat — they need not be <i>shots</i>, per
+se. There is a wide variety of skill uses for which called shots are useful,
+including Gambling (“I will draw the ace of spades from the top of the deck!”),
+Languages or Streetwise (“I will use obscure slang specific to this sub-culture
+to convince them I’m legit”), Piloting, and more.<p>Of course, a successful called shot is also by definition a <a href=#SmashingSuccess>smashing success</a>.<h3>Smashing Success</h3><p>If a player rolls equal to or greater than twice the difficulty rating for
+any skill roll (not just a called shot), they achieve <b>smashing success</b>:
+they not only achieve their goal, but an additional goal as well. For example, a
+smashing success at Astrogation might result in a route that takes half the
+usual time.<p>However, because the player does not take the risk of failure that comes with
+calling a shot, they do not get to specify the additional degree or type of
+success. That is up to the gamemaster.<p>In combat, the effect of a smashing success is often to increase the damage
+code for the hit. For example, a smashing success with a blaster pistol (damage
+code 4D) might do 5D of effective damage to its target.</div><h3>Collaborative Rolls</h3><p>Sometimes, a group of characters combine their efforts to achieve a task. For
+example, perhaps several characters work together to lift a heavy steel beam. To
+collaborate like this, you only roll once, but you combine the skill scores of
+the characters. Use the skill score of the character with the highest-rated
+skill as a base, and then add the number of dice of each of the other
+characters’ skill scores <i>as pips</i>. Then, <a href=#DieAndPipArithmetic>reduce the base score and the added pips to a dice
+score as usual</a>.<div class=example><p>The characters need to lift a very heavy steel beam out of the way, and the
+gamemaster has set the difficulty at 25 for a skill roll of Athletics (Land).
+Jane has the highest skill score, 4D+2. Bug has 2D+2, Serai has 2D+1, and Pel
+has 3D. Bug’s effort thus adds 2 pips, Serai’s adds 2, and Pel’s adds 3, for a
+total of 7p. 4D+2 + 7 = 4D+9, which reduces to 7D, so that’s what they roll.
+Their odds are decent!</div><p>However, collaboration requires effective leadership. One character must lead
+the others in the task, by rolling Command. (This character is not necessarily
+the one with the highest skill in the task.) The difficulty of the Command roll
+depends on how willing the characters are to collaborate in the first place. For
+details, see <a href=#Command>the Command skill</a>.<p>It is also possible to collaborate this way with combat skills. Each
+successful collaborative roll counts as a single success. In combat terms that
+means a single hit and a single damage roll.<div class=example><p>The 4 Stormtroopers decide to concentrate their fire on Serai, who has just
+stolen a copy of the Imperial personnel database and is running away as fast as
+she can. Each Stormtrooper’s effective Firearms (Light) skill is 4D − 1D armor
+disadvantage = 3D. That’s 3D as a base score for the first trooper, then an
+additional 3p for each of the remaining 3: 3D+9. 3D+9 reduces to 6D, so that’s
+what they roll. If they succeed, it counts as a single hit —  but the damage roll
+is calculated the same way. All the Stormtroopers carry blaster rifles (5D
+damage), so the damage is 5D + 5p for each of the other three. That’s 5D + 15 =
+10D. Serai may want to try to Dodge!</div><p>It is also possible for collaborative rolls to achieve <a href=#SmashingSuccess>smashing success</a> and (with sufficient training,
+discipline, and leadership) to be <a href=#CalledShots>called shots</a>.<p>If you use <a href=#TheWildDie>the Wild Die complication</a>, 1 of the dice
+is a wild die as usual.<h3>Hero Points</h3><p>Heroes, and major villains, typically have 1 or more <b>Hero Points</b> which
+they can spend to double all their base attribute and skill scores (i.e., their
+attribute and skill scores <i>before</i> adding any other advantages or
+subtracting any disadvantages) for 1 <a href=#Action>action round</a>.<p>Spending a Hero Point spends it permanently. However, if the character spends
+it in furtherance of the story, the gamemaster is likely to award the character
+a new Hero Point at the end of the gaming session. If the character spends the
+point selfishly, just to save their own bacon or otherwise solely for their own
+gain, they might not get a new point.<p>A character can only spend 1 Hero Point per action round.<p>With or without using a Hero Point, if a character acts particularly
+selflessly (for example to save other characters’ lives), the gamemaster may
+award that character new Hero Points at the end of the gaming session. All Hero
+Point awards are at the gamemaster’s discretion.<h3>Villain Points</h3><p>Villains, and heroes, may have 1 or more <b>Villain Points</b>. Villain
+Points can confer evil power; for example, it may be necessary to have some
+Villain Points to use certain evil magic —  or using evil magic might ‘earn’ the
+character a Villain Point. The specifics of this depend on the particular game
+setting. (See <a href=#Magic>Magic</a> for more.)<p>Unlike Hero Points, players don’t spend Villain Points. Instead, Villain
+Points represent the state of the character’s soul —  and their future as a
+player-character.<p>Every time a character gets a Villain Point, their player must roll 1 die. If
+the roll is <i>less than</i> the character’s Villain Point total, the character
+becomes a villain. (Note that it is therefore impossible for a character with
+only 1 Villain Point to become a villain.) Player-characters cannot be villains,
+so the player loses the ability to play this character. Players should therefore
+be very careful about doing evil, and gamemasters should be very careful about
+assigning Villain Points.<p>A hero can <b>atone</b> for their villainous deeds, and reduce their Villain
+Point score, by acting solely in the service of others for 1 or more gaming
+sessions (as the gamemaster sees fit).<h2>Action</h2><p>Action (movement, combat, hijinks) takes place in <b>rounds</b> of about 5
+seconds of game-world time. Each round is broken up into 1 or more <a href=#ActionSegments>action segments</a>, during which the results of
+characters’ actions are resolved.<h3>The Order Of Actions</h3><p>First, each player decides what they want their character to do in the
+current round. The gamemaster decides what the NPCs will do.<p>Then, going around the table, each player and the gamemaster announce what
+their characters will do. At this point, take note of which characters’ actions
+may affect each other. (See more details below.)<h4>Action Segments</h4><p>As each player and the gamemaster announce what their characters will do,
+they may announce that their character will (try to) perform more than 1 action.
+Each distinct action happens in its own <b>action segment</b>, during which each
+character attempts 1 action. The order in which actions in each segment occur is
+determined by <a href=#Initiative>initiative</a>.<p>After each character’s action has been resolved, the action round then
+progresses to the next segment, during which players who had declared additional
+actions for their characters resolve those actions. The round contains as many
+segments as are necessary to resolve all announced character actions. Depending
+on what the players try to have their characters do, a given action round might
+contain 1 segment, or 5, or more.<h4>Initiative</h4><p>If 2 or more characters declare actions in the same segment that would
+interfere, such as if the hero and villain both intend to attack each other,
+roll both actions as normal. The action with the higher roll occurs first. If
+the action succeeds and would cause the opposing action to fail, the opposing
+action does not occur.<h4>An Example Combat Round</h4><p>The PCs Bug (a slicer), Sass (a student of the Force), and Jane (a bounty
+hunter) are inside the Star Destroyer <i>Unforgiving</i>, having stolen a
+top-secret Imperial intelligence personnel database, and are trying to escape
+back out into the hangar bay. A squad of 4 Stormtroopers and their captain are
+hot on the trail. The captain has remotely locked the blast door to the hangar
+bay.<p><b>Gamemaster:</b> You run up to the blast door, but it doesn’t open —  the
+light on the lock panel is blinking red. The captain yells, “Eliminate the
+bounty hunter first, and then we’ll deal with the rest of them!” What do you
+do?<p><b>Player 1 (Sass):</b> Sass will use the Force power Affect Mind to confuse
+the captain and make them fail to command their soldiers.<p><b>Player 2 (Bug):</b> Bug will try to crack the lock on the door!<p><b>Player 3 (Jane):</b> Jane will shoot her blaster twice at the captain and
+once at one of the other Stormtroopers.<p>This round will have 3 segments, because Jane wants to try 3 actions. This is
+shown below. In each segment, the initiative order of the actions is sorted by
+the characters’ rolls, highest to lowest. TODO make this chart correct, e.g.
+reduce captain’s Perception roll since reaction and they’ve already done
+stuff<figure><table><tr><th>Segment<th>Character<th>Action<th>Skill Use<th>Difficulty<th>Roll<tr><td rowspan=5>1<td>Bug<td>Unlock door<td>Security<td>25<td>6D → 22<tr><td>Stormtrooper Captain<td>Coordinate Stormtroopers’ fire<td>Command<td>10<td>5D → 20<tr><td>Jane<td>Shoot the captain<td>Firearms (Light)<td>10 (short range) + Captain’s 4D (−1D since 1 skill use) Dodge roll =
+19<td>7D (−2D since 3 skill uses declared) → 19<tr><td>4 Stormtroopers<td>Shoot Jane (since Command succeeded)<td>Firearms (Light)<td>10 (short range) (plus any Dodge)<td>4D (−1D due to armor) + 3p + 3p + 3p = 6D → 18<br>Jane rolls Dodge to avoid being hit: 5D (−3D since 4 skill uses now declared) →
+10<tr><td>Sass<td>Confuse squad leader with Affect Mind<td>Control + Sense + Alter<td>Control: 5 to affect perceptions + 2 for proximity = 7<br>Sense: Stormtrooper’s 2D Perception roll + 20 for relationship = 25<br>Alter: 5 for slight, momentary misperceptions<td>Control: 5D (−2D since 3 skills used) → 10<br>Sense 5D (−2D) → 12<br>Alter 5D (−2D) → 10<tr><td>2<td>Jane<td>Shoot the captain<td>Firearms (Light)<td>10 (short range)<td>6D (−3D) → 9<tr><td>3<td>Jane<td>Shoot a Stormtrooper<td>Firearms (Light)<td>10 (short range)<td>6D (−3D) → 11</table><figcaption>Example of a turn.</figcaption></figure><p>Here is how the players and gamemaster might narrate this action round, given
+the rolls above.<p><b>Player 2 (Bug):</b> As I run toward the blast door, I see the lock’s red
+light and pull my hard line out of my pocket. I jack 1 end into my skull port,
+and the other into the lock’s maintenance port when I get there.<p><b>Gamemaster:</b> You get really close to unlocking it, but it’s going to
+take at least another round to finish! Meanwhile, the Stormtroopers hear their
+captain and take aim.<p><b>Player 3 (Jane):</b> I reward the captain with a blaster shot — <p><b>Gamemaster:</b> He Dodges! It’s a 9, so you need 19 — <p><p><b>Player 3 (Jane):</b> So I just barely hit! My heavy blaster does 5D; I got
+16.<p><b>Gamemaster:</b> The captain has 2D Constitution and no armor, and rolls 8,
+so he starts to hit the deck. The Stormtroopers concentrate their fire on you in
+return!<p><b>Player 3 (Jane):</b> I Dodge!<p><b>Gamemaster:</b> The barrage of blaster bolts misses —  but only barely!<p><b>Player 1 (Sass):</b> I wanted to dazzle the squad leader with flashing
+lights, but I just couldn’t get in this stranger’s head. Dang!<p><b>Gamemaster:</b> Mastering the use of the Force on people you don’t know is
+very difficult indeed. Jane, your 2nd shot at the captain just leaves a scorch
+mark on the deck, but your 3rd shot leaves a scorch mark on the 4th
+Stormtrooper’s chest plate!<h3>Movement</h3><p>The Athletics skills (Land, Air, and Water) represent a character’s skill and
+speed at movement. For the purposes of initiative —  flying out of range before
+an adversary can shoot, running a race, and so on —  roll the appropriate
+Athletics skill.<p>The Athletics skills also represent how far a character can move in 1 action
+round. If we assume that the average Earth human can sustain a walking speed of
+about 4 miles (6,436 meters) per hour, and if we model the average Earth human
+to have a Constitution score of 2D and no additional skill in Athletics (Land),
+we find that they can walk about 9 meters per 5-second round: 6,436 meters ÷ 60
+minutes ÷ 12 5-second rounds per minute = 8.9 meters per round.<p>From there, we can extrapolate that 1D of Athletics (Land) skill represents a
+walking speed of about 4.5 m/round. So a character with 3D in Athletics (Land)
+could walk 13.5 m/round, a character with 4D could walk 18 m/round, and so
+on.<p>For normal running, double the walking speed. For desperate running or
+racing, triple it.<p>In difficult terrain, including uphill, a character’s effective speed is
+reduced by a factor of 2 or more (at the gamemaster’s discretion).<p>If a character runs for longer than a few minutes, or walks for more than a
+few hours, they will need to succeed at successively more difficult <a href=#Endurance>Endurance</a> skill rolls for suffer <a href=#Fatigue>Fatigue</a>.<p>TODO: Water and Air.<h3>Ranged Combat</h3><p>TODO<h4>Range</h4><p>TODO<figure><table><tr><th>Range<th>Difficulty<tr><td>Point-blank<td>5<tr><td>Short<td>10<tr><td>Medium<td>15<tr><td>Long<td>20</table><figcaption>Ranged combat difficulty.</figcaption></figure><h4>Cover, Terrain, And Size</h4><p>TODO<figure><table><tr><th>Target Disposition<th>Difficulty Modifier<tr><td>Target prone<td>+5<tr><td>Target protected<td>+5<tr><th colspan=2>Target Cover<tr><td>Target has light cover<td>+1<tr><td>Target has medium cover<td>+2<tr><td>Target has heavy cover<td>+5<tr><td>Target in doorway<td>+2<tr><td>Target in window<td>+4<tr><td>Target in slit<td>+6<tr><th colspan=2>Target Size<tr><td>Target &lt; 1 cm<td>+20<tr><td>Target 1 –  10 cm<td>+10<tr><td>Target 11 –  100 cm<td>+5<tr><td>Target 101 cm –  1 m<td>+2<tr><td>Target 1 –  3 m<td> — <tr><td>Target 3 –  10 m<td>−5<tr><td>Target 10 –  100 m<td>−10<tr><td>Target > 100 m<td>−20</table><figcaption>Ranged combat target cover difficulty modifiers.</figcaption></figure><h3>Melee And Unarmed Combat</h3><p>TODO. Roll Attack, each weapon has an inherent difficulty level to hit.
+Defender can Parry to increase the difficulty.<div class=complication><h4>Reach</h4><p>TODO: Consider simplifying this to either 0 or −1. Also consider applying it
+to Melee Attack.<p>In melee combat, a weapon’s <b>reach</b> is as critical a concern as range is
+in ranged combat. When you have a dagger, it’s more difficult to parry an
+attacker’s long sword —  the sword can reach farther than the dagger, and can
+keep the dagger at bay.<p>When rolling Melee Parry, calculate the defender’s reach (dis)advantage as
+follows:<div class=equation>Melee Parry (dis)advantage = defender’s reach − attacker’s
+reach</div><div class=example><p>Captain Alio’s vibrosword has reach 3p, and she is bearing down on an
+Imperial Stormtrooper who is trying to parry with a vibrodagger (reach 1p). This
+results in a significant disadvantage for the poor Stormtrooper: 1p − 3p = −2p.
+Similarly, when parrying the Stormtrooper’s stabs, Alio’s advantage is 3p − 1p =
+2p.</div><p>For weapons with 1.3m (4p) reach or more, the defender’s effective reach
+becomes 0 if the attacker can get inside that distance.<div class=example><p>Leonidas has valiantly fought off the first wave of Immortals with his long
+pike (a pole-arm with reach 2m, 6p). However, one of them managed to parry the
+attack despite the great disadvantage —  the Immortals earned their name! — and
+has closed in on Leonidas’ space. To avoid being at a disadvantage against the
+Immortal’s scimitar (a short sword with reach 2p), Leonidas grimaces, drops the
+pike, and draws his xiphos (also a short sword).</div></div><h3>Surprise And Initiative</h3><p>TODO.<h3>Performing Multiple Actions Per Round</h3><p>TODO.<h4>Wielding Multiple Weapons</h4><p>TODO<h2>Wounds And Healing</h2><p>TODO. Something about reducing Constitution by 1D per wound level<h3>Fatigue</h3><p>TODO. Also reduces Constitution by 1D per fatigue level —  fatigue is
+effectively a ‘wound’. Difference is recovery<h3>Types Of Damage</h3><p>TODO: Explain why damage type matters: some armor, creatures, vehicles, et c.
+might be more or less susceptible to a given type.<p>TODO: use the D&D 5e categories: Slashing Piercing Bludgeoning Poison
+Acid Fire Cold Radiant Necrotic Lightning Psychic<h2>Equipment</h2><p>TODO<h3>Weight And Encumbrance</h3><p>TODO. Measured in kg (weight) and pips (encumbrance). # of pips proportional
+to an Endurance roll you have to make to not get fatigued. Encumbrance also
+reduces effective Agility. (TODO: Fold armor into this concept.) Normally, 5 kg
+= 1 pip encumbrance; some items have encumbrance beyond their weight (e.g.
+armor, especially long or voluminous objects, et c.).<h3>The Basic Equipment</h3><p>TODO<p>See <a href=#BasicEquipmentChart>the Basic Equipment Chart</a> for
+details.<h3>Melee Weapons</h3><p>TODO<h4>Weapon Properties</h4><p>Different weapons have different properties that affect how (and whether)
+characters can use them.<dl><dt>2-handed<dd>2-handed weapons require 2 hands to wield effectively. For
+species with no additional arms, this precludes wielding any additional weapons.<p class=example>Gimli strolled out onto the field with a mug of beer in one
+hand, and his great axe in the other. He stared at the line of orcs, who jeered
+as he chugged. Suddenly, they charged at him! With a sigh, he dropped the mug
+and gripped the axe in both hands, ready to swing. Such a shame to have to waste
+good brew like that.<dt>Finesse<dd>Finesse weapons are easy enough to manipulate that a
+skilled warrior can choose to use either Constitution or Agility as the basis
+for the weapon’s Damage score. To take advantage of finesse, the character’s
+Melee Attack score (or Throw score, when throwing throwable finesse weapons)
+must be greater than the damage rating would be if based on the character’s
+Agility.<p class=example>Dread Pirate Roberts has Constitution 3D, Agility 3D+2, and
+Melee Attack 4D. Normally, his rapier has a damage rating of 3D (Constitution) +
+1D = 4D. To wield his rapier with finesse —  thus dealing 3D+2 (Agility) + 1D =
+4D+2 damage — he’ll need to achieve greater than 4D+2 in Melee Attack skill:
+that is, 5D or better.<dt>Heavy<dd>Heavy weapons require high strength to wield effectively, and
+cannot be used together with other melee weapons (as in a dual-wield attack).
+When wielding these weapons, attackers suffer a disadvantage on their Melee
+Attack rolls equal to their Constitution dice score (not counting any remaining
+pips) − 5.<p class=example>Conan The Barbarian has Constitution 4D, so is at a 4 − 5 =
+−1p disadvantage when he swings his great sword. Conan’s friend Bob The
+Barbarian has Constitution 3D+1. If he borrows Conan’s sword, he swings at a 3 −
+5 = −2p disadvantage.<dt>Light<dd>Light weapons pose no additional disadvantage when the
+warrior is dual-wielding.<p class=example>Baerd and his rapiers were a blur as he ran, parrying and
+lungeing through a rank of Dragonclaws. It was as if there were 2 fearsome drow,
+not 1.<dt>Throwable<dd>Throwable weapons can be thrown. The thrower’s
+Constitution and the weapon’s weight determine the effective range.<p class=example>Annie Chapman crouched in the shadows behind a broken down
+ox-cart. Slowly, quietly, she drew from her boot the dagger Elizabeth had given
+her. Just when the top hat turned the corner, she whipped the blade 3 meters
+down the alley. There was a gasp, and then the Ripper’s body slumped to the
+ground.<dt>Versatile<dd>Versatile weapons can be wielded with 1 or 2 hands. When
+used with 2 hands, the weapon’s damage score increases by 1p.<p class=example>Seeing the Taira horseman begin his charge, Tomoe raised her
+long sword in both hands. Thundering hooves, ringing steel, a scream — then
+silence. Tomoe lowered the weapon and let out a slow breath.</dl><p>For weapon details, see <a href=#BasicMeleeWeaponsChart>the Basic Melee
+Weapons Chart</a> and <a href=#BasicRangedWeaponsChart>the Basic Ranged
+Weapons Chart</a>.<h3>Ranged Weapons</h3><p>TODO<h4>Thrown Weapons</h4><p>Weapons that have the throwable property (see below) have an effective range
+determined by the thrower’s Constitution dice score (not counting any remaining
+pips) and the weight of the weapon itself.<div class=equation>range unit in meters = Constitution dice ÷ weapon kg<br>short range: &lt; 1 unit<br>medium range: &lt; 2 units<br>long range: &lt; 3 units</div><div class=example><p>Misha’s Constitution is 3D+1, and she wants to throw a dagger (0.6 kg). 3 ÷
+0.6 = 5 meters. For her, short range is less than 5m, medium range is less than
+10m, and long range is less than 15m. Beyond that, the dagger falls to the
+ground.</div><p>You can use <a href=#ThrownRangeTool>the Thrown Range Tool</a> to calculate
+thrown item ranges.<h3>Armor</h3><p>Armor is quite handy when the villains are blasting at you! Armor increases a
+character’s effective Constitution score <i>only for the purposes of calculating
+damage</i> by some amount of dice and/or pips. For some types of armor, the
+advantage may vary by <a href=#TypesOfDamage>the type of damage
+inflicted</a>.<p>At the same time, armor is typically bulky and heavy, especially the more
+effective it is. Therefore, armor also typically decreases a character’s
+effective Agility score <i>for all rolls</i>, and the additional weight and
+encumbrance might result in the character needing to make Endurance checks. (See
+<a href=#WeightAndEncumbrance>Weight And Encumbrance</a>.)<p>Here are some examples of armor types. Note that if particular damage types
+are not listed for the Constitution advantage, then the advantage applies to all
+damage types.<p>TODO: Double-check all the damage types, weights, and encumbrances in this
+table<p>For armor details, see <a href=#BasicArmorChart>the Basic Armor
+Chart</a>.<p>TODO: Consider some kind of scheme where partial armor incurs a random chance
+of not being effective, instead of assigning different Constitution advantages.
+TODO: Consider Perception disadvantage for helmets (or advantage in case of
+sensors)?<h3>Money</h3><p>Specific to the game setting. TODO<h2>Characters</h2><p>This chapter covers everything you need to know about creating and developing
+your own characters (both PCs and, for gamemasters, NPCs).<h3>Building Characters</h3><p>Although the gamemaster may provide templates or pre-created characters for
+players to play, you can also build a new character completely from scratch.
+This section describes how.<h4>Character Type</h4><p>First, decide what kind of character you want to play. A rakish gambler? A
+princess with a will of iron? A rogue who creates their own justice? Before
+doing anything else, sketch out your character’s personal history, goals and
+motivations, fears, and so on. Consider writing out a quote or some lines of
+dialogue involving your character to get a feel for how they would act.<p>Consider how other characters might perceive your character. Does your
+character see themselves as a hero while others see them as a fool, like Don
+Quixote? (Or vice versa?) Do people underestimate your character, like R2-D2
+or the hobbits of the Shire?<h4>Attributes</h4><p>Each hero or villain character starts with 18D worth of attribute dice to
+distribute across the 6 attributes as the player (for PCs) or gamemaster (for
+NPCs) sees fit. You could divide them evenly, yielding 3D on each attribute,
+or put 2D on some and 4D on others. You could even go as low as 1D or as high
+as 5D (see <a href=#Species>Species</a> for when this is allowed).<p>It is also possible to break a die up into 3 pips, and distribute the pips
+across attributes.<div class=example><p>Chris is creating a martial artist named Grunff. He starts by putting 3D on
+each of the 6 attributes, and then makes adjustments. The defining features of a
+martial artist are Agility and Constitution, so Chris moves 1D from Technical to
+Agility, yielding 2D Technical and 4D Agility. To increase Grunff’s
+Constitution, Chris breaks up 1 of the 3D Grunff has on Mechanical into 3 pips.
+He puts 2 pips on Constitution and leaves the last on Mechanical. Grunff’s
+attribute scores are now: Agility 4D, Constitution 3D+2, Knowledge 3D,
+Perception 3D, Mechanical 2D+1, and Technical 2D.</div><p>Think carefully about your character’s attribute scores before making them
+final. They will affect everything your character does.<h4>Skills</h4><p>Next, the gamemaster will give you a certain number of <b>skill points</b>
+that you can spend increasing your character’s skills above the baseline
+attribute scores. Exactly how many skill points you get is at the gamemaster’s
+discretion, but a reasonable starting number would be 40. For higher-level
+campaigns where the characters need to start out more powerful, the gamemaster
+may allot more.<p>You spend skill points to increase your character’s skill scores by pips and
+dice. How many skill points a pip costs is relative to how high the skill score
+already is: 1 pip costs as many skill points as the skill score currently has
+dice.<div class=example><p>Grunff’s Melee Attack skill starts at 4D, since his Agility is 4D. To
+increase it by 1 pip to 4D+1, Chris would need to spend 4 skill points.
+Increasing it to 4D+2 would cost another 4, and then increasing it from 4D+2 to
+5 would cost another 4. At this point, pips get more expensive: it would cost 5
+more skill points, not 4, to increase the skill to 5D+1.</div><p>Thus, the better a character is at a skill, the harder it is to improve. Here
+is a table that illustrates the pattern:<figure><table><tr><th>From<th>To<th>Cost in skill points<tr><td>1D<td>1D+1<td>1<tr><td>1D+1<td>1D+2<td>1<tr><td>1D+2<td>2D<td>1<tr><td>2D<td>2D+1<td>2<tr><td>2D+1<td>2D+2<td>2<tr><td>2D+2<td>3D<td>2<tr><td>3D<td>3D+1<td>3<tr><td>3D+1<td>3D+2<td>3<tr><td>3D+2<td>4D<td>3<tr><td>4D<td>4D+1<td>4<tr><td>4D+1<td>4D+2<td>4<tr><td>4D+2<td>5D<td>4<tr><td>5D<td>5D+1<td>5<tr><td>5D+1<td>5D+2<td>5<tr><td>...<td>...<td>...</table><figcaption>Examples of the cost in skill points of increasing
+skills.</figcaption></figure><p>When spending your skill points, keep an eye on how well-balanced your
+character’s skills are. If you spend all your points in 1 or 2 skills, you may
+end up with a character that can’t do much a lot of the time, or who can’t
+participate in much of the gameplay. (Games are rarely all combat!) The
+gamemaster might also set a limit on how high newly-created characters’ skills
+can go.<h4>Equipment And Money</h4><p>Given your character’s type and skills, consider what equipment they are
+likely to have (or want). How much equipment, and at what quality and quantity,
+also depend on the character’s resources. A prince or merchant is likely to have
+more money and equipment than a rogue who grew up as a street urchin, for
+example. A mercenary or soldier may have been issued a standard set of gear and
+weapons, while a priest or wizard will usually have the basic tools of their
+trades.<p>The gamemaster may allow you to simply declare a reasonable set of equipment,
+or may give your character a set amount of money and then you can buy what
+equipment you can.<h4>Magic Abilities</h4><p>Depending on the game setting, your character might have or be able to get
+magical abilities, psychic powers, or advanced technology that seems like magic
+(such as the cybernetic implants available to citizens of the Culture). The
+rules for these special powers are specific to the setting.<h4>Limitations, Vices, Weaknesses</h4><p>Nobody is perfect, including heroes. You may decide to give your character
+weaknesses or limitations, or the gamemaster may impose one (perhaps to offset a
+special power). For example, a wizard might have an irrational fear of a certain
+school of magic. A character might be too small or too large to use certain
+equipment, mounts, or vehicles. A character might have a physical disability, or
+be especially sensitive to certain substances.<h3>Species</h3><p>Characters can be of any species appropriate for the game setting. A fantasy
+setting may have elves, orcs, gnomes, and others, as well as (or instead of)
+humans. A science fiction or space opera setting can have any number and kind
+of aliens.<p>The maximum attribute dice code for normal humans is 4D. Other species may
+have higher limits, at the gamemaster’s discretion. For example, Wookiees are
+famously strong, and Wookiee heroes may have Constitution scores as high as 5D.
+It’s probably not a good idea, for game balance, to allow species to have
+attribute limits higher than 5D (but see <a href=#DroidsAndRobots>Droids And
+Robots</a>, below).<p>Different species may also have special abilities or limitations, again at
+the gamemaster’s discretion. For example, certain alien species may be
+especially vulnerable or resistant to certain chemicals — perhaps the Klarthon
+people can only breathe ammonia, for example, and find an Earth-like atmosphere
+poisonous.<h4>Droids And Robots</h4><p>TODO<h3>Growth And Development</h3><p>TODO<h4>Skill Points</h4><p>TODO. Training time, with and without a teacher, et c. Can spend 10x to
+increase attributes too. Make a chart showing all the costs.<h2>Magic</h2><p>If a game setting has some form of magic, it is inherently specific to that
+setting. Being general-purpose, Pipsqueak doesn’t have its own distinct magic
+system. However, the <i>Star Wars</i> game’s rules for Force powers can
+illustrate what you might devise for your own games using Pipsqueaky
+principles.<h3>Star Wars: The Force</h3><p>TODO: 3 skills: Control, Sense, Alter. Combine to create effects<h3>Dungeons & Dragons: The 8 Schools</h3><p>TODO: 8 skills for the 8 schools of magic: Conjuration, Necromancy,
+Evocation, Abjuration, Transmutation, Divination, Enchantment, Illusion. Combine
+to create effects<h2>Tools, Charts, And Tables</h2><h3>Basic Skill Difficulty Chart</h3><figure><table><tr><th>Roll Required<th>General Difficulty<th>Ranged Combat<th>Knowledge Skills<th>Healing<tr><td>5<td>Very easy<td>Point-blank<td>Everyone knows<td>Stunned<tr><td>10<td>Easy<td>Short<td>Common knowledge<td>Wounded<tr><td>15<td>Moderate<td>Medium<td>No secret, but not widely known<td>Incapacitated<tr><td>20<td>Difficult<td>Long<td>Specialized knowledge<td>Mortally wounded<tr><td>30<td>Heroic<td>Out of range<td>Expert knowledge<td>All but dead</table><figcaption>Basic skill difficulties.</figcaption></figure><h3>Basic Equipment Chart</h3><table><tr><th>Item<th>Weight<th>Encumbrance<th>Notes<tr><td>Rope (hemp), 15 m<td>TODO<td>TODO<td><tr><td>Rope (silk), 15 m<td>TODO<td>TODO<td></table><h3>Basic Melee Weapons Chart</h3><table><tr><th>Weapon<th>Damage Rating<th>Damage Type<th>Reach<th>Properties<th>Weight<th>Encumbrance<tr><td>axe<td>Constitution + 1D<td>slashing<td>2p/0.6m<td>versatile<td>1.6kg<td>TODO<tr><td>axe (great)<td>Constitution + 1D+1<td>slashing<td>3p/1m<td>2-handed, heavy<td>3kg<td>TODO<tr><td>axe (hand)<td>Constitution + 1D<sup><i>1</i></sup><td>slashing<td>3p/1m<td>finesse, light, throwable<td>1kg<td>TODO<tr><td>club<td>Constitution + 1D<td>bludgeoning<td>2p/0.6m<td>light<td>1kg<td>TODO<tr><td>dagger<td>Constitution + 1D<sup><i>1</i></sup><td>slashing, piercing<td>1p/0.3m<td>finesse, light, throwable<td>0.6kg<td>TODO<tr><td>knife, dart<td>Constitution<sup><i>1</i></sup><td>piercing, slashing<td>0p/0m<td>finesse, light, throwable<td>0.3kg<td>TODO<tr><td>mace or warhammer<td>Constitution + 1D<td>bludgeoning, piercing<td>2p/0.6m<td> — <td>1.6kg<td>TODO<tr><td>mace or warhammer (great)<td>Constitution + 1D+1<td>bludgeoning, piercing<td>3p/1m<td>2-handed, heavy<td>2.6kg<td>TODO<tr><td>pole-arm<td>Constitution + 1D<td>piercing<td>6p/2m<td>versatile<td>2kg<td>TODO<tr><td>pole-arm (heavy)<td>Constitution + 1D+1<td>piercing<td>6p/2m<td>2-handed, heavy<td>3kg<td>TODO<tr><td>quarterstaff<td>Constitution + 1D<td>bludgeoning<td>3p/1m<td>2-handed<td>1.6kg<td>TODO<tr><td>spear<td>Constitution + 1D<sup><i>2</i></sup><td>piercing, slashing<td>4p/1.3m<td>versatile, throwable<td>1.3kg<td>TODO<tr><td>sword (great)<td>Constitution + 1D+1<td>slashing, piercing, bludgeoning<td>4p/1.3m<td>2-handed, heavy<td>2.6kg<td>TODO<tr><td>sword (long)<td>Constitution + 1D<sup><i>2</i></sup><td>slashing, piercing<td>3p/1m<td>versatile<td>1.3kg<td>TODO<tr><td>sword (rapier)<td>Constitution + 1D<td>piercing<td>3p/1m<td>finesse, light<td>1kg<td>TODO<tr><td>sword (short)<td>Constitution + 1D<td>slashing, piercing<td>2p/0.6m<td>finesse, light<td>1kg<td>TODO</table><p><b>Notes.</b> 1. Damage attribute is Agility for finesse weapons when the
+wielder can use finesse. 2: Damage increases by 1p for versatile weapons when
+the wielder can use the capability.<h3>Basic Ranged Weapons Chart</h3><table><tr><th>Weapon<th>Damage Rating<th>Damage Type<th>Range (Short, Medium, Long)<th>Properties<th>Weight<th>Encumbrance<tr><td>arrow (long bow)<td>4D<td>piercing<td>&lt; 50 m, &lt; 100 m, &lt; 230 m<td>TODO<td>TODO<td>TODO<tr><td>arrow (short bow)<td>3D<td>piercing<td>&lt; 25 m, &lt; 75 m, &lt; 125 m<td>TODO<td>TODO<td>TODO<tr><td>bolt (crossbow)<td>4D<td>piercing<td>&lt; 25 m, &lt; 75 m, &lt; 125 m<td>TODO<td>TODO<td>TODO<tr><td>bolt (hand crossbow)<td>3D<td>piercing<td>&lt; 15 m, &lt; 30 m, &lt; 90 m<td>TODO<td>TODO<td>TODO<tr><td>bolt (heavy crossbow)<td>4D+1<td>piercing<td>&lt; 50 m, &lt; 100 m, &lt; 230 m<td>TODO<td>TODO<td>TODO<tr><td>Blaster pistol<td>4D<td>radiant<td>TODO<td>TODO<td>TODO<td>TODO<tr><td>Blaster pistol (heavy)<td>5D<td>radiant<td>TODO<td>TODO<td>TODO<td>TODO<tr><td>Blaster pistol (light)<td>3D<td>radiant<td>TODO<td>TODO<td>TODO<td>TODO<tr><td>Blaster rifle<td>5D<td>radiant<td>TODO<td>TODO<td>TODO<td>TODO<tr><td>Blaster rifle (sniper)<td>5D<td>radiant<td>TODO<td>TODO<td>TODO<td>TODO</table><h3>Basic Armor Chart</h3><table><tr><th>Armor Type<th>Defensive Advantage<th>Weight<th>Encumbrance<th>Notes<tr><td>chain mail (full suit)<td>+2p (piercing, slashing, bludgeoning, acid)<br>+1p (cold, fire, radiant)<td>25 kg<td>-4p<td><tr><td>chain mail (shirt)<td>+1p (piercing, slashing, bludgeoning, acid, radiant)<td>10 kg<td>-1p<td><tr><td>leather (full suit)<td>+1p (piercing, slashing, bludgeoning, acid, cold)<td>5 kg<td>-1p<td><tr><td>leather (cuirass)<td>+1p (piercing, slashing, bludgeoning, acid, cold, fire, radiant)<td>2.5 kg<td>0<td><tr><td>full plate mail<td>+1D (piercing, slashing, bludgeoning, acid, cold, fire, radiant)<td>25 kg<td>−5p<td><tr><td>Mandalorian Beskar steel suit<td>+1D (piercing, slashing, bludgeoning, acid, cold, fire)<br>+1D+2 (radiant)<td>15 kg<td>−3p<td>Limited protection in vacuum. May have additional sensors in helmet.<tr><td>Stormtrooper Plastisteel® suit<td>+1D (piercing, slashing, bludgeoning, acid, cold, fire, radiant)<td>15 kg<td>−3p<td>Limited protection in vacuum. May have additional sensors in helmet.</table><h3>Thrown Range Tool</h3><table><tr><th class=right>Thrower’s Constitution (dice)<td><input id=thrownRangeDiceInput size=4><tr><th class=right>Item weight (kg)<td><input id=thrownRangeWeightInput size=4><tr><th class=right>Short range<td>&lt; <span id=thrownRangeShortSpan>0</span> meters<tr><th class=right>Medium range<td>&lt; <span id=thrownRangeMediumSpan>0</span> meters<tr><th class=right>Long range<td>&lt; <span id=thrownRangeLongSpan>0</span> meters</table><h3>Dice Roll Tool</h3><table><tr><th class=right>Dice score<td><input id=diceInput size=5 placeholder="e.g. 6"> D +
+<input id=pipsInput size=5 placeholder="e.g. 2"><tr><th class=right>&nbsp;<td><button id=diceRollButton>Roll The Bones!</button><tr><th class=right>Result<td><span id=diceResult>0</span><tr><th class=right>Wild dice!<td><span id=wildDiceResult>0</span>!</table><div id=diceImages></div><h3>Falling And Collisions Chart</h3><p>TODO: Make this more continuous, e.g. pips per meter or pips per km/hr.<table><tr><th>Damage<th>Distance Fallen (meters)<th>Collision Velocity (km/hour)<tr><td>3D<td>3 – 6<td>5 – 10<tr><td>4D<td>7 – 12<td>11 –  20<tr><td>5D<td>13 –  18<td>21 –  50<tr><td>6D<td>19  – 30<td>51 –  100<tr><td>8D<td>31 –  50<td>101 – 200<tr><td>10D<td>51+<td>201+</table><footer><p>Pipsqueak by <a xmlns:cc=http://creativecommons.org/ns# href=https://noncombatant.org/ property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons, under the
+terms of <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>the
+Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</footer><script src=toc.js type=module></script>
+<script src=index.js type=module></script><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

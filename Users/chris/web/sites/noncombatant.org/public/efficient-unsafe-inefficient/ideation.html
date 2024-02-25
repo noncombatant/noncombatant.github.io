@@ -1,0 +1,174 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content="same-origin"><meta name=author content="Chris Palmer"><title>Efficient + Unsafe = Inefficient</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>"><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Efficient + Unsafe = Inefficient</h1><p><time>TODO</time><p>In <a href=/2018/01/15/on-validating-inputs/>a previous post</a>, I
+said:<blockquote>From a systems perspective, it’s reasonable to question if
+unsafe-but-efficient languages are in fact efficient.</blockquote><p>Here, I’ll say more about what I meant there.<p>To make code written in an unsafe language like C, C++, or assembly reliable
+and safe enough to ship, especially as it gets larger, you have to do expensive
+things. The end result is that the overall system does not exhibit the high
+performance that motivated the original choice to use an unsafe language.<p>The experience I’m drawing on for this post comes mostly from working on
+Chrome and a little bit from working on Android, and from years of relatively
+easy pickings when pen-testing products written in C and C++. (<a href=https://www.dwheeler.com/flawfinder/>Flawfinder</a> still works, as does
+<code><a href="https://bugs.chromium.org/p/chromium/issues/list?can=1&q=reporter%3Apalmer+pdfium+integer+&colspec=ID+Pri+M+Stars+ReleaseBlock+Component+Status+Owner+Summary+OS+Modified&x=m&y=releaseblock&cells=ids">grep
+-ri alloc *</a></code>.) But I think my experience generalizes at least somewhat
+well.<h2>Costs Of Unsafe Languages</h2><p>To ship a safe-enough product implemented in an unsafe language in 2022,
+developers must use a variety of techniques, each of which comes with certain
+costs and benefits.<h3>Exploit Mitigations</h3><p>The various native code exploit mitigations can sometimes be quite effective:
+turning a reliable exploit into an unreliable one; forcing the attacker to find
+an additional bug and <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=226937">create an
+exploit chain</a>; <a href=https://threatpost.com/mark-dowd-on-exploit-mitigation-development/125947/>slowing
+down exploit development</a>; or even, if we may dream, making some bugs not
+cost-effective to exploit. Maybe. Probably not, over time. But they can buy us
+some time.<p>But even when exploit mitigations are effective, they aren’t quite free, and
+they can twist the architecture of a program in strange ways.<h4>Stack Canaries</h4><p><code>-fstack-protector</code>, and especially
+<code>-fstack-protector-strong</code>, are <a href="https://cs.chromium.org/chromium/src/build/config/compiler/BUILD.gn?type=cs&q=build.gn+stack-protector&sq=package:chromium&l=248">not
+quite as free as one might think they’d be</a>.<h4>Address Space Layout Randomization</h4><p>ASLR (fragmentation, blocks applications from working, <a href=https://benpfaff.org/papers/asrandom.pdf>not effective on 32-bit</a>,
+hard to quantify how much it helps, ...)<p>Mututally-untrusting processes on the same host typically know each other’s
+layouts, reducing the effectiveness of ASLR.<h4>Control-Flow Integrity</h4><p>CFI: Run-time cost traded off against precision TODO<h4>TODO other exploit mitigations...</h4><h3>Privilege Separation And Privilege Reduction</h3><p>Also known as sandboxing. IPC costs, memory cost, process start-up costs,
+... TODO<h3>Dynamic Analysis</h3><p>The LLVM sanitizers — <a href=https://clang.llvm.org/docs/AddressSanitizer.html>AddressSanitizer</a>,
+<a href=https://clang.llvm.org/docs/ThreadSanitizer.html>ThreadSanitizer</a>,
+<a href=https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html>UndefinedBehaviorSanitizer</a>,
+et c. —  are fantastic. But they are expensive to develop. At Google (and Google
+developers are not the only people working on the sanitizers), we have a team of
+geniuses dedicated to implementing them. This is good, but there’s an
+opportunity cost: what if they had spent their time building out the compiler,
+run-time support, community and documentation of a safe language, for
+example?<p>...and porting things to it? It makes sense to work hard to make the code you
+have as safe and reliable as possible, because it’s many fewer orders of
+magnitude less expensive than a total rewrite (were that even feasible, or <a href=https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/>advisable</a>).
+But in doing so we are at best buying time, and at worst putting off the
+inevitable. It’s not enough to buy time if you do not also then use it to
+surpass what came before.<p>And we can’t use the sanitizers in production, for performance reasons —  if
+we are to continue to think of C++ as a fundamentally ‘fast’ language. (And
+their support libraries were not necessarily designed for production safety
+requirements.) They are potentially more expensive overall than the dynamic
+checks of a safer language; certainly if one were to use them all at once (to
+the extent possible). So we use them in debug builds, and in fuzzing runs, and
+hope to <a href="https://bugs.chromium.org/p/chromium/issues/list?can=1&q=Security_Impact%3DHead+sanitizer&colspec=ID+Pri+M+Stars+ReleaseBlock+Component+Status+Owner+Summary+OS+Modified&x=m&y=releaseblock&cells=ids">discover
+and fix bugs before shipping them in a production release</a>.<p>And how much does running the dynamic analysis servers cost? Potentially a
+lot.<h4>Fuzzing</h4><p>Fuzzing can be a great way to find bugs, including exploitable bugs. And
+fuzzing has matured nicely. (See e.g. <a href=https://github.com/google/oss-fuzz>OSS-Fuzz</a>, <a href=https://llvm.org/docs/LibFuzzer.html>libFuzzer</a>, and <a href=http://lcamtuf.coredump.cx/afl/>American Fuzzy Lop</a> for examples.)
+Especially in combination with the LLVM sanitizers, fuzzing is awesome.<p>But fuzzers can have a key limitation: they tend to have a hard time getting
+really deep into the call tree of a complex program. Fuzzers can find bugs that
+would be impractical to find by other means —  but the reverse is true, too.<p>And fuzzers have costs:<ul><li>They are compute-intensive. Google runs ClusterFuzz to support Chromium’s
+fuzzing efforts and those of OSS-Fuzz, but it’s very expensive. Google can
+afford it, but... it’s the kind of thing you need to be Google or Microsoft to
+afford. To improve the effectiveness of open source contributors who can’t
+afford to run a large compute cluster, we’ll run fuzzers written by proven
+bug-hunters on our infrastructure.<li>Developers have to write fuzzers, which costs time. It’s pretty easy to use
+libFuzzer and the OSS-Fuzz infrastructure and support to write and run a simple
+fuzzer, but a simple fuzzer is also the kind that generally can’t get deep into
+the branches of a complex program. A really powerful fuzzer is specific to the
+data format and the target, hard to develop, and driven by a large corpus.
+Writing really good fuzzers is a full-time job in itself.</ul><p>As indispensable as fuzzing is, it’s not going to get a society based on
+unsafe software to a place of sustainable safety.<h2>Alternatives</h2><p>Everything I’ve described here is an old problem, obviously. People have
+answered with good solutions before, and some form of either the old or new
+answers would be a big improvement on the status quo.<h3>The ‘Old’ Answer: Well-Defined Abstract Machines</h3><p>JVM and CLR, Lisp, Haskell, basically everything else. TODO There are
+platforms written fully or partially in these languages: <a href=https://en.wikipedia.org/wiki/HotJava>HotJava</a>, <a href=TODO>Singularity</a>, ... Oberon?<p>TODO The big question is performance. And indeed, HotJava was unusable on a
+SPARCStation 20 I had at work long ago. (It was intended for UltraSPARCs with
+far more RAM than I had.) Maybe HotJava would not be slow by today’s standards,
+on today’s hardware. A whole lot of Java code ran on the Android G1 just
+fine.<p>I find it a bit ironic that we can get well-defined behavior, type safety,
+and static and dynamic checks built-in to languages that are considered ‘slow’ —  yet which we use heavily. There is a whole lot of Java, JavaScript, Python,
+and Ruby out there. It’s generally not possible to directly compare inherent
+language performance for a given task without actually implementing a program to
+perform the task in the languages under comparison, and for something like a
+modern browser that’d be prohibitively difficult and expensive to do simply as
+an experiment.<p>(Fortunately, <a href=#how-to-get-there-from-here>I don’t think we have to
+do that</a>.)<h3>The New Answer: Rust, any other memory-safe language</h3><p>TODO<h2>“A Safer Language Doesn’t Solve All Your Problems”</h2><p>Or, “You will always need <code>unsafe</code>”. This is true (see e.g. <a href=https://rcoh.me/posts/rust-linked-list-basically-impossible/>Why Writing
+A Linked List In (Safe) Rust Is So Damned Hard</a>). But that’s no reason for
+unsafe to be the default, let alone the norm, let alone the only option.<p>It’s a huge improvement to have only application-semantic bugs — many of
+which can be addressed using type safety —  instead of application-semantic bugs
+<em>plus</em> the nasty menagerie of memory corruption bugs.<h2>Can C++ Be Reformed?</h2><p>I believe that C++ cannot be repaired and remain C++. For example, even the
+nice new C++17 features such as <code><a href=https://en.cppreference.com/w/cpp/header/string_view>string_view</a></code>
+lend themselves to <a href="https://bugs.llvm.org/show_bug.cgi?id=34729">unsafe
+use by necessity</a> (“fixing this would make string_view much less
+useful”). TODO: more: https://alexgaynor.net/2019/apr/21/modern-c++-wont-save-us/<p>Similarly, although the STL doesn’t have a guaranteed or standardized way to
+ensure minimal bounds checking (let alone anything more sophisticated) beyond
+enforcing that all <code>operator[]</code> call sites be changed to use
+<code>at</code>, you can and should do your own checking in your custom
+containers and templates. But even then, you can’t stop callers from doing
+unsafe things the language is designed to do:<pre>
+// Assume you have a custom container:
+Array&lt;int&gt; integers(capacity);
+
+// You’ve defined that its operator[] is checked:
+cout << integers[2] << endl;
+
+// But you can’t stop callers from using C/C++ as designed:
+int* last = &integers[capacity - 1];
+cout << *last << endl;
+
+// So far, so good...
+
+// ... but you will not go to well-defined space today:
+last += 2;
+cout << *last << endl;
+</pre><p>Although a code reviewer might flag this as not in <a href=https://github.com/isocpp/CppCoreGuidelines>the modern C++ idiom</a>, and
+you must provide a safe checked iterator, the fact remains that code like this
+will get into your codebase.<p>As much of an improvement as the CPP Core Guidelines are, <a href=http://www.stroustrup.com/P0977-remember-the-vasa.pdf>adding features has
+crossed at least Stroustrup’s line</a>.<p>You can’t fix C++ by adding features, or at least not without also taking
+features away. I think the proper place for unsafe code is in the small, minimal
+cores of kernels and interpreters, where C++’s fancy features are often (<a href=https://depletionmode.com/zircon-process.html>though not always</a>)
+inapplicable anyway. C11, or preferably a new C-like, C-compatible, or
+C-generating language, with stricter defaults and less legacy madness, and with
+<a href=https://www.imperialviolet.org/2014/06/20/boringssl.html>boring</a>
+compilation and abstract machine semantics, would perhaps be better for these
+small cores. A C-like language with no implicit casts, default private
+visibility, default <code>const</code>, sane integer types and semantics, ...,
+destructors, ... could be a beautiful thing in its forever-necessary niche.<p>Unsafe code cannot be the bulk of a product’s code, so we need to change the
+status quo present in many products (all mainstream kernels, browsers, language
+interpreters, servers, and more). Much, or in some cases most, of the code in
+these things must be — and I believe can be — at least memory-safe, but
+preferably also type-safe.<h2>How To Get There From Here?</h2><p>Although I (and Joel Spolsky) said it’s not feasible to do a total rewrite...
+that’s what is happening anyway, in some places! Although risky for production
+applications, there are benefits to these green-field projects, such as the
+ability to re-assess design descisions baked into legacy software. Those can be
+sufficient motivation for a new project, and then a new language can get in for
+the ride. For some current examples, see <a href=https://en.wikipedia.org/wiki/Google_Fuchsia>the Fuchsia operating
+system</a> and <a href=https://github.com/xi-editor/xi-editor>the xi text
+editor</a>.<p>However, we have other options for existing systems.<h3>Modern C++</h3><p>Porting legacy C and C++ into modern C++ is the easiest, cheapest approach,
+and in Chromium and PDFium we are investing in it where necessary and useful. It
+is very necessary and very useful. You can also use static analysis to identify
+non-modern patterns in code. <a href="https://docs.microsoft.com/en-us/visualstudio/code-quality/using-the-cpp-core-guidelines-checkers?view=vs-2017">A
+Core Guidelines checker is built right in to Visual Studio</a>, which is
+great.<p>We are also <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=817982">hardening
+our custom containers and base classes</a>, and hardening some parsers by
+purposefully limiting their functionality, making their APIs more ergonomic, and
+so on.<p>The Core Guidelines are never going to entirely get us where we need to be.
+For that, we must attempt more daring adventures.<h3>Cross-Language, Cross-Process IPC</h3><p>TODO Piecemeal replacement, especially in service-oriented, mutli-process
+architectures... (move drivers out to userland, privilege-separated
+multi-process programs like OpenSSH server, modern browsers, modern servers...)
+link to Mojo<h3>Compatible Linkage In Process</h3><p>TODO It’s great to see <a href=https://wiki.mozilla.org/Oxidation>Mozilla
+doing exactly this with Rust</a>.<p>TODO <a href="https://www.youtube.com/watch?v=WI4ApeHH9QE">Integrating Rust
+into Tor: Successes And Challenges</a> by Isis Lovecruft And Chelsea Komlo<h1>Fast Is Slow</h1>software engineering is programming integrated over time. We have to learn the
+lessons time has taught us over the past 50 years. The lesson is that software
+is unnecessarily unreliable, risky, and unsafe, for systemic reasons that we
+understand and know how to fix.
+the modern bar: lightweight/shippable formal methods: that is, expressing
+application semantic invariants via types. Type safety is a bare minimum, but
+without memory safety we can’t begin to get it.
+Hardware side channel bugs, C++: unsafe is slow, because repairing the damage
+speed hacks do ends up costing more efficiency. (And complexity)
+Having to containerize Lambda: https://news.ycombinator.com/item?id=32291848
+(multiple problems with Cloudflare's approach as well)
+speculative exec: mitigations kill performance
+https://www.theregister.com/AMP/2022/09/12/retbleed_slugs_vm_performance_by/,
+might have been better off paying for extra transistors
+Speaking of transistors: MTE: RAM for the tags, die space
+Fuzzing: lots of development effort, lots of machine time/energy/carbon, lots of
+time to handle the results. Searching the call graph and object space by, more
+or less, brute force at run-time instead of being able to make static
+assertions.
+Object lifetime bugs: the trickier your object graph, the fancier memory
+management you need, up to and including full GC. And now it’s not cheaper than
+Java
+all the spatial hacks: stack canaries, dynamic bounds checks.
+CFI: expensive, coarse, and you still don’t have real type safety in the end
+anyway.
+in general, mitigations are incomplete, minimally-effective substitutes for
+actual safety —  but they likely cost as much as real safety would have.
+----<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>Conway’s Game Of Life</title>
+<link rel="stylesheet" href="style.css"/>
+
+<table class="layout"><tr>
+
+<td class="layout" width="80%">
+<div id="gameBoard"></div><br/>
+<div id="generation"></div><br/>
+</td>
+
+<td class="layout">
+
+<p><button id="playButton">Play</button></p>
+<p><button id="resetButton">Reset</button></p>
+<p><button id="randomButton">Random Game</button></p>
+
+<p>
+<input type="radio" name="interval" value="100" checked/> <strong>Normal</strong><br/>
+<input type="radio" name="interval" value="50"/> <strong>Faster</strong><br/>
+<input type="radio" name="interval" value="10"/> <strong>Zoooom</strong><br/>
+</p>
+
+<p><strong>Board size:</strong><br/>
+<input type="text" size="10" id="boardSize" value="15" /></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway’s
+Game of Life</a>:
+
+<ul>
+<li>Any live cell with fewer than 2 live neighbors dies.</li>
+<li>Any live cell with more than 3 live neighbors dies.</li>
+<li>Any live cell with 2 or 3 live neighbors lives on to the next
+generation.</li>
+<li>Any dead cell with exactly 3 live neighbors becomes a live cell.</li>
+</ul></p>
+
+<p>Click on any cell to toggle its liveness, at any time. (Doing this stops
+the game so that you can more easily edit multiple cells.)</p>
+
+</td>
+
+</tr></table>
+
+<script src="life.js" type="module"></script>

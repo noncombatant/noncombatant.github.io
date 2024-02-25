@@ -1,0 +1,61 @@
+<h1>STOP DOING C</h1>
+
+<ul>
+
+<li><p>OBJECTS WERE NOT SUPPOSED TO BE USED AFTER BEING FREED</p></li>
+
+<li><p>YEARS OF COMPILING yet NO REAL-WORLD USE FOUND for access out of
+bounds</p></li>
+
+<li><p>Wanted to go out of bounds anyway for a laugh? We had a tool for that: it
+was called “ASSEMBLY”</p></li>
+
+<li><p>“Yes please give me <code>void*</code> of something. Please give me TYPE
+PUNS of it” — statements dreamed up by the utterly Deranged</p></li>
+
+</ul>
+
+<p>LOOK at what Unix programmers have been demanding your Respect for all this
+time, with all the calculators and abacus we built for them</p>
+
+<p style="text-align: center;"><b>(This is REAL C, done by REAL C
+programmers):</b></p>
+
+<table><tr>
+
+<td style="vertical-align: bottom; width: 33%">
+<pre>
+17[items]
+</pre>
+<span style="color: red"><b>?????</b></span>
+</td>
+
+<td style="vertical-align: bottom; width: 34%">
+<pre>
+typedef int T;
+void f(void) {
+  T y = 1;
+  if(1) {
+    int T;
+    T = 1;
+  }
+  T x = 1;
+}
+</pre>
+<span style="color: red"><b><a
+href="https://hal.archives-ouvertes.fr/hal-01633123/document">???????</a></b></span>
+</td>
+
+<td style="vertical-align: bottom; width: 33%">
+<pre>
+free(12);
+</pre>
+<span style="color: red"><b>?????????????????</b></span>
+</td>
+
+</table>
+
+<p><big>“Hello, I would like apple number 2,093,274 from this bushel of 48,
+please”</big></p>
+
+<p style="text-align: center;"><b>They have played us for absolute fools</b></p>

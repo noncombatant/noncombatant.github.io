@@ -1,0 +1,96 @@
+<h1>Long Live Sandboxing!</h1>
+
+<p><time>11 April 2021</time></p>
+
+<p>Apparently, there is some confusion about whether sandboxing is necessary,
+sufficient, and/or affordable. (<a
+href="https://www.securityweek.com/cost-sandboxing-prompts-shift-memory-safe-languages-little-too-late">Here
+is an example from Security Week</a>, although this is not the only
+instance.)</p>
+
+<p>As the lead of Chrome’s sandboxing team and as co-lead of Chrome’s memory
+safety efforts, perhaps I can clarify a little.</p>
+
+<p>As I said in <a
+href="https://www.usenix.org/conference/enigma2021/presentation/palmer">my
+Enigma presentation</a> (<a
+href="https://www.usenix.org/sites/default/files/conference/protected-files/enigma2021_slides_palmer.pdf">slide
+7</a>), “good sandboxing is table stakes.” I reiterated this point in <a
+href="/2021/04/09/prioritizing-memory-safety-migrations/">my previous post</a>
+(“if [...] your application is not making use of process sandboxing, consider
+exploring that first before starting a rewrite effort”).</p>
+
+<p>Contrary to what the Security Week article and some Twitter discourse
+suggest, <b>sandboxing and memory safety are complementary techniques</b>, and
+both are necessary.</p>
+
+<dl>
+
+<dt><b>Sandboxing reduces the severity of bugs.</b></dt>
+
+<dd>
+
+<p>Sandboxing isolates code away from system resources and application
+resources, reducing the damage that compromise can do. (Sandboxing also has
+certain efficiency advantages, as well as disadvantages, too.)</p>
+
+<p>However, a certain amount of attack surface will always be available from
+within a sandbox, and memory unsafety (and other bugs) can enable an attacker to
+get at it.</p>
+
+<p>So you still need to get rid of as many bugs inside the sandbox as
+possible.</p>
+
+</dd>
+
+<dt><b>Memory safety reduces the number of bugs.</b></dt>
+
+<dd>
+
+<p>As discussed at Enigma and in my previous post, very many bugs, including an
+overwhelming majority of the vulnerabilities we know about right now, are due to
+memory unsafety. It helps to get rid of as many of those as possible.</p>
+
+<p>However, memory safety can’t constrain access to system resources, including
+the file system, system calls, et c.</p>
+
+<p>So you still need sandboxing.</p>
+
+</dd>
+
+</dl>
+
+<p>There are 2 key ways that Chromium (specifically) is nearing the limits of
+how much sandboxing we can do right now:</p>
+
+<ul>
+
+<li>Our unit of isolation, the process, is expensive in time and space on some
+(not all) platforms.</li>
+
+<li>Some operating systems do not provide sufficiently fine-grained mechanisms
+to allow us to maximally constrain sandboxed processes. Things are improving,
+but it’s an unavoidably slow process.</li>
+
+</ul>
+
+<p>I tried also to raise awareness that not all the applications that need
+sandboxing are making use of it. I know of at least 1 organization that was
+compromised because their server application did not sandbox a file format
+parser (written in C), and allowed anyone on the internet to send input to it.
+So, more developers need to do more sandboxing — <b>as an industry, we are nowhere
+near the limits yet</b>.</p>
+
+<p>We are still pursuing additional sandboxing in Chromium. It’s just that we
+can see a limit to what’s possible <b>at the moment</b>. If OS developers give
+us more of the primitives we want, we’ll jump right on them — as we always
+have.</p>
+
+<p>Finally, nobody knowledgeable, that I know of, has claimed or would claim
+that eliminating 100% of memory unsafety bugs would also get rid of all
+vulnerabilities. The claim — <a
+href="https://alexgaynor.net/2020/may/27/science-on-memory-unsafety-and-security/">based
+on repeated real-world experience and evidence</a> — is that memory unsafety
+accounts for a large majority of vulnerabilities. There will still be bugs. Our
+goal is to marginalize memory unsafety bugs, because they are currently our
+worst observed problem.

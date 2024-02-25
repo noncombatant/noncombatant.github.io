@@ -1,0 +1,35 @@
+digraph {
+  splines = polyline;
+  rankdir = LR
+  node [
+    shape = box
+    style = rounded
+    fontname = "Roboto"
+    fontsize = 9
+    margin = 0.1
+  ];
+  edge [
+    fontname = "Roboto"
+    fontsize = 9
+    margin = 0.1
+  ];
+
+  attacker [ label = "attacker" ];
+  NIC [ label = "net interface" ];
+  kernel [ label = "device driver" ];
+  TCP [ label = "TCP" ];
+  TLS [ label = "TLS" ];
+
+  attacker -> NIC [
+    label = "0, low, or\nmedium"
+  ];
+  NIC -> kernel [
+    label = "0"
+  ];
+  kernel -> TCP [
+    label = "0"
+  ];
+  TCP -> TLS [
+    label = "low or\nmedium"
+  ];
+}

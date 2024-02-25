@@ -1,0 +1,44 @@
+<h1>Simple Computer Security</h1>
+
+<p><time>2 June 2013</time></p>
+
+<p><strong>Don’t panic.</strong> The internet is far, far more valuable than it
+is dangerous. In general, internet security is about pushing down the cost of
+unnecessary losses and increasing the overall value of the network. This work is
+done in the margins; in the big picture, the internet is a clear win. “Cyber”
+alarmism is serving somebody — but not you.</p>
+
+<p><strong>Redundancy and backup.</strong> Have a spare machine, a spare network
+connection, a secondary email service, or whatever is most important to you.
+Have a backup plan <em>that you have actually tested</em>. (For example, set up
+your spares by restoring your backups on to them.) In case of any problem —
+loss, theft, hacking, fire, whatever — you will need a fresh system with minimal
+disruption.</p>
+
+<p><strong>Isolation and compartmentalization.</strong> Separate your different
+sources of data, and separate your different activities. For example, separate
+your work computing from your personal computing; separate your military secrets
+from your iTunes; separate your digital audio workstation from the guest
+computer in your lobby. To combine activities of different degrees of importance
+onto one machine is unnecessarily risky, now that computers are so cheap.</p>
+
+<p><strong>Keep it simple. Keep it updated.</strong> Stick with the <em>latest
+stable version</em> of a <em>small number of programs</em> that you <em>really
+need</em> from a <em>small number of well-established vendors</em>. If a
+platform or app gets updates only rarely or if updating is hard, that is a
+severe danger sign. (The current industry standard is that updates arrive
+monthly and install in one or two clicks; expect updates to become more frequent
+and easier as engineering improves.) Avoid ‘supplementing’ the platform with
+software from third-party vendors: avoid plug-ins, extensions, and
+pseudo-security utilities like anti-virus software or firewalls.</p>
+
+<p><strong>Avoid complexity and distrust magic.</strong> Prefer tools you
+understand and are comfortable with, whatever your level of understanding is.
+Resist pressure to adopt complicated recipes, and reject claims like “Product X
+will make you safe from Problem Y!”</p>
+
+<p><strong>You might need a professional.</strong> You may have specialized
+needs, a particularly acute threat model or dangerous threat actor, or be in
+some crisis. In that case, a blog post is not going to be sufficient for you,
+and you may need specialized advice/tools/techniques that only a professional
+can provide.</p>
