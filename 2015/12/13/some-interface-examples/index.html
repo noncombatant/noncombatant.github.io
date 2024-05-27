@@ -1,0 +1,133 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Some Interface Examples</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Some Interface Examples</h1><p><time>13 December 2015</time><p>In <a href=/2015/12/12/interface-design-principles/>my previous post on
+interface design principles</a>, I sort of assumed that people would know what I
+meant by “primary interface definition”. In <a href=/2014/08/10/security-as-a-class-of-interface-guarantee/>Security
+As A
+Class Of Interface Guarantee</a> I defined it it as follows:<blockquote>The <strong>primary interface definition</strong> is the immediately
+accessible surface of the interface itself, e.g. a function or method
+declaration, an IDL specification or other code generation/specification system
+for network protocols, the grammar of a programming language, or a user-facing
+GUI or CLI. A <strong>secondary interface definition</strong> is supplementary
+material; usually documentation, annotation, post-facto errata, entries in issue
+trackers, commit log messages, et c.</blockquote><p>Our ideal is, or should be, to make interfaces so simple to use that people
+can learn them immediately, and use them readily. Additionally, it should be
+impossible (or at least difficult) to use the interface unsafely. (“Unsafety”
+could mean whatever you like: deleting important information, not deleting
+information that the person needs deleted, sending information to the wrong
+person, not sending information to the right person, crashing the machine, and
+so on.)<p>A learnable interface explains itself upon contact — the person using it has
+no need of secondary interface definitions such as documentation. Like a
+screwdriver, the shape of the head either fits or does not fit the screw. If the
+person somehow manages to crank the wrong screwdriver into a screw head, the
+damage will be immediate, obvious, and commensurate with how hard the person
+cranked it. (Unlike so much software that explodes silently, a week
+later...)<figure><img src=screws.jpg alt="Picture of screwdrivers and their matching
+screw heads." width=456 height=232 loading=lazy><figcaption>From <a href=http://universalscrewdriver.com/>Universal Screwdriver</a>. Maybe we can
+make software interfaces more universal.</figcaption></figure><p>I also assumed people would know what it means for an interface to be as
+simple as possible, but no simpler. For example, maybe the <a href=http://universalscrewdriver.com/>Universal
+Screwdriver</a> really works — but maybe it doesn’t. It seems unlikely to perfectly fit the different types of
+screw heads. It’s worth a try, but we should fall back to regular screwdrivers
+if necessary.<p>Here are 2 more examples. I am a fan of dialog boxes that really offer
+choice, rather than the often meaningless <strong>OK</strong> and
+<strong>Cancel</strong> ‘non-dialog’ boxes. Sometimes, those 2 choices are just
+not enough to give the person what they need.<figure><img src=3-choice-2.png alt="Screenshot of 3 choices when deleting a
+recurring calendar event: Only This Instance, All Following, and All Events In
+The Series." width=755 height=253 loading=lazy><figcaption>Screenshot of
+3 choices when deleting a recurring calendar event: <strong>Only This
+Instance</strong>, <strong>All Following</strong>, and <strong>All Events In The
+Series</strong>.</figcaption></figure><figure><img src=3-choice-1.png alt="Screenshot of 3 choices when exiting a
+text editor: Close Without Saving, Cancel, and Save As." width=714 height=559 loading=lazy><figcaption>Screenshot of 3 choices when exiting a
+text editor: <strong>Close Without Saving</strong>, <strong>Cancel</strong>, and
+<strong>Save As</strong>.</figcaption></figure><p>The only way to simplify the calendar example would be to over-simplify it:
+to remove meaningful choices. The safest choice, <strong>Only This
+Instance</strong>, is first, followed by the still-pretty-safe <strong>All
+Following</strong>. But <strong>All Events In The Series</strong> is sometimes
+necessary. And of course, Google Calendar does offer <strong>Undo</strong>.<p>The text editor example could be simplified; for example, Mac OS X
+TextEdit.app and Google Docs both constantly auto-save. They entirely get rid of
+the concept of saving, which is great because people throughout the Cyber Age
+have lost tons of work because they forgot to save. All that remains of the old
+<strong>Save</strong>/<strong>Save As...</strong> paradigm is the
+still-meaningful <strong>Export...</strong>, <strong>Rename...</strong>, and
+<strong>Make A Copy...</strong>.<p>Note that auto-saving applications must either automatically name files (<a href=https://developer.apple.com/library/mac/documentation/General/Conceptual/MOSXAppProgrammingGuide/CoreAppDesign/CoreAppDesign.html>Mac
+OS X</a>; see “The Document Architecture Provides Many Capabilities for Free”),
+or do away with the concept of the filesystem by replacing it with search
+(Google Drive).<p>One could argue, as I probably would, that a programmer’s or engineer’s text
+editor still needs a concept of <em>explicit commit</em>, and hence should not
+auto-save or at least not auto-name. Therefore, such editors do still need to
+raise a dialog if there are un-committed buffers on exit; given that, Gedit’s
+3-choice dialog seems to fit people’s needs well. On the other hand, one could
+argue that the revision control system (e.g. Git; ideally integrated into the
+editor as in most IDEs) exists to provide explicit commit, and that the editor
+could and hence should auto-save (possibly into a temporary, private branch in
+the RCS). But it probably still could not auto-name.<p>Thus, even in the case of the engineer’s text editor, no further
+simplification is possible. You can move the complexity around, creating 1
+giant complex system (e.g. Eclipse) or integrating many small tools with
+glue code (e.g. bash + vim + git), but you can’t eliminate it without losing
+something crucial.<p>Although the examples so far have been of UIs, we can apply the same
+interface design principles to APIs. APIs are, after all, UIs for engineers.
+(The same is true of a programming language’s syntax, and the principles apply
+there, too.) Consider the <code>get</code> method of the Java
+<code>HashMap</code> class. From <a href=https://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html#get(java.lang.Object)>the
+documentation</a>:<blockquote><code>public V get(Object key)</code><p>Returns the value to which the specified key is mapped, or null if this map
+contains no mapping for the key.<p>More formally, if this map contains a mapping from a key k to a value v such
+that (<code>key==null ? k==null : key.equals(k)</code>), then this method
+returns v; otherwise it returns <code>null</code>. (There can be at most one
+such mapping.)<p>A return value of <code>null</code> does not <em>necessarily</em> indicate
+that the map contains no mapping for the key; it’s also possible that the map
+explicitly maps the key to <code>null</code>. The <code>containsKey</code>
+operation may be used to distinguish these two cases.<p><strong>Specified by:</strong><p><code>get</code> in interface <code>Map&lt;K,V&gt;</code><p><strong>Overrides:</strong><p><code>get</code> in class <code>AbstractMap&lt;K,V&gt;</code><p><strong>Parameters:</strong><p>key - the key whose associated value is to be returned<p><strong>Returns:</strong><p>the value to which the specified key is mapped, or <code>null</code> if this
+map contains no mapping for the key<p><strong>See Also:</strong><p><code>put(Object, Object)</code></blockquote><p>Look how verbose the documentation is. Part of the verbosity is ‘necessary’
+to explain the interface’s unfortunate ambiguity (the meaning of a
+<code>null</code> return value), and part of the verbosity is gratuitous (the
+meaning of the <code>key</code> parameter, whose name and type make it obvious
+to a reader who has read and understood the <code>Map</code> interface).<p>Note also that the documentation as verbose as it is, does not explain the
+exceptions that the implementation might throw. The reader has to follow the <a href=http://docs.oracle.com/javase/7/docs/api/java/util/Map.html#get(java.lang.Object)>links
+up the inheritance chain to find the exceptions</a>.<p>Still, this interface does have the virtue of explaining itself immediately
+upon contact, somewhat like the screwdriver. Compare it to Python’s online
+help:<pre>
+>>> <strong>help({}.__getitem__)</strong>
+Help on built-in function __getitem__:
+
+__getitem__(...)
+    x.__getitem__(y) <==> x[y]
+</pre><p>And of course, Python exceptions are all run-time exceptions; there is no
+equivalent of Java’s checked exceptions (which make up part of the declared and
+statically-checked type of an interface).<p>Between these extremes of annoying verbosity and useless terseness, there is
+the admirably concise but eye-rollingly gnomic <a href=https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system>Hindley-Milner
+type system</a> notation.<p>It’s easy to imagine, and in C++ and Java easy to actually achieve, interface
+definitions that explain themselves concisely like Hindley-Milner, but without
+the gnomic Greek. For example, a better <code>Map.get</code> in Java:<pre>
+public V get(K key) throws NoSuchKeyException
+</pre><p>Or, if you dislike exceptions and like Maybe types as I do,<pre>
+public MaybeV get(K key)
+</pre><p>Either way, the interface explains itself in 1 concise line, without the
+ambiguity of <code>null</code>, with no need for verbosity, and with no need to
+crawl up the inheritance chain for more clues. Just as the labels in buttons
+like <strong>All Events In The Series</strong> and <strong>Close Without
+Saving</strong> explain themselves concisely, the names of types and identifiers
+explain themselves to readers who have understood the 1-paragraph definitions of
+<code>Map</code> and <code>Maybe</code>. Callers that violate the interface
+simply won’t compile, let alone run — no nasty run-time surprises like in
+Python.<p>(Note that in defining the key type <code>K</code> as the argument type of
+<code>get</code>, we avoid another ambiguity in the Java <code>Map</code>
+interface: the possibility of <code>ClassCastException</code> (<a href=https://docs.oracle.com/javase/7/docs/api/java/util/Map.html#get(java.lang.Object)>documented
+as “optional”</a>). Recall from the documentation above that Java’s
+<code>Map.get</code> takes <code>Object</code> as the argument type — which may
+not correctly cast, at run-time (!), to <code>K</code>.)<p>There is a whole rant to be written on another topic I touched on in the last
+post: Whether or not an interface’s guarantee is <em>computable</em>. But, it
+will have to wait; for now, it is time to compose these 2 interfaces:<pre>
+class Person {
+  // ...
+  MaybeSatisfaction eat(Eatable* eatable) mutable;
+  // ...
+}
+
+class ChocolateChipPancake : public Eatable {
+  // ...
+}
+</pre><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

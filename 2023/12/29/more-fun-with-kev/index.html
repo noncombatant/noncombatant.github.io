@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>More Fun With The Known Exploited Vulnerabilities Catalog</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>More Fun With The Known Exploited Vulnerabilities Catalog</h1><p><time>29 December 2023</time><p>Happily, <a href=https://cwe.mitre.org/top25/archive/2023/2023_kev_insights.html>MITRE has
+analyzed and characterized the bugs in the Known Exploited Vulnerabilities (KEV)
+Catalog of 2023</a>:<blockquote><p>In 2021, the <a href=https://www.dhs.gov/cisa/cybersecurity-division>Cybersecurity and
+Infrastructure Security Agency (CISA)</a>
+began publishing the “<a href=https://www.cisa.gov/known-exploited-vulnerabilities-catalog>Known
+Exploited Vulnerabilities (KEV) Catalog</a>.” Entries in this catalog are
+vulnerabilities that have been reported through the <a href=https://www.cve.org/>Common Vulnerabilities and Exposures (CVE®)</a>
+program and are observed to be (or have been) actively exploited.</blockquote><p>I think this part in particular is important for software engineers and
+management to be aware of:<blockquote><p>CISA recommends that organizations monitor the KEV catalog and
+use its content to help prioritize remediation activities in their systems to
+reduce the likelihood of compromise.</blockquote><p>Last year I did <a href=/2022/04/22/itw-taxonomy/>a similar thing</a> (see
+also <a href="https://docs.google.com/spreadsheets/d/1JeN3F8EG6A_ckb7PDCHIuAocR8W-6UEu9kKoctJaF08/edit#gid=1509787727">the
+spreadsheet</a>), with a substantially different classification system but with
+essentially the same outcome.<p>Hand-waving away the differences in the bug classification for a moment, we
+see that MITRE got a similar result as I did: they got 46% memory unsafety (with
+use-after-free (UAF) leading), while my (incomplete) result was 40% memory
+unsafety. So we’re in the same ballpark, which is nice.<p>Of the various kinds of memory unsafety, why should UAF be so prominent in
+known exploitation in 2023? My take is that for arbitrarily complex object
+graphs, <a href=/2023/05/29/complexities-of-allocation/>nothing but
+heap-walking garbage collection is reliable for achieving temporal safety</a>.
+(GC; as opposed to less expensive lifetime management approaches like reference
+counting, arena allocation, and so on.) Temporal safety is much harder in
+general to fix efficiently than is spatial unsafety.<p>Moreover, browsers — which by definition must have complex object graphs (due
+to for example the HTML DOM, JavaScript, and cross-process IPC with entangled
+object lifetimes) —  are naturally a big focus of exploit developers’ attention.
+For efficiency reasons, browsers tend not to use GC for much of the browser’s
+own internals. I think that accounts for the prominence of UAF in the 2023
+catalog.<p>Let’s consider MITRE’s classification system, though.<h2>Taxonomic Tangles</h2><p>At its core, I find <a href=https://cwe.mitre.org/>the Common Weaknesses
+Enumeration taxonomy</a> (CWE) to be trying for more precision than we can get
+or even need, and that it obscures more than it enlightens. (<a href=/2022/07/10/fraught-vdbs/>I find the same is true of the Common
+Vulnerability Scoring System</a> (CVSS).)<p>For example, consider the 2nd- and 3rd-most prevalent bug classes, <a href=https://cwe.mitre.org/data/definitions/122.html>CWE-122 heap-based buffer
+overflow</a> and <a href=https://cwe.mitre.org/data/definitions/787.html>CWE-787 out-of-bounds
+write</a>. It’s not immediately clear what the important differences between
+these 2 taxa are. After reading their definitions, I find it even less clear.
+Were the heap-overflows all reads, not writes? Were the OOB writes all on the
+stack?<p>At the high level of analysis we are doing here — that is, helping managers
+and engineers allocate their time and attention most effectively —  the read vs.
+write distinction matters, but I’m not sure the heap vs. stack (vs. <a href=https://en.wikipedia.org/wiki/.bss>BSS</a>) part is the biggest deal. It
+matters to exploit developers, but the solutions look similar and have similar
+costs to develop.<p>There is also a <a href=https://cwe.mitre.org/data/definitions/788.html>CWE-788 access of memory
+location after end of buffer</a> taxon. Where does that fit in?<p>This is important, because it might be that the 2nd- and 3rd-most significant
+categories actually outrank UAF, if you treat them as essentially the same: as
+spatial unsafety. That might significantly impact an engineering team’s
+cost/benefit analysis: solving temporal safety is very hard (expensive), while
+solving spatial safety is typically much easier (cheaper). Consider <a href=https://github.com/abseil/abseil-cpp/blob/lts_2023_08_02/absl/container/inlined_vector.h#L363>a
+C++ <code>vector</code> type</a>:<pre>
+// `InlinedVector::operator[](...)`
+//
+// Returns a `reference` to the `i`th element of the inlined vector.
+reference operator[](size_type i) ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    <b>ABSL_HARDENING_ASSERT(i &lt; size());</b>
+    return data()[i];
+}
+</pre><p>If the biggest security problem of 2023 can be solved by sprinkling 1 line of
+code in the right places in core libraries, that’s a very different story than
+if the biggest problem requires fancy allocation and deallocation strategies, as
+solving UAF typically does. Allocation and deallocation necessarily have a much
+greater impact on software efficiency and development cost than does the spatial
+safety fix above.<p>Similarly, the 4th-biggest problem of 2023 in MITRE’s analysis is <a href=https://cwe.mitre.org/data/definitions/20.html>CWE-20 improper input
+validation</a>. As defined, that could be a key contributing factor to all of
+the other top 9 problems —  and often is. (That
+<code>ABSL_HARDENING_ASSERT</code> above is proper input validation, for
+example.)<p>Along the same lines, type confusion (#8) could lead to spatial unsafety,
+could be an exploitable outcome of UAF, and could be part of the exploitation of
+deserialization of untrusted data (#6).<h2>Keep Calm And Engineer On</h2><p>Although CWE is Kind Of A Lot, MITRE’s analysis is, at a high level, correct
+and useful in directing our work:<ol><li>memory unsafety is the biggest problem
+(#1, #2, #3, and at least some of #4 and #8)<li>the next biggest class of problem is what I called <code>eval</code> bugs
+(#5, #6, possibly #8)<li>after that, it’s all about what I called logic and configuration bugs (#7,
+#9, #10)</ol><p>Our goal should be to get things to where logic and (rarely) configration
+bugs are our biggest problems. To get there, we gotta hammer on memory unsafety
+and <code>eval</code>.<p>Finally, if spatial unsafety really is the current biggest problem, that is
+great news. Time to go write a bunch of 1-liners, and <a href=https://research.swtch.com/testing>write tests</a>! 🙂<p>And, as I am reminded, turn all those pointers into <code>span</code>s.
+😉<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

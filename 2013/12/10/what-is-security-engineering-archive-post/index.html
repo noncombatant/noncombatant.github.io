@@ -1,0 +1,60 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>What Is Security Engineering (archive post)</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>What Is Security Engineering (archive post)</h1><p><time>10 December 2013</time><p><em>To make sure I keep a copy of this post, <a href=https://hackbrightacademy.com/blog/software-security-engineering/>originally
+posted at the Hackbright blog</a>, here it is.</em><p>As a Hackbright student or alumna, you probably plan to participate in
+building the foundation of our shiny new automated world. (Thanks for
+joining us! We need you.)<p>Software, firmware, and computing hardware underlie essentially all
+aspects of our society  —  the <a href=http://www.edn.com/design/automotive/4423428/Toyota-s-killer-firmware--Bad-design-and-its-consequences>safety
+systems in our cars</a> (and trains, and airplanes), our <a href=http://money.cnn.com/2012/08/09/technology/knight-expensive-computer-bug/>financial
+system</a>, <a href=http://www.darkreading.com/management/stuxnet-expert-proposes-new-framework-fo/240160846>critical
+infrastructure</a> like energy and water purification, our <a href=https://twitter.com/alexhern/status/402365655250644992/photo/1>healthcare
+system</a>, and our <a href=http://www.gamesindustry.biz/articles/2013-03-27-ea-drm-is-a-failed-dead-end-strategy>culture</a>.
+Even hand-crafted clothing is sold on <a href=http://www.etsy.com/>Etsy</a> and is made of <a href="http://www.nytimes.com/2013/09/20/business/us-textile-factories-return.html?_r=0">cotton
+spun by a robot</a>.<p>But it’s not enough that our infrastructure merely work. It has to work
+well and reliably under all kinds of pressure: human error (operator  —  and
+developer!), bad weather, bad luck, radio interference, hardware failure,
+network outages, criminal malfeasance. Even war.<p>Security engineering requires adopting a new mindset, at once cautious
+and conservative, yet also willing to calculate risks and experiment. Either
+perspective on its own is not enough; we must be of two minds to
+succeed.<p>Software security engineers are the professional pessimists who insist
+that <a href=https://blog.twitter.com/2013/keeping-our-users-secure>Twitter must
+encrypt and authenticate all its network traffic</a> even though it might
+seem less important than, say, banking. (Ironically, we then <a href=http://arstechnica.com/security/2013/04/why-your-password-cant-have-symbols-or-be-longer-than-16-characters/>beg
+and plead with banks to adopt security</a> at least as good as Twitter’s.)
+We worry about <a href=https://www.usenix.org/legacy/event/leet08/tech/full_papers/king/king.pdf>how
+impossible it is to audit the hardware which we have to assume is
+safe</a>. <a href=http://arstechnica.com/security/2013/11/smart-tv-from-lg-phones-home-with-users-viewing-habits-usb-file-names/>Normal
+people see a TV</a>, but we see <a href=http://en.wikipedia.org/wiki/Telescreen>Winston Smith’s
+telescreen</a>. We are those annoying friends who remind their co-workers
+that <a href=http://en.wikipedia.org/wiki/Integer_overflow>computers
+cannot, in fact, correctly add two numbers together</a> (not without <a href=http://en.wikipedia.org/wiki/Arbitrary-precision_arithmetic>significant
+help</a>, at least).<p>Software security engineers are the professional optimists who try to
+make computers work safely in spite of <a href=http://en.wikipedia.org/wiki/Murphy%27s_law>Murphy’s best
+efforts</a>  — we will try to <a href=http://www.cl.cam.ac.uk/~rja14/Papers/satan.pdf>program Satan’s
+computer</a>. We dream of a world in which <a href=http://en.wikipedia.org/wiki/Google_driverless_car>robot
+cars</a> tell each other only the truth about their position and speed. We
+dream of a world in which credit card and ATM fraud is mere statistical
+noise. We dream of a world in which <a href="http://www.youtube.com/watch?v=TzR7R6fBr00">your phone is really off
+when you turn it off</a>, and which keeps your communications with your
+doctor confidential when it is on.<p>We dream of a world in which <a href=http://arstechnica.com/gadgets/2012/10/drm-be-damned-how-to-protect-your-amazon-e-books-from-being-deleted/>books
+cannot be burned</a>.<h2>Resources</h2><p>If you’re interested in security engineering (and I hope you are, even if
+you don’t choose to make it your specialty), you can get involved at any
+point in your career. One of the best ways to get started is  —  as
+always  —  simply getting your hands dirty.<ul><li>Use <a href=https://www.wireshark.org/>Wireshark</a> to learn what is
+happening on your network, and learn about the structure of network packets
+and connections.<li>Use an <a href=http://portswigger.net/burp/proxy.html>HTTP proxy like
+Burp</a> to learn what your browser is saying to web servers, and learn what
+it takes to intercept encrypted communications.<li>Check out <a href=http://lcamtuf.coredump.cx/>Michal Zalewski</a>’s
+excellent <em><a href=https://code.google.com/p/browsersec/wiki/Main>Browser Security
+Handbook</a></em> to learn why, exactly, the nytimes.com web site cannot
+read your Gmail. (Hopefully.)<li>If you’re interested in cryptography, an excellent beginning book is <a href=http://www.amazon.com/Cryptography-Engineering-Principles-Practical-Applications/dp/0470474246><em>Cryptography
+Engineering</em></a> by Ferguson, Schneier, and Kohno.<li>It’s important and hilariously fun to learn the C programming language,
+and to learn <a href=http://www.amazon.com/Expert-Programming-Peter-van-Linden/dp/0131774298>how
+C programs can go so badly wrong</a>. <a href=http://lldb.llvm.org/tutorial.html>Get your hands dirty with a
+debugger and disassembler</a>, and learn what the machine is really
+doing.</ul><p>And, as always, find a <a href=http://www.baythreat.org/>good</a> <a href=http://ccc.de/>community</a> to <a href=http://infosecmentors.com/>learn with</a>. Or <a href=http://observationdeck.io9.com/help-fund-a-feminist-makerspace-in-seattle-1467872208>build
+your own</a>!<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

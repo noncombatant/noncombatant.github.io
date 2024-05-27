@@ -1,0 +1,43 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Long Live Sandboxing!</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Long Live Sandboxing!</h1><p><time>11 April 2021</time><p>Apparently, there is some confusion about whether sandboxing is necessary,
+sufficient, and/or affordable. (<a href=https://www.securityweek.com/cost-sandboxing-prompts-shift-memory-safe-languages-little-too-late>Here
+is an example from Security Week</a>, although this is not the only
+instance.)<p>As the lead of Chrome’s sandboxing team and as co-lead of Chrome’s memory
+safety efforts, perhaps I can clarify a little.<p>As I said in <a href=https://www.usenix.org/conference/enigma2021/presentation/palmer>my
+Enigma presentation</a> (<a href=https://www.usenix.org/sites/default/files/conference/protected-files/enigma2021_slides_palmer.pdf>slide
+7</a>), “good sandboxing is table stakes.” I reiterated this point in <a href=/2021/04/09/prioritizing-memory-safety-migrations/>my previous post</a>
+(“if [...] your application is not making use of process sandboxing, consider
+exploring that first before starting a rewrite effort”).<p>Contrary to what the Security Week article and some Twitter discourse
+suggest, <b>sandboxing and memory safety are complementary techniques</b>, and
+both are necessary.<dl><dt><b>Sandboxing reduces the severity of bugs.</b><dd><p>Sandboxing isolates code away from system resources and application
+resources, reducing the damage that compromise can do. (Sandboxing also has
+certain efficiency advantages, as well as disadvantages, too.)<p>However, a certain amount of attack surface will always be available from
+within a sandbox, and memory unsafety (and other bugs) can enable an attacker to
+get at it.<p>So you still need to get rid of as many bugs inside the sandbox as
+possible.<dt><b>Memory safety reduces the number of bugs.</b><dd><p>As discussed at Enigma and in my previous post, very many bugs, including an
+overwhelming majority of the vulnerabilities we know about right now, are due to
+memory unsafety. It helps to get rid of as many of those as possible.<p>However, memory safety can’t constrain access to system resources, including
+the file system, system calls, et c.<p>So you still need sandboxing.</dl><p>There are 2 key ways that Chromium (specifically) is nearing the limits of
+how much sandboxing we can do right now:<ul><li>Our unit of isolation, the process, is expensive in time and space on some
+(not all) platforms.<li>Some operating systems do not provide sufficiently fine-grained mechanisms
+to allow us to maximally constrain sandboxed processes. Things are improving,
+but it’s an unavoidably slow process.</ul><p>I tried also to raise awareness that not all the applications that need
+sandboxing are making use of it. I know of at least 1 organization that was
+compromised because their server application did not sandbox a file format
+parser (written in C), and allowed anyone on the internet to send input to it.
+So, more developers need to do more sandboxing —  <b>as an industry, we are nowhere
+near the limits yet</b>.<p>We are still pursuing additional sandboxing in Chromium. It’s just that we
+can see a limit to what’s possible <b>at the moment</b>. If OS developers give
+us more of the primitives we want, we’ll jump right on them —  as we always
+have.<p>Finally, nobody knowledgeable, that I know of, has claimed or would claim
+that eliminating 100% of memory unsafety bugs would also get rid of all
+vulnerabilities. The claim — <a href=https://alexgaynor.net/2020/may/27/science-on-memory-unsafety-and-security/>based
+on repeated real-world experience and evidence</a> —  is that memory unsafety
+accounts for a large majority of vulnerabilities. There will still be bugs. Our
+goal is to marginalize memory unsafety bugs, because they are currently our
+worst observed problem.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

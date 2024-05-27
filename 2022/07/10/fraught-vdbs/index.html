@@ -1,0 +1,184 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>The Fraught Utility Of Vulnerability Disclosure Databases</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>The Fraught Utility Of Vulnerability Disclosure Databases</h1><p><time>10 July 2022</time><p>Do we need vulnerability databases? Are the ones we have working? Should we
+do something else? How can we improve our overall approach to the “WTF is going
+on?” problem?<p>My strong bias is toward the scientific method —  which requires open inquiry
+and easy access to knowledge —  and against unreliable or false metrics. I also
+strongly resist any make-work or boondoggling that is not directly relevant to
+understanding how software works and fails, and making it work more
+goodlier.<p>So, I tried to think about vulnerability databases, and what all we might
+want from them. First, some definitions.<h2>Definitions</h2><dl><dt>Developer:<dd>An organization which (or lone hacker who) develops
+software.<dt>Developer communications:<dd>Communications from developers about
+vulnerabilities, including bug trackers, release notes, Knowledge Base articles,
+code review and CI/CQ, et c.<dt>Researcher:<dd>An organization which (or lone hacker who) hunts for
+vulnerabilities in software.<dt>Researcher communications:<dd>Communications from researchers about
+vulnerabilities, including bug trackers, advisories, blog posts, exploits, and
+Twitter threads.<dt>Deployer:<dd>An organization or person who is using some software to
+achieve a goal.<dt>Vulnerability database program (VDB):<dd>An organization that tracks,
+describes, and/or issues alerts for vulnerabilities.</dl><h2>Vulnerability Databases</h2><p>What might we want in a VDB?<ul><li>Information about the nature of the vulnerability, including:<ul><li>specific versions of specific products affected;<li>attack pathways (e.g. unauthenticated internet attacker, authenticated local
+user account, et c.);<li>proof of concept (PoC) exploit, unit test, or other test: proof that the bug
+is real and that the fix works;<li>availability of the fix;<li>workarounds;<li>mitigating factors;<li>the type of bug (e.g. heap buffer overflow, SQL injection); and<li>the specific locus of the bug (e.g. the login flow, the network-facing
+<code>FooHandler</code>, the kernel-mode driver, et c.).</ul><li>Searchability: a unique ID (or a keyword) that search engines can easily
+find. The IDs must be unique, and there should not be multiple IDs for the same
+bug.<li>Authoritativeness: ideally, most of the community will recognize a given
+information source as ✨ The Last Word ✨ in vulnerabilities for the range of
+software it covers.<li>Alert quality: timely, relevant, and actionable alerts.<li>Low overhead: for developers to add new entries to the database must be easy
+and fast. Researchers should therefore be able to get IDs for their discoveries
+quickly.</ul><p>I made a rough comparison of 4 sources of vulnerability information:<table><tr><th class=bottom>Source<th class=bottom>Information<th class=bottom>Searchability<th class=bottom>Authoritativeness<th class=bottom>Alert Quality<th class=bottom>Overhead<tr><th>CVE<td><a href=/2022/04/22/itw-taxonomy/>Poor</a><td>Good<td>Low, due to poor information<td><a id=fn1_back></a>Highly varying<a href=#fn1>①</a><td>High<tr><th><a href=https://www.openwall.com/ove/>OVE</a><td>None; provides only IDs<td>Good<td>None; provides only IDs<td>None; provides only IDs<td><a href=https://en.wikipedia.org/wiki/Machine_epsilon>epsilon</a><tr><th>Developer communications<td><a id=fn2_back></a>Highly varying<a href=#fn2>②</a><td>Good<td><a id=fn3_back></a>‘Should be’ ideal but varies with information quality<a href=#fn3>③</a><td>Good<td>None beyond what is inherently necessary<tr><th>Researcher communications<td>Varying; often good<td>Poor<td>Varying; sometimes good<td>Varying; sometimes good<td>None beyond what is inherently necessary</table><p>From this I observe a few things:<p><b>Developer communications have the best ability to meet all our
+requirements:</b> developers (should) have the best knowledge about the software
+they create, full information about the nature of the bug, full information
+about the fix, and full information about remediation. Sometimes developers do
+meet our requirements, and that is great. Ideally, they always would. All too
+often, they don’t, and keeping communications high quality requires constant
+effort and skill from program managers.<p><b>Researcher communications have a great ability to meet our information
+requirements in particular.</b> Sometimes they do, and that is great. Sometimes,
+they can be more authoritative than reticent developers.<p><b>CVE’s clearest benefit seems to be an authoritative source of unique ID
+numbers,</b> plus whatever information the developer might provide (usually very
+little). But in my experience the coordination cost is high for developers, and
+as a result developers often minimize their use of CVE. Hence OVE: the argument
+goes that if all CVE reliably does for us is make numbers, well, we can do that
+far more cheaply.<p><b>We might benefit if program managers of VDBs stopped accepting poor, late,
+and un-actionable information from developers.</b> The CVE program, as the most
+widely recognized VDB, has an opportunity to raise the bar across the industry
+by calling out such reticent developers, citing the needs of and benefits to the
+public and basic science.<p>For example, imagine if a VDB tagged entries with a message like “Developer
+declined to provide meaningful information” when the vendor provided a
+meaningless description of the vulnerability. That might exert some salutary
+pressure on developers.<p><b>We would benefit if VDBs made it easier for the developer to commit
+current information to the database.</b> For example, CVE-2022-2294, which is
+currently being exploited in the wild, is documented <a href=https://chromereleases.googleblog.com/2022/07/stable-channel-update-for-desktop.html>in
+Chrome’s 4 July 2022 release notes</a>, but <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?id=CVE-2022-2294">the CVE
+entry</a> as of 8 July contains no information, saying only:<blockquote>** RESERVED ** This candidate has been reserved by an organization
+or individual that will use it when announcing a new security problem. When the
+candidate has been publicized, the details for this candidate will be
+provided.</blockquote><p>Perhaps the CVE entry will be eventually consistent with the Chrome release
+notes, hopefully including a link to the bug tracker. (<a href=https://chromium.googlesource.com/chromium/src/+/master/docs/security/security-labels.md#Drop-Restrict_View_SecurityTeam_SecurityNotify_From-Old-And-Fixed-Bugs>Chrome
+policy</a> is to make security bugs public 14 weeks after the fix has shipped,
+so a link to the bug tracker will become valuable in time.)<h2>Prioritizing Vulnerability Response</h2><p>What do we want in a vulnerability ‘scoring’ system? (Do we want a
+vulnerability scoring system?)<p>As an experiment, I imagined a hypothetical easy to use, network-based,
+denial of service (DoS —  not <a href=https://en.wikipedia.org/wiki/Denial-of-service_attack#Distributed_DoS>DDoS</a>)
+attack, and tried to score it with CVSS. I assumed there is an existing exploit
+that doesn’t completely take down a service, but causes it to consume lots of
+time and/or space.<p><a id=fn4_back></a>For example, imagine a database query that, for some
+reason, is slow in a given database engine. It is for some reason (less than SQL
+injection, more than just using the site normally) remotely-triggerable. Perhaps
+an attacker can make some unauthenticated web request that invokes this
+expensive query, and it’s expensive only because the query planner has a bug —  normally, the query would be efficient<a href=#fn4>④</a>.<p>The CVSS vector I got is<pre>
+AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L/E:F/RL:U/RC:C/CR:X/IR:X/AR:H/MAV:N/MAC:L/MPR:N/MUI:N/MS:U/MC:N/MI:N/MA:L
+</pre><p>which scores 6.0 in <a href=https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator>NIST’s CVSS 3.1
+calculator</a>.<p>Since that string is just noise, let’s look at a graphic:<figure><img src=calculator.png width=1024 height=302 alt="A screenshot of
+the NIST CVSS calculator showing the hypothetical bug with a score of 6.0" loading=lazy><figcaption>More readable, though not more
+informative.</figcaption></figure><p>What does “6.0” mean? Is it high enough to call <a href=https://en.wikipedia.org/wiki/Site_reliability_engineering>the on-call
+SRE</a>? Do we only get out of bed for 7.5 or higher? (Why 7.5?) Is this bug bad
+enough to call the vendor to complain —  or sue?<p>Some people might use CVSS to make that kind of decision. It is, after all, a
+score telling you how severe a problem is.<p>But there is no single threat model, so there can be no single score that
+suits all audiences. Not everyone who uses the DoS-able database engine makes
+that kind of inefficient query. Not all deployers of vulnerable platforms need
+to worry, even if the bug is present —  maybe their servers are overprovisioned
+relative to their load.<p>But what about a shopping site? What about a shopping site during the winter
+holiday season? Such a deployer can put a concrete dollar value on the cost of
+downtime, and that cost changes from quarter to quarter. In turn, that will
+change how the deployer prioritizes different vulnerabilities.<p>Nor do the scores map to real-world costs and risks —  will a vulnerability
+with a CVSS score of 10.0 cost you twice as much as (or, say, 5 orders of
+magnitude more than) one with a score of 5.0? The question is nonsensical
+because nobody has the same cost model, either.<p>The CVSS people are aware of these problems, and have tried to address them.
+From <a href=https://www.first.org/cvss/user-guide>the CVSS User
+Guide</a>:<blockquote><p><b>2.1. CVSS Measures Severity, not Risk</b><p>The CVSS Specification Document has been updated to emphasize and clarify the
+fact that CVSS is designed to measure the severity of a vulnerability and should
+not be used alone to assess risk.<p>Concerns have been raised that the CVSS Base Score is being used in situations
+where a comprehensive assessment of risk is more appropriate. The CVSS v3.1
+Specification Document now clearly states that the CVSS Base Score represents
+only the intrinsic characteristics of a vulnerability which are constant over
+time and across user environments. The CVSS Base Score should be supplemented
+with a contextual analysis of the environment, and with attributes that may
+change over time by leveraging CVSS Temporal and Environmental Metrics. More
+appropriately, a comprehensive risk assessment system should be employed that
+considers more factors than simply the CVSS Base Score. Such systems typically
+also consider factors outside the scope of CVSS such as exposure and threat.</blockquote><p>CVSS 3.0 and greater were (presumably) devised to address the problem of
+nonsensical scores, such as that <a href=https://heartbleed.com/>Heartbleed</a> —  a bug that lets unauthenticated
+internet attackers read secrets out of a server’s memory — <a href=https://nvd.nist.gov/vuln/detail/cve-2014-0160>scored only 5.0 at the
+time</a>. (Click the <b>CVSS Version 2.0</b> button to see it.) At least in the
+case of Heartbleed, CVSS 3 results in scores that seem more ‘intuitively
+accurate’ —  to those of us assuming a particular class of threat model.<p>However, I find that section quoted above to be a bit of a cop-out, given how
+people have reported using CVSS to me. People are using it to make operational
+decisions. It also feels insufficient: it’s not just that risk is different for
+different people at different times, it’s that severity can vary too!<p>Imagine that a hypothetical shopping app deployer has deployed the DoS-able
+database such that each query runs in a sandboxed and resource-limited process.
+The deployers have tested their sandbox resource limits such that 99.99% of true
+shopping queries succeed, while queries that exceed the memory limit or use more
+than some number of milliseconds of compute time are killed. For this deployer,
+the severity of the bug goes way down, nearly to zero, even though the cost of
+successful attack has stayed the same. This deployer has effectively mitigated
+the bug. (This deployment strategy can mitigate many potential bugs, and can
+change how the deployer prioritizes a wide variety of vulnerabilities.)<p>Another problem with CVSS is its <a href=https://en.wikipedia.org/wiki/False_precision>false precision</a>. If you
+look at the calculator, you’ll see that the ‘measurements’ you can make about a
+vulnerability are of very coarse ‘precision’, e.g. None –  Low –  High, or (for
+Exploit Code Maturity) Not Defined –  Unproven –  PoC – Functional – High. The
+measurements are in tertiles, quartiles, and quintiles, yet the calculator
+produces results purporting 2 significant figures (e.g. 6.2). This is an
+illusion produced by the arithmetic of the CVSS scoring procedure, not actual
+measurements of real bug severity.<p>I have my doubts about whether the severity of vulnerabilities can be scored
+at all, especially without lots and lots of deployer-specific context. Even with
+that context, you still also need a well-grounded cost model —  but it is very
+difficult to get one. Not all users that a given deployer is serving will share
+a given model, so you may need many cost models. And then you need a way to
+balance the concerns of all your constituents —  another complex and
+hard-to-ground model. In real life, people make risk decisions much more
+qualitatively than we or they would like to believe.<p>That doesn’t mean we shouldn’t strive for well-grounded quantitative models!
+Just that we need to be prepared to act without them, and that CVSS is not
+one.<p>If we do away with the spurious numbers and just treat CVSS as purely
+qualitative —  which it is, <b>and which is fine!</b> —  we’d have a more honest
+and safer-to-use system. (Nobody is really worrying about the difference between
+7.6 and 7.4 anyway. At least I hope not.) The basic qualities that CVSS
+encompasses are all important and useful, and account for many of the desiderata
+at the top of this post.<h2>Conclusion</h2><p>The combination of CVE + CVSS gives us some of what we want, and we could
+have more of it at lower cost if any of a few magical things happened:<ul><li>Developers provided meaningful information in their own vulnerability
+databases<li>Developers provided meaningful information to VDBs<li>VDBs made it easier for developers to keep entries current and accurate<li>VDBs rejected information-free entries or called them out as such<li>Coordination costs were lowered, such as by removing the ‘global lock’ in
+the CVE database (as OVE proposes to do, and which could be done by giving each
+<a href=https://www.cve.org/ProgramOrganization/CNAs>CNA</a> its own
+‘namespace’ to issue numbers in)<li>The CVSS program embraced its inherent qualitativeness, and shed the
+pseudo-quantities.</ul><p>However, it will never be possible to beat the information richness,
+searchability, or authoritativeness of a well-run developer communications
+program. (This is especially true for projects that are open source as well as
+being well-run.) Also great are well-run researcher communications programs —  <a href=/2022/04/22/itw-taxonomy/>Taxonomy Of In-The-Wild Exploitation</a> was
+only possible because so many researchers wrote so many great blog posts and
+PoCs. (Thank you!)<p>Additionally, there will always be vulnerabilities that are known and fixed
+but which don’t get VDB entries. <b>In my experience, the majority of
+vulnerabilities go un-numbered</b>, and for those vulnerabilities, this whole
+discussion is moot. This is not a fault of any VDB program: although reducing
+the friction of working with the program would help, we will always need to
+prepare for vulnerabilities that aren’t announced or tracked. You never get
+perfect global coordination, no matter how low the friction. And sometimes
+developers don’t even realize (or want to admit) that they are fixing a
+vulnerability (as opposed to just a regular bug). And sometimes their own bug
+trackers are already easier to use and more useful than a global database.<p>Therefore no VDB can ever be the sole trigger for action on the part of
+deployers. The only reliable way to get all the available fixes is to track the
+latest stable version. No matter how good any VDB gets, that will always be true —  and deployers who do so will be insulated from gaps and mistakes on the part
+of developers and of VDB programs.<p>For the sake of public safety —  and, honestly, just for the pride of
+engineering excellence —  we must improve the quality and discoverability of
+vulnerability information, and reduce the cost of providing and getting it.
+There’s a lot of room for us to do a lot better as a community. The status quo
+is not working.<hr><p><a id=fn1></a><a href=#fn1_back><b>1.</b></a> When CVE alerts are of
+low quality, it is not typically the ‘fault’ of the CVE program itself. Software
+development organizations must provide timely, relevant, and actionable
+information; if they don’t, there’s not much the CVE program can do.<p><a id=fn2></a><a href=#fn2_back><b>2.</b></a> Some developer bug
+trackers are great and have most or all of the properties we want. This is
+typically, but neither inherently nor historically only, seen in the trackers
+for open source projects. But other developers provide very little information,
+intentionally hide information, or don’t even have bug trackers at all.<p><a id=fn3></a><a href=#fn3_back><b>3.</b></a> When the developer’s bug
+tracker is information-poor, then researchers’ bug trackers, advisories, and
+blogs become more authoritative.<p><a id=fn4></a><a href=#fn4_back><b>4.</b></a> I once really had a bug
+like this, on a security review engagement years ago. The client told me that
+their biggest fear was that 1 tenant in their multi-tenant platform would starve
+other tenants of resources, so they had strict quotas around CPU time and memory
+allocation. I was able to make <a href=https://stackoverflow.com/questions/44487537/why-does-naive-string-concatenation-become-quadratic-above-a-certain-length>the
+string allocation routine in their language runtime go quadratic</a> in a way
+that their quota system couldn’t see, but which I could and did time remotely. I
+fired off a few pathological requests, and the development server became
+unresponsive. So I wrote it up and went to lunch, since I couldn’t test any
+more. For this client, it was the most high-priority bug to fix; but for others,
+it might not matter as much or at all.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

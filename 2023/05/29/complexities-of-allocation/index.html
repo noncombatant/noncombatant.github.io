@@ -1,0 +1,55 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Ergonomics, Resource Lifetimes, And Object Graphs</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Ergonomics, Resource Lifetimes, And Object Graphs</h1><p><time>29 May 2023</time><p>This is a smol thought on how resource acquisition and release strategies
+affect the ergonomics of object lifetimes and the complexity of object graphs.
+<i>Resource</i> generally means any or all of: memory, objects, files, locks,
+sockets, et c.<p>Whenever a program requires complex object graphs, complex lifetimes, or
+deterministic release of resources, but the language does not make those things
+ergonomic to express, bugs will inevitably ensue. Examples include (but are not
+limited to) trying to manage cyclic graphs with <a href=https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization>RAII</a>
+(e.g. classic HTML DOM and JavaScript binding implementations); any language
+with explicit release (e.g. any C program that allocates on the heap, opens
+files, or holds locks); and programs for which deterministic resource release is
+critical to correctness but when automatic release is non-deterministic (e.g.
+Java’s <code>finalize</code>).<p>The kinds of bugs you might ‘enjoy’ if your language cannot ergonomically
+express the relationships between your resources vary according to the kinds of
+resources you need to acquire and release. Examples:<dl><dt>memory<dd>Space inefficiency; use-after-free bugs<dt>locks<dd>Deadlocks; time inefficiency (holding a lock too long);
+forgetting to release a lock<dt>files and handles<dd>File descriptor and handle exhaustion due to
+keeping them open too long; data loss due to failing to synchronize a write
+before program exit</dl><p><a href=https://noncombatant.org/2016/01/30/everyone-needs-secure-usability/>Everyone
+needs secure usability</a>, if we hope to consistently produce correct and safe
+software.<p>For simple examples of what I mean by these strategies (except for GC, which
+hopefully everyone is familiar with from experience in Go, Python, Java, et c.;
+and global static analysis, which you can read about <a href=https://doc.rust-lang.org/1.8.0/book/references-and-borrowing.html>as it
+is used in Rust</a>), see <a href=examples.cc>examples.cc</a>. These examples
+use memory as the resource, but keep in mind the same idea applies to other
+kinds of resources.<table><tr><th>Allocation Strategy<th>Brief Characterization<th>Ergonomic For Lifetimes<th>Ergonomic for Object Graph Complexities<th>Guarantee Of Resource Release<tr><td>caller acquires, caller releases implicitly<td>Static or stack storage, released on termination or <code>return</code>
+(respectively)<td>static, stack-local<td>plain old data (no references); or possible references to objects of same or
+longer lifetimes<td>typically deterministic<sup>†</sup><tr><td>caller acquires, caller releases explicitly<td>Heap or other external resource released with an explicit call
+(<code>free</code>, <code>delete</code>, <code>close</code>, et c.)<td>not ergonomic<sup>＊</sup><td>not ergonomic<td>deterministic; subject to programmer error<tr><td>callee acquires, caller releases implicitly<td>Types (e.g. <code>string</code>, <code>vector</code>, <a href=https://en.cppreference.com/w/cpp/thread/scoped_lock><code>scoped_lock</code></a>,
+et c.) that manage resources internally and release them in their destructors,
+which are implicitly called at the end of the scope<td>static, stack-local<td>acyclic graph; possible references to objects of same or longer
+lifetimes<td>typically deterministic<sup>†</sup><tr><td>callee acquires, caller releases explicitly<td>Functions and types that wrap resource acquisition but still require
+explicit release, e.g. <code>asprintf</code>/<code>free</code>, <a href=https://www.gnu.org/software/libc/manual/html_node/Controlling-Buffering.html#index-setvbuf><code>setvbuf</code></a>,
+<code>open</code>/<code>close</code>, et c.<td>not ergonomic<sup>＊</sup><td>not ergonomic<td>deterministic<sup>‡</sup>; subject to programmer error<tr><td>anyone acquires, anyone releases when ref count is 0<td>Reference-counting smart pointers, like <code>shared_ptr</code>, <a href=https://doc.rust-lang.org/std/rc/struct.Rc.html><code>Rc</code></a>, and
+<a href=https://doc.rust-lang.org/std/sync/struct.Arc.html><code>Arc</code></a>.<td>any<td>acyclic graph; possible references to objects of same or longer
+lifetimes<td>typically deterministic when thread-local; subject to leaks via cyclic
+references<tr><td>anyone acquires, global garbage collection<td>Languages with a garbage collector in its runtime, such as Lisp, JavaScript,
+Python, Go, et c.<td>any<td>arbitrary graph of objects of arbitrary lifetimes<td>non-deterministic; subject to leaks if program terminates before collection
+completes<tr><td>anyone acquires, global static analysis ensures implicit release<td>Languages that statically analyze explicit and/or deduced lifetime
+annotations that become part of an object’s type (see e.g. <a href=https://en.wikipedia.org/wiki/Substructural_type_system#Linear_type_systems>linear
+typing</a>).<td>inversely proportional to the complexity of entangled lifetimes<td>arbitrary graph of objects with references to objects of same or longer
+lifetimes<td>typically deterministic when thread-local<sup>†</sup></table><small><p>† Although one can imagine implicit but non-deterministic release, I don’t
+know of a language that has it in a static or stack-local context (but see GC).
+RAII is the generalized form of these strategies.<p>‡ Go’s <code>defer</code> is a special case: an explicit expression of
+non-deterministic release.<p>＊ Arena acquisition and release (when resources acquired during a given
+epoch are released together) can ease the difficulty that arises when objects of
+different lifetimes become entangled in a graph. The costs are that resource
+release within an arena might not be deterministic, and that some resources may
+have longer lifetimes than strictly necessary.</small><aside><p>Thanks to David Adrian and Jon Callas for reading earlier drafts of this post
+and nudging me to make it less unclear. If it’s still too gnomic, drop me a
+line. ☺️</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

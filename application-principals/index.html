@@ -1,0 +1,380 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Isolating Application-Defined Principals</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Isolating Application-Defined Principals</h1><p>By <a href=https://noncombatant.org/>Chris Palmer</a>,
+<time>19 July 2018</time><p>I originally prepared this article for the <a href=https://conf.researchr.org/track/wossca-2018/wossca-2018-papers>2018
+Workshop On Speculative Side-Channel Analysis</a>, but I think/hope it has some
+usefulness generally.<p>In particular, I strongly believe that more types of applications must align
+their principals with security mechanisms that platforms provide. Until they do,
+they remain unnecessarily vulnerable to both side-channel attacks and more
+prosaic problems like bad ol’ memory corruption, and logic bugs leading to
+principal confusion.<p>For that to work, platforms (operating systems and hardware) must provide
+stronger, guaranteed, documented, efficient, and ergonomic security mechanisms.
+The leading edge of application security practice works and is good. But it is
+fragile, hard to use and maintain, and not as powerful as it could be. This is
+all for lack of mechanisms built in to hardware and software platforms whose
+roots are in the 1970s. It’s time for platforms to catch up to the needs of
+applications. Spectre and Meltdown were a wake-up call, but the problems have
+been with us for decades.<p>Please send comments/criticism/questions to palmer@google.com or
+chris@noncombatant.org. Thanks!<div id=toc></div><h2>Abstract</h2><p>Typically the operating system defines the principal, with support from the
+hardware. However, some applications define their own internal principals beyond
+those the OS defines. The Spectre and Meltdown vulnerabilities have exposed and
+exacerbated a pre-existing lack of effective confinement between
+application-defined principals in many applications.<p>Operating systems must provide mechanisms for applications to effectively
+isolate application-defined principals, and applications must use those
+mechanisms. Many existing applications can and must make better use of existing
+mechanisms, and platforms must provide better mechanisms.<p>Existing mechanisms for isolating application-defined principals fall short
+in various ways, including complexity, brittleness, and inefficiency.<h2>Introduction</h2><p>The discovery of the Spectre and Meltdown vulnerabilities [<a href=#RefHornSideChannel>HornSideChannel</a>] [<a href=#RefLippMeltdown>LippMeltdown</a>] [<a href=#RefKocherSpectre>KocherSpecter</a>] showed that previously
+unknown
+micro-architectural side-channel attacks erode confidentiality guarantees across
+a variety of security boundaries, including hypervisor/guest, kernel/user, and
+user/user. Unfortunately, security boundaries <em>inside</em> user-space
+programs are trivially unable to provide confidentiality against a Spectre
+attacker operating inside any one of the boundaries.<p>Many types of user-space application (see <a href=#applications-define-principals>Applications That Define
+Principals</a>,
+below) define their own security boundaries or principals that are crucial to
+the confidentiality, integrity, or control of information managed by those
+principals. The Open Web Platform’s (OWP) same-origin policy [<a href=#RefBarthOrigin>BarthOrigin</a>] is a notable
+example.<h3>Application-Defined Principals</h3><p>Saltzer and Schroeder [<a href=#RefSaltzerProtection>SaltzerProtection</a>]
+define a <em>principal</em> as follows:<blockquote>The entity in a computer system to which authorizations are granted;
+thus the unit of accountability in a computer system.</blockquote><p>Typically the operating system defines the principal, with support from the
+hardware. For example, NT and POSIX use the hardware’s memory protection
+features to protect processes and ‘users’ from each other, and to protect the
+kernel from user processes.<p>Some applications define their own internal principals beyond those the OS
+defines. This could happen as a result of porting an application to a new
+platform with a different conception of principals than the application’s
+original platform had. It can also happen when an application grows to become an
+application platform itself. The OWP is an example, but sometimes even web
+applications themselves can be come platforms. An example is Facebook, which
+hosts third-party applications that Facebook users can use. Database servers
+also often support their own user account principals.<p>Because user applications do not run as privileged, kernel-mode code with
+access to the hardware’s memory protection instructions, applications can only
+enforce boundaries between their principals by using the facilities the OS
+provides to user programs. Unfortunately, it is generally the case that
+applications do not make use of such facilities. Instead, many or most
+applications that define their own principals do so entirely with in-process
+logic. Such applications and their (by definition mutually hostile) principals
+are subject to (at least) all of the problems described in <a href=#problems-application-principals>Problems For
+Application Principals</a>,
+below.<p>As problematic as application-defined principals currently are, they exist
+and are unlikely to go away. They enable platform-within-a-platform applications
+like the web; they enable security architecture experimentation even on legacy
+platforms; and applications often grow to become platforms (e.g. MS Office,
+Facebook) in ways that benefit people.<p>Therefore, platforms must provide mechanisms for applications to effectively
+isolate application-defined principals, and applications must use those
+mechanisms. Many existing applications can and must make better use of existing
+mechanisms, and platforms must provide better mechanisms because existing
+mechanisms are inadequate in various ways.<h3>Defending Application-Defined Principals</h3><p>Web browser developers have deployed various mitigations against
+Spectre(-like) micro-architectural side-channel attacks, and other attacks. (See
+e.g. <a href=#principal-confusion>Loss Of Integrity, Confidentiality, And
+Control Via Principal Confusion</a>, below). They are re-architecting their
+browsers to re-establish the boundaries between principals (origins, or
+<em>sites</em>) [<a href=#RefChromeRethink>ChromeRethink</a>].<p>It is very likely that other application types that define their own
+principals, including but not necessarily limited to those that allow different
+principals to run code of their own authorship, should undertake efforts similar
+to those of web browser developers in order to re-establish the boundaries
+between their principals. This is true at least, but not only, for defense
+against side-channel attacks against confidentiality.<h3>Assumptions</h3><p>From the application perspective, we have to assume that the underlying
+platform (including the operating system kernel or hypervisor, and the hardware)
+have been repaired enough to re-establish confidentiality against
+micro-architectural side-channel attacks that the operating system’s own
+boundaries purport to defend against. If that is not the case, then no
+application principal or boundary can be effective.<p>Unfortunately, for now and at least into the medium-term, systems in the
+field are likely to be only partially repaired. Even so, it is worthwhile to
+plan for the time when systems are fully repaired, and to determine what
+mechanisms and facilities platforms will need to more completely support
+applications that define principals.<p>The side-channel crisis is also an opportunity for large-scale platform
+improvements.</p><a id=problems-application-principals></a><h2>Problems For Application Principals</h2><p>Not only (micro-architectural and other) side-channel attacks, but also
+application-layer vulnerabilities, pose problems for applications trying to
+enforce boundaries between their own principals. From the application layer
+perspective, micro-architectural side-channel attacks are not necessarily
+different from more mundane vulnerabilities such as the circus of horrors
+arising from the use of memory-unsafe implementation languages. Some other
+side-channels, however, are in the application domain.<h3>Loss Of Confidentiality Via Out-Of-Bounds Reads</h3><p>Any out-of-bounds (OOB) read bug, such as those due to unchecked array
+indices or type confusion arising from the use of unsafe implementation
+languages, can enable a hostile principal to read any memory in the
+application’s address space, including sensitive information belonging to other
+principals (including belonging to the application itself.)<h4>Preconditions For Attack</h4><ul><li>The presence of an OOB read bug;<li>for valuable data to be in the address space; and<li>an ability to exfiltrate the OOB data:<ul><li>as part of the application’s normal functionality (e.g. network requests);
+or<li>if the attacker has satisifed a stronger precondition, e.g. arbitrary code
+execution or the ability to influence control flow with an OOB write
+(<em>data-only</em> attacks [<a href=#RefRogowskiDataOnly>RogowskiDataOnly</a>])</ul></ul><h3>Loss Of Confidentiality Via Side-Channel Attacks</h3><p>This includes not just micro-architectural side-channel attacks like Spectre,
+but also e.g. timing side-channels in the application domain (see e.g. Cascading
+Style Sheets in web browsers [<a href=#RefHabalovCSS>HabalovCSS</a>]).<h4>Preconditions For Attack</h4><ul><li>For the target to be using vulnerable hardware, and an operating environment
+lacking mitigations;<li>for valuable data to be in the address space; and<li>an ability to exfiltrate the OOB data, as above.</ul><a id=principal-confusion></a><h3>Loss Of Integrity, Confidentiality, Or Control Via Principal Confusion</h3><p>Bugs in the application’s own logic for isolating principals can result in a
+loss of integrity, confidentiality, or control. In the web browser context,
+where the origin is the principal, we call this <em>universal cross-site
+scripting</em> (UXSS) or <em>same-origin policy bypass</em> (SOP bypass). More
+generally, for any application type, we can call this <em>principal
+confusion</em>.<p>Application environments that give principals a rich programming interface,
+like (but likely not only) the OWP, often suffer from principal confusion. For a
+browser example, see <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=605766">Chromium
+issue 605766</a>.<h4>Preconditions For Attack</h4><ul><li>The presence of a principal confusion bug; and<li>valuable data to be in the address space or the ability to cause it to be
+loaded.</ul><h3>Implications For Exploit Mitigations</h3><p>The presence of these problems, and in particular the presence of
+micro-architectural side-channels, poses problems not only in the application
+domain itself, but in exploit mitigations for the implementation.<p>If we assume that an attacker can achieve at least a word-sized OOB read and
+make use of the value (and, given micro-architectural side-channel attacks, we
+may have to even in the long term), certain existing exploit mitigations may
+lose their effectiveness. I call this the <em>free infoleak</em> problem.<h4>Address Space Layout Randomization</h4><p>Address space layout randomization (ASLR) can’t have meaning intra-process
+against an attacker with any kind of OOB read. On platforms that don’t
+re-randomize per process, the same is true across processes on the same host.
+This would seem to restrict the usefulness of ASLR to 64-bit platforms and only
+when defending against cross-host attacks. (ASLR on 32-bit platforms is known to
+be ineffective [<a href=#RefShachamASLR>ShachamASLR</a>].)<p>It is better if the platform re-randomizes for each process, but this
+can degrade run-time efficiency.<h4>Stack Canaries</h4><p>Here again, the free infoleak problem leads straightforwardly to an
+attacker’s ability to ‘repair’ a corrupt stack canary when exploiting an OOB
+write on the stack.<h4>Control-Flow Integrity</h4><p>Certain implementations of control-flow integrity (CFI), such as some (but
+not all) of those that keep a ‘shadow stack’ somewhere in memory to validate
+returns, may be weakened given the free infoleak problem. If the attacker can
+locate the shadow stack, they may be able to use an OOB write to repair it in
+the process of exploting an OOB write on the (real) stack. (Note that Intel CET
+write-protects the location of the shadow stack to avoid this [<a href=#RefIntelCET>IntelCET</a>].) This might or
+might not require the attacker
+to have a second OOB write vulnerability, depending on the freedom of the first
+OOB write primitive.<p>Since protecting returns is necessary for CFI to be effective [<a href=#RefCarliniCFB>CarliniCFB</a>], CFI
+implementations where the shadow
+stack is in the target’s address space and is writable would seem to be
+significantly weaker due to the free infoleak.</p><a id=applications-define-principals></a><h2>Applications That Define Principals</h2><p>Although web browsers are relatively well-understood to define their own
+principals (primarily origins), they are by no means the only class of
+application that does so.<h3>Web Browsers</h3><p>The most obvious type of principal for a web browser to define is the web
+origin. But depending on the browser design and implementation, there may be
+others:<ul><li>Privileged parts of the implementation itself, such as the browser process
+of Chromium, Edge, and Firefox, or the GPU process of Chromium and Edge.<li>Browser-specific origins (e.g. the chrome://settings and other chrome://
+pages in Chromium must be distinct and protected from any web origin).<li>Extensions and add-ons from different authors must be protected from each
+other and from web origins.</ul><h3>Database Servers</h3><p>Database servers need to defend themselves against hostile queries, and also
+to isolate different query authors.<ul><li>Privileged parts of the implementation itself, such as the server
+process and any helper processes.<li>Database user accounts (see e.g. <a href=https://www.postgresql.org/docs/8.0/static/sql-createuser.html>Postgres</a>,
+<a href=https://docs.oracle.com/cd/B28359_01/server.111/b28286/statements_8003.htm>Oracle</a>).</ul><h3>Application Servers</h3><p>Application servers (including, but not only, web servers) may also run code
+from multiple authors, and may therefore need to define principals and
+effectively enforce them.<ul><li>Privileged parts of the implementation itself, such as the server
+process and any helper processes.<li>Authors of application code.<ul><li>In the case of web servers, that could mean
+each virtual host.<li>Other types of application servers may have their own analogous concept. For
+example, some Windows services use <a href=https://msdn.microsoft.com/en-us/library/cc246059.aspx>impersonation</a>
+to handle requests from clients running as different principals in the
+domain.</ul></ul><h3>Document Editors And Renderers</h3><p>Web browsers are not the only type of application to retrieve ‘documents’
+from untrustworthy sources and parse, render, and execute their complex
+contents. A variety of other applications, such as office suites, PDF viewers,
+and so on, face the same risks.<h2>Approaching Solutions</h2><p>A key goal for defenders is to identify a minimal number of simple mechanisms
+(i.e., parsimony) that defend well against a variety of problems, regardless of
+their root cause. Parsimony is important because each defense mechanism imposes
+a certain cost in run-time efficiency and complexity. Piling mechanism upon
+mechanism can quickly become untenable, and the interactions between mechanisms
+can reduce defense effectiveness or even give rise to new vulnerabilities.</p><a id=#process-isolation></a><h3>Process Isolation</h3><p>One approach to defending against the <a href=#problems-application-principals>problems</a> is to maintain a 1:1
+mapping between processes and principals (<em>privilege separation</em>) and to
+reduce the privilege of each process to the minimum appropriate for the
+principal (<em>privilege reduction</em>). (Privilege separation and reduction
+used together are often called ‘sandboxing’, although note that that term does
+not necessarily imply that each principal gets its own sandbox.)<h4>Costs</h4><p>Process isolation is an excellent defense mechanism against the
+vulnerabilities we’re concerned with here, but the costs can be significant and
+surprising.</p><a id=resource-consumption></a><h5>Resource Consumption</h5><p>Each process incurs costs in time (startup latency, scheduling) and in space
+(the memory overhead ranges from low-but-nonzero to very high, depending on the
+platform). For example, one cloud service provider I talked to offers a service
+allowing customers to run arbitrary code on the provider’s servers. They need to
+scale to 10,000 or more customers per machine, at which point process isolation
+becomes too expensive in terms of process startup latency, kernel scheduling
+overhead, and memory overhead. (This particular provider uses Linux, where
+process overheads are very low relative to other platforms. They also report
+occasional spikes in process startup and scheduling latency, even though it is
+generally low.) As efficient as Linux is (in the common case), and as necessary
+as isolation is, there is a hard real-world limit that is below the needs of
+some service providers.<p>Worse, Linux is probably the best case (although I’d be interested to see if
+FreeBSD behaves more linearly under heavy load). Windows was designed with an
+expensive process/inexpensive thread programming model, and of course threads by
+definition do not provide the kind of isolation we need. Although Android uses
+Linux for its kernel, <code>fork</code> and <code>exec</code> are not officially
+supported for non-platform applications — the intention is for applications to
+launch <a href=https://developer.android.com/reference/android/app/Service><code>Service</code></a>s
+and <a href=https://developer.android.com/reference/android/app/Activity><code>Activity</code></a>s
+through Java platform APIs, which incur huge latency and memory overheads (due
+to virtual machine costs). (These costs apply even to applications that don’t
+need to run Java code.)<h5>Implementation Complexity And Brittleness</h5><p>Most of the operating systems available to application developers, and
+certainly all of the popular ones, were not originally designed to provide
+privilege reduction and privilege separation (‘sandboxing’) for
+application-defined principals.<p>As a result, application developers seeking to isolate their own principals
+have had to develop ‘off-label’ sandboxing mechanisms using existing platform
+APIs (public, private, documented, and undocumented) and even quirks.
+Maintaining these mechanisms, and ensuring their continual functionality,
+imposes significant costs on application developers. This surely contributes to
+the relative rarity of sandboxing in applications.<p>For example, the Windows function <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa379317(v=vs.85).aspx"><code>RevertToSelf</code></a>
+is intended to enable Windows services running at high privilege (e.g. as SYSTEM
+or Network Service) to impersonate lower-privilege subjects to handle an
+incoming request, and then revert to their previous (higher) degree of privilege
+after the request is satisfied. However, Chromium uses this function
+‘backwards’: renderers impersonate at <em>higher</em> privilege during sandbox
+warm-up, then call <code>RevertToSelf</code> to ‘re-drop’ privilege before
+handling web content.<p>On Linux (and hence Chrome OS), Chromium uses a variety of hacks to enable
+sandboxing. An example is the setuid-root helper binary. To isolate renderers
+from the filesystem, the helper <code>clone</code>s the zygote while keeping the
+filesystem view shared, then <code>chroot</code>s to an empty directory.
+(Although <code>chroot</code> is a UID 0-only system call, this zygote clone can
+<code>chroot</code> because the helper that cloned it is setuid-root.) This way,
+Chromium renderers can be <code>chroot</code>ed without requiring the zygote to
+run as root.<p>(The Chromium renderer zygote (distinct from the Android concept of the same
+name) is <a href=https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_zygote.md>a
+process that makes spawning renderer processes more efficient and
+reliable</a>.)<p>The setuid helper is now deprecated in favor of <a href=https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md#User-namespaces-sandbox>user
+namespaces</a>, but Chromium cannot entirely drop support for it because some
+Linux distributions do not support user namespaces. <a href=http://man7.org/linux/man-pages/man7/user_namespaces.7.html>User
+namespaces</a> are a Linux kernel feature enabling application-defined
+principals, but comes with the implementation flaws that inevitably come with a
+re-design that imposes new requirements on old code. (And it exposes attack
+surface of its own.)<p>Chrome OS security engineers developed the <a href=https://www.kernel.org/doc/html/latest/userspace-api/seccomp_filter.html>Seccomp-BPF</a>
+system for enabling processes to revoke their own access to kernel APIs. (Note
+in particular the “Caveats”, “Pitfalls”, and “What it isn’t” sections of that
+document.) With effort they were able to merge into upstream Linux. It works
+well for Chromium renderers and other callers, but is an example of the kind of
+complexity application developers have to take on to enforce their own
+principals.<p>Android was extended to provide the <a href=https://developer.android.com/guide/topics/manifest/service-element#isolated><code>isolatedProcess</code></a>
+API, enabling applications to run many <code>Service</code> processes each
+isolated from each other and other principals.<p>Although macOS has a privilege reduction mechanism called Seatbelt, direct
+programmatic access to it was deprecated and is now undocumented. Apple supports
+preset Seatbelt profiles in Xcode, but the Seatbelt policy language is a “System
+Private Interface”. Other privilege reduction APIs, such as
+<code>setrlimit</code> to reduce certain resource consumption limits, appear to
+work but have no effect.<h4>Limitations</h4><p>If a platform can provide process isolation efficient enough for an
+application’s needs, the remaining limitation is the granularity of isolation.
+The theoretical gold standard would seem to be <a href=https://en.wikipedia.org/wiki/Object-capability_model>object
+capability
+isolation</a>, but existing platforms in the field don’t offer capability
+isolation for all types of resources. On most platforms there remain global
+resources, access to which can only be mediated in a somewhat ad hoc manner.<p>The in-development Zircon kernel (supporting the Fuchsia platform) <a href=https://fuchsia.googlesource.com/zircon/+/HEAD/docs/concepts.md>aims to
+follow the object-capability model more closely</a>. It should therefore be
+easier to achieve fine-grained isolation for application principals on this
+platform.<h3>Address Space Segmentation</h3><p>Since processes are expensive, it would be helpful if there were a more
+efficient way to isolate principals. For example, they could each get their own
+light-weight thread, but be locked to 1 or more segments of memory in the shared
+address space. (We could call this a <em>segmented thread</em>.) No
+widely-deployed platform directly supports this concept, but there are concepts
+in the literature (e.g. CHERI) and and the possibilities of building blocks in
+leading-edge deployed platforms. Given the increasing need to isolate
+finer-grained principals, it would be helpful for the security of real-world
+applications if hardware and operating systems supported sraightforward,
+guaranteed interfaces for this kind of isolation.<h4>CHERI And Memory Capabilities</h4><p>The CHERI architecture [<a href=#RefWatsonCheriIsa>WatsonCheriIsa</a>]
+enables lower-cost application-defined principals by hardware-enforced
+capabilities, which are essentially memory segments. As a natural result of its
+design, CHERI defends against Variants 1 and 3 [<a href=#RefWatsonCheriSpectre>WatsonCheriSpectre</a>].<p>To defend against Variant 2, CHERI needs an enhancement: to expose a CHERI
+compartment identifier (CID) in the instruction set, allowing calling code to
+direct the micro-architecture as to when it can and cannot share state across
+compartments. In addition to being a defense against a class of vulnerability,
+this enhancement may improve applications’ ability to define principals in a
+flexible way, including trading off security and performance in important
+deployment scenarios (e.g. many principals using a shared runtime):<blockquote><p>There are a various tradeoffs around the use of a CID to
+partition micro-architectural state. Hard partitioning of that state may lead to
+performance loss where prior sharing led to performance gain — e.g., where
+branch-predictor state was shared beneficially between two compartments sharing
+common code. This concern also arises in the context of harder partitioning for
+MMU-based process schemes: forked processes executing common code (e.g., a
+language runtime or server application) may benefit from branch-predictor
+leakage between tasks, which would be prevented by partitioning. However,
+architectural CIDs need not map one-to-one with software compartments: if only
+integrity or availability is required (and not confidentiality), then a software
+compartment change can take place without requiring use of an independent
+micro-architectural state.</blockquote><h4>Limitations</h4><p>CHERI or any similar hardware design is not deployed in the field now, and
+even if adopted immediately and universally, hardware lifecycles are long.<p>One can imagine microcode updates for existing hardware to support new
+security boundaries such as CHERI-like capabilities, but experience with
+microcode updates has shown that they are expensive and not without risk.
+Radical changes such as new security boundaries would likely be more expensive
+and risky. Mass-market operating system providers would still need to support
+upgraded and non-upgraded hardware, further increasing complexity.<h4>Memory Protection Keys</h4><p>Intel Memory Protection Keys (see e.g. [<a href=#RefCorbetMPK>CorbetMPK</a>]) enable an application to protect its
+own
+address space with up to 16 ‘keys’ for address space regions and 2 permission
+bits (read and write). This mechanism is supposed to be more efficient than the
+existing <code>mprotect</code> function. Corbet:<blockquote><p>The problem with the current bits is that they can be expensive
+to manipulate. A change requires invalidating translation lookaside buffer (TLB)
+entries across the entire system, which is bad enough, but changing the
+protections on a region of memory can require individually changing the
+page-table entries for thousands (or more) pages. Instead, once the protection
+keys are set, a region of memory can be enabled or disabled with a single
+register write. For any application that frequently changes the protections on
+regions of its address space, the performance improvement will be
+large.</blockquote><p>It would seem that an application could therefore use MPK to efficiently
+isolate the memory of up to 16 application-defined principals per process, such
+as by giving each principal a thread with its own protected memory, and reducing
+that thread’s access to the kernel.<p>However, the fact that the keys themselves are in the process’ address space,
+and that updating the control register is an unprivileged processor instruction,
+limit the defense value of this mechanism against attackers who can corrupt
+memory and/or take control of a process. (A process-per-principal solution can
+avoid this weakness.) If the application can ensure that the MPK-isolated
+principal cannot/does not issue <code>WRPKRU</code> (the instruction that
+updates the protection bits), and then continues executing code it controls, it
+can resolve that problem.<p>The mechanism might be more readily usable if the keys and the control
+register were managed exclusively with privileged processor instructions, but
+that might negate some of the performance advantage of MPK over traditional page
+protections.<p>There are also a variety of pragmatic hurdles to be overcome, such as memory
+management and communication with the application.<h3>Object Code And Runtime Mitigations</h3><p>Although it is possible to mitigate some (not all) micro-architectural
+side-channels by controlling the machine code such that it does not rely on
+(e.g.) branches for critical safety checks (see e.g. [<a href=#RefPizloSpectre>PizloSpectre</a>] and [<a href=#RefChromeRethink>ChromeRethink</a>]), it fundamentally means sacrificing
+much of the performance improvement that comes with out-of-order execution. The
+incompleteness of the solution, and the fact that it doesn’t address the other
+<a href=#problems-application-principals>problems we want to address</a>,
+makes it not cost-effective in general.<p>That said, object code and runtime mitigations can be effective or even
+crucial in environments that can afford the cost, can’t afford the cost of
+address space isolation, have greater control over their operating environment
+than do (e.g.) web browsers, and/or don’t face the full suite of problems this
+article discusses.<h2>Discussion</h2><h3>Address Segmentation Alone?</h3><p>To defend against all the attacks (not just OOB reads), can we get by on
+address space segmentation alone or do we need independent scheduling units
+(processes or threads) for each principal? That is likely to depend on the
+application and its operating environment. Some reasons to use independent
+scheduling units include:<ul><li>The need for different principals to have different degrees of privilege
+(one sandbox size might not fit all).<li>Principals’ need for resources that cannot be revoked, but which when shared
+become a source of side channels or other vulnerabilities. (E.g. a graphics or
+audio context, files or databases, and so on.)</ul><h3>Application Composition Techniques</h3><p>Principals are often composed or compose themselves with data or code from
+foreign sources —  other principals — and need a way to ergonomically do so in a
+way that does not break cross-principal isolation.<p>We can’t secure applications that directly include or link against hostile
+code. However, it may be possible to extend some application platforms to
+compose applications in a different, safer way. For example,
+<code>iframe</code>s on the web ‘(<a href=https://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/>sandboxed</a>’,
+and cross-process when Site Isolation is in effect) can provide a form of
+isolation. There have also been experiments to do something similar on Android
+([<a href=#RefPearceAdDroid>PearceAdDroid</a>] and my own unpublished
+work).<p>There may be other examples. Crucially, any such mechanism must be efficient
+and ergonomic, to enable rich composition.<h2>Conclusions</h2><p>Application-defined principals are here to stay, but applications struggle to
+enforce them with the tools that deployed, mainstream platforms provide.<p>Application developers need to recognize the principals they define, and
+re-engineer their applications to enforce them with effective platform
+mechanisms. At the moment, that usually means process isolation.<p>At the same time, application developers should organize to pressure platform
+developers to provide more efficient and effective isolation mechanisms. In
+particular, innovation is necessary in hardware. While there are some good
+experiments and proposals happening, more movement is necessary. This is
+difficult due to the long lifecycle of hardware. That makes it all the more
+important to start now.<h2>Acknowledgements</h2><p>Thanks to Jann Horn, Jorge Lucangeli Obes, Robert Sesek, and Will Harris for
+ideas, specific examples, and corrections. The errors that surely remain are my
+own.<h2>References</h2><a id=RefBarthOrigin></a><p>[BarthOrigin] <a href=https://tools.ietf.org/html/rfc6454>RFC 6454: The
+Web Origin Concept</a>; Adam Barth</p><a id=RefCarliniCFB></a><p>[CarliniCFB] <a href=https://nicholas.carlini.com/papers/2015_usenix_controlflowbending.pdf>Control-Flow
+Bending: On the Effectiveness of Control-Flow Integrity</a>; Nicolas Carlini,
+Antonio Barresi, Mathias Payer, David Wagner, Thomas R. Gross</p><a id=RefChromeRethink></a><p>[ChromeRethink] <a href=https://chromium.googlesource.com/chromium/src/+/lkgr/docs/security/side-channel-threat-model.md>Post-Spectre
+Threat Model Re-Think</a>; Chrome Security Team</p><a id=RefCorbetMPK></a><p>[CorbetMPK] <a href=https://lwn.net/Articles/643797/>Memory Protection
+Keys</a>; Jonathan Corbet</p><a id=RefCrowellConfinement></a><p>[CrowellConfinement] <a href=https://web.eecs.umich.edu/~earlence/assets/papers/confinement_invited.pdf>The
+Confinement Problem: 40 Years Later</a>; Alex Crowell, Beng Heng Ng, Earlence
+Fernandes, Atul Prakash</p><a id=RefHabalovCSS></a><p>[HabalovCSS] <a href=https://www.evonide.com/side-channel-attacking-browsers-through-css3-features/>Side-channel
+Attacking Browsers Through CSS3 Features</a>; Ruslan Habalov</p><a id=RefHornSideChannel></a><p>[HornSideChannel] <a href=https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html>Reading
+Privileged Memory With A Side Channel</a>; Jann Horn</p><a id=RefIntelCET></a><p>[IntelCET] <a href=https://software.intel.com/sites/default/files/managed/4d/2a/control-flow-enforcement-technology-preview.pdf>Control-flow
+Enforcement
+Technology Preview</a>, Intel</p><a id=RefKocherSpectre></a><p>[KocherSpectre] <a href=https://spectreattack.com/spectre.pdf>Spectre
+Attacks: Exploiting Speculative Execution</a>; Paul Kocher, Daniel Genkin,
+Daniel Gruss, Werner Haas, Mike Hamburg, Moritz Lipp, Stefan Mangard, Thomas
+Prescher, Michael Schwarz, Yuval Yarom</p><a id=RefLampsonConfinement></a><p>[LampsonConfinement] <a href=http://www.cs.utexas.edu/users/shmat/courses/cs380s_fall09/lampson73.pdf>A
+Note On The Confinement Problem</a>; Butler W. Lampson</p><a id=RefLinuxMPK></a><p>[LinuxMPK] <a href=http://man7.org/linux/man-pages/man7/pkeys.7.html>Overview Of Memory
+Protection Keys</a>; Linux man-pages project</p><a id=RefLippMeltdown></a><p>[LippMeltdown] <a href=https://meltdownattack.com/meltdown.pdf>Meltdown</a>; Moritz Lipp,
+Michael Schwarz, Daniel Gruss, Thomas Prescher, Werner Haas, Stefan Mangard,
+Paul Kocher, Daniel Genkin, Yuval Yarom, Mike Hamburg</p><a id=RefPearceAdDroid></a><p>[PearceAdDroid] <a href=https://people.eecs.berkeley.edu/~pearce/papers/addroid_asiaccs_2012.pdf>AdDroid:
+Privilege Separation For Applications And Advertisers In Android</a>; Paul
+Pearce, Adrienne Porter Felt, Gabriel Nunez, David Wagner</p><a id=RefPizloSpectre></a><p>[PizloSpectre] <a href=https://webkit.org/blog/8048/what-spectre-and-meltdown-mean-for-webkit/>What
+Spectre And Meltdown Mean For WebKit</a>, Fil Pizlo</p><a id=RefReisBrowserOS></a><p>[ReisBrowserOS] <a href="https://4310b1a9-a-c71d7a1b-s-sites.googlegroups.com/a/charlesreis.com/home/research/publications/creis-thesis.pdf?attachauth=ANoY7coOrFpaWUtshAy5QGrNSa0EswF04Tvp998Acn5drvfVqgCRlfO5MQLo3UbtNmAr-HzWRln--nM4agLMy8FwkYGwL52qHQNpnC4YPw-fRt5lRPLSxAh27ZBnJCQq765pU3DToR7IEE5ez7RJpyJ2SXULP_uM1qQnZumgpLaC69E9IjifPPGBUEBEboUsXpKxIEeMika4HCsJFZHZ7FbsKEP67UEfP1iEGUA3Z7Q8lYd-oLQDJUc%3D&attredirects=0"><em>Web
+Browsers As Operating Systems: Supporting Robust And Secure Web
+Programs</em></a>; Charles Reis</p><a id=RefRogowskiDataOnly></a><p>[RogowskiDataOnly] <a href=https://www3.cs.stonybrook.edu/~mikepo/papers/xfu.eurosp17.pdf>Revisiting
+Browser Security in the Modern Era: New Data-only Attacks and Defenses</a>;
+Roman Rogowski, Micah Morton, Forrest Li, Fabian Monrose, Kevin Z. Snow,
+Michalis Polychronakis</p><a id=RefSaltzerProtection></a><p>[SaltzerProtection] <a href=http://www.cs.virginia.edu/~evans/cs551/saltzer/><em>The Protection of
+Information In Computer Systems</em></a>; Jerome H. Saltzer and Michael D.
+Schroeder</p><a id=RefShachamASLR></a><p>[ShachamASLR] <a href=https://benpfaff.org/papers/asrandom.pdf>On The
+Effectiveness Of Address-Space Randomization</a>; Hovav Shacham, Matthew Page,
+Ben Pfaff, Eu-Jin Goh, Nagendra Modadugu, Dan Boneh</p><a id=RefWatsonCheriIsa></a><p>[WatsonCheriIsa] <a href=https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-850.pdf><em>Capability
+Hardware Enhanced RISC Instructions: CHERI Instruction-set
+architecture</em></a>; Robert N.M. Watson, Peter G. Neumann, Jonathan Woodruff,
+Jonathan Anderson, David Chisnall, Brooks Davis, Ben Laurie, Simon W. Moore,
+Steven J. Murdoch, Michael Roe</p><a id=RefWatsonCheriSpectre></a><p>[WatsonCheriSpectre] <a href=http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-916.pdf>Capability
+Hardware Enhanced RISC Instructions (CHERI): Notes on the Meltdown and Spectre
+Attacks</a>; Robert N. M. Watson, Jonathan Woodruff, Michael Roe, Simon W.
+Moore, Peter G. Neumann<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

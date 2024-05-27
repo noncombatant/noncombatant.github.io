@@ -1,0 +1,57 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Security And Apparentness</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Security And Apparentness</h1><p><time>20 September 2015</time><aside><p>Update 28 October 2015: <a href=http://conferences2.sigcomm.org/imc/2015/papers/p27.pdf>“Neither Snow Nor
+Rain Nor MITM… An Empirical Analysis of Email Delivery Security”</a> by
+Durumeric, et al. confirms my assertion that opportunistic security must be
+either useless or rarely adopted:<blockquote>We analyze the mail sent to Gmail from these hosts and find that in
+seven countries, more than 20% of all messages are actively prevented from being
+encrypted. In the most severe case, 96% of messages sent from Tunisia to Gmail
+are downgraded to cleartext.</blockquote><p>If you actually need STARTTLS, you can’t count on it doing anything. One
+solution would be for Gmail to require STARTTLS, and to require some kind of
+Certificate Transparency or key pinning for STARTTLS certificates. But then the
+next problem would arise: surfacing the connection failures to people. Due to
+the asynchronous and ‘it just works’ nature of email, I don’t see an elegant or
+even minimally workable solution to that problem. I’d love to be proven
+wrong...</aside><p>Original post follows:<hr><p>If an application (or platform, or protocol, or...) cannot communicate a
+particular security guarantee to the person — perhaps because there is no
+channel by which to communicate the message — then the mechanism that provides
+the security guarantee can be at best <em>opportunistic</em>. The mechanism
+provides the guarantee if conditions are favorable; otherwise, it does not.<p>With an opportunistic security mechanism, there arises a question: whether or
+not the effort to develop the mechanism, and the attack surface the mechanism
+exposes, is worth the benefit — which is likely to be negligible.<p>The reason the benefit of an opportunistic security mechanism is likely to be
+negligible is that, because the application cannot communicate failures to the
+person, the success or failure of the mechanism cannot possibly be part of the
+person’s mental model of the system. Thus, the person is very likely to rank
+other benefits — such as availability or performance — above the security
+benefit that they cannot even perceive.<p>Thus, opportunistic security mechanisms almost certainly must fail open,
+rather than fail closed. If an opportunistic security mechanism were to fail
+closed, but the application could not communicate a particular reason or
+recourse to the person, people would be likely to reject the application as
+being flaky and unpredictably unavailable.<p>Thus, in the presence of an attacker, the opportunistic security mechanism
+must, by design, be useless or rarely adopted.<p>An application may also fail to communicate the failure of a security
+mechanism not because the communication channel to the person is lacking, but
+because it is too complex. Too much communication can be just as bad as too
+little.<p>If the application cannot communicate the security guarantee to the person
+because the semantics of the security are too complex, the application
+developers should simplify the security guarantee. Specifically, by simplifying
+(or “quantizing”) the security guarantee <em>upward</em>. (Or, equivalently,
+quantizing the semantic complexity downward.)<p>For example, it can be very difficult to explain in an application’s UX that
+the person’s communications with their friend are encrypted but not
+authenticated; or authenticated but not encrypted. Thus, it is better to provide
+both authentication and encryption together, and clearly label that state
+‘secure’; or to provide neither and clearly label that state ‘non-secure’.
+(Alternately, an application whose users will accept occasional unavailability
+may instead report a connection error and explain that no ‘secure’ connection is
+available at the time.)<p>To <a href=http://iang.org/ssl/h1_the_one_true_cipher_suite.html>paraphrase
+Ian Grigg</a>, we can characterize the ultimate security quantization as, “There
+is 1 mode, and it is secure”. Allowing less-secure or non-secure modes
+complicates the mechanism’s semantics and implementation. Such complexity makes
+it difficult both for the people who use the application and the people who
+develop the application to model the application’s states accurately.<p>In fact, there is much less of a bright line between ‘developers’ and ‘users’
+than either group believes. Developers, just like users, inevitably create
+inaccurate models of the application. Developers call it <em>abstraction</em>,
+and call it a necessary virtue. And they are right.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

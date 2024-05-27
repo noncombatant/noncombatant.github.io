@@ -1,0 +1,183 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Thoughts On Language Design Bugs</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Thoughts On Language Design Bugs</h1><p><time>23 October 2021</time><p>This post is an attempt to answer some pretty reasonable questions my friends
+and colleagues have asked me, on the topic of programming language security. If
+you’ve read anything else I’ve written, you know I believe the 2nd-biggest
+software security engineering problem is the unsafety of C and C++. What that
+implies and what to do about it is not necessarily obvious. So here are some
+lightly paraphrased questions, and my general thoughts.<p>(The 1st-biggest problem is all about human factors: abuse, phishing, and
+accessibility.)<div id=toc></div><h2>Is JavaScript Memory-Unsafe?</h2><blockquote>Why do you call JS and Python ‘safer’? Since (e.g.) JavaScript is
+implemented in C++, doesn’t that make it just as memory-unsafe as
+C/C++?</blockquote><p>Yes — and no. The kernels of the implementations of languages like Python,
+JavaScript (JS), and Java are typically in C/C++ and they certainly do exhibit
+memory unsafety and other C/C++ undefined behavior (UB) bugs. (Memory unsafety
+is a subclass of UB.) However, these languages intend to limit UB as part of
+their interface or contract. Minimizing or eliminating memory unsafety is a
+design goal.<p>Thus, crucially, UB bugs in these languages are <b>implementation bugs</b>.
+The (e.g. Python) developers fix them once, and then everyone benefits from the
+implementation getting closer to the interface semantics. The implementation can
+inch closer to the ideal of the interface, and the community can adopt the
+improvement at scale.<p>In C/C++, by contrast, UB is considered <b>a design ‘feature’, not a bug</b>.
+The language design committees and compiler developers won’t fix such bugs. Even
+brand new features in C++ introduce new UB —  it’s not considered a historical
+mistake to be corrected.<p>It might seem like Python, JS, et c. are safe wrappers around unsafe code.
+And they can be, and (depending on the specific implementation) more or less
+are. For example, if an application implemented in Python is successfully
+attacked, it’s much more likely to have been from a bug in the application logic
+than from a use-after-free or a buffer overflow in a list comprehension or other
+core Python feature.<p>Thus, a safe language implemented in an unsafe language might be OK, to the
+extent that we can scale up fixing the errors in the implementation. But that’s
+highly variable, as the next question raises.<h2>What’s Happening With JavaScript Security?</h2><blockquote>What about the fairly rough time JS implementations are having? They
+don’t seem to be getting incrementally closer to the interface
+ideal.</blockquote><p>Yes, this is a notable problem. I think there are a few reasons the problem
+exists, and is apparent.<p>JS implementations are quite complex and large. Any large body of C/C++ code
+is going to have a lot of problems. By contrast, the implementations of (say)
+Lua and Self are notably concise, and Python is large but not huge. (And a good
+chunk of Python’s size is auto-generated code.) If we assume roughly equivalent
+bug-density per line across developers —  in general we have no reason to assume
+otherwise —  less code means fewer bugs.<p>Additionally, defensive and offensive security research teams are hunting
+night and day, en masse and at scale, for bugs in JS implementations
+specifically. If another language suddenly grew to equivalent prominence, it
+might face similar scrutiny and perhaps the known bug count would go up.<p>But there is a 3rd critical issue: Many of the bugs affecting JS
+implementations are not vanilla C/C++ UB implementation bugs. For Reasons, JS
+happens to face fairly intense scrutiny on raw micro-performance, which
+typically leads developers to cut corners on correctness. (That’s the usual
+justification for C/C++’s UB, too. Such an extreme performance focus can make
+sense in some circumstances, but in the vast majority of cases it’s the wrong
+trade-off.)<p>As part of achieving high performance, JS engines typically include several
+different run-time compilers (just-in-time or JIT compilers) to transform the
+code at run-time into a faster form. To build not 1 but several such systems
+into your language implementation is a significant and complex undertaking —  especially when the pressure is on to go fast and save battery life on
+people’s phones.<p>For example, JS implementations often have JIT optimization bugs that go
+something like this: “We thought we could optimize by removing this dynamic type
+check, because we thought we had a solid argument that the object is guaranteed
+to be of type <code>T</code>. But, we were wrong.” (This kind of thing is quite
+hard to get right.) And then the JIT emits memory-unsafe object code due to
+erroneous assumptions during compilation. This class of bug is not due directly
+or uniquely to C/C++.<h2>Why Don’t We Rewrite Everything In Safer Languages?</h2><blockquote>Given that C/C++ UB creates so many problems —  causing the
+implementations of languages to not live up to their designs — why aren’t the
+likes of Python and other languages being rewritten in memory-safe
+languages?</blockquote><p>First, because it’s expensive to do that. There are whole teams working hard
+to make it less expensive to transition large codebases from C/C++ to modern
+languages, but it’s just not a cheap or easy thing to do yet. Whether it is
+possible to make it cheap enough at all is an open research question. Whether or
+not it succeeds, I hope that the work being done now, in several organizations,
+is made public. Even negative results would be hugely useful.<p>Additionally, separate from C/C++ UB, there exists a claim that developers
+would just as likely make the same JIT compiler logic errors in a safer language
+as they do in C/C++. In switching to a safer language, you would get rid of the
+‘simple’ or direct UB and memory-unsafety problems, but JIT compilers would
+still be difficult.<p>I hypothesize that some such compiler and interpreter logic bugs can be
+approached as type errors and state machine transition errors, and thus
+automatically detected and prevented by the implementation language’s own type
+semantics. (For example, consider a bug where it should never have been possible
+to move from state 1 to state 2 with an object of type <code>T1</code>, only
+with a <code>T2</code>. This is known as <a href=https://cliffle.com/blog/rust-typestate/>the typestate pattern</a>, and
+it might help with certain of the problems that dynamic language run-times
+face.)<h3>Micro-Performance vs Correctness: An Ecosystem Problem</h3><p>To a significant extent, though, the semantics of JS, Lua, and Python are
+highly dynamic —  and that means there’s an inherent tension between the run-time
+cost of dynamic correctness checks vs. raw micro-performance. Dynamism is an
+awesome feature, but it comes at the cost of some machine-level performance.<p>I believe the right approach to this trade-off is to focus on
+macro-performance, and to stop worrying about micro-performance for a while.<p>(At an absolute level, the micro-performance of modern JS engines is
+absolutely stunningly awesome. Part of the reason we are having these problems
+is that the developers of these engines have already done the impossible 10
+times over, and now they’re looking for some 11th win. And, who knows... they’re
+so good at what they do, they might very well find it. JS engine developers have
+effectively solved the micro-performance problem of dynamic languages. It’s
+impossible to understate the excellence of that —  in part because it makes safer
+languages that much more applicable and deployable! So we should all thank
+performance-oriented engineers for this safety.)<p>What’s wrong with JS performance —  why some pages or apps make your phone
+warm —  no longer has much to do with whether we do or don’t elide a dynamic
+correctness check. It’s all about JS ecosystem problems.<ul><li><p>Your favorite news site pulls in garbage from Outbrain or whomever. <a href=https://en.wikipedia.org/wiki/Transclusion>Transclusion</a> is a key
+(beautiful) feature of the web, but page authors often transclude content
+developed by maniacs who have no concern for the performance and reputation of
+the transcluder.<p>To address this problem, <a href=https://developers.google.com/web/updates/2020/05/heavy-ad-interventions>some
+browsers do enforce limits on 3rd-party resource consumption</a>, but they are
+too generous. These interventions require the browser to be able to recognize 3P
+resources as such, which is not always possible. A common practice on the web is
+to pull the 3rd-party content into the first party itself: what should be
+<code>&lt;iframe src="https://ads.com/ad"&gt;&lt;/iframe&gt;</code> becomes
+<code>&lt;script src="https://ads.com/ad"&gt;&lt;/script&gt;</code>. At that
+point, the browser can’t reliably recognize the 3P script as 3P, and thus to
+impose limits on its performance and functionality would be even more
+contentious than it already is.<li><p>The JS standard library is too small, and that encourages the development of
+<a href=https://www.npmjs.com/>an oversized and intensely interdependent
+contingent ecosystem of 3rd-party modules</a> to provide genuinely missing, but
+also trivial or <a href=https://philipwalton.com/articles/loading-polyfills-only-when-needed/>unnecessary</a>,
+functionality. These modules are not always implemented to the standards of
+quality that we expect in a modern language’s standard library. And they’re
+interdependent: if you pull in 1 module to do 1 thing, it might likely pull in
+many of its own transitive dependencies.<p>Many web pages include many of these modules, which increases the amount of
+JS code that needs to be sent to your browser and then parsed, compiled, and
+executed. <a href=https://infrequently.org/2018/09/the-developer-experience-bait-and-switch/>The
+size of web pages has been growing quickly</a>, and of all bytes in a web page,
+JS bytes are the most expensive.<li><p>JIT compilation is a valiant and often successful approach to improving time
+efficiency, but it has trade-offs that can be significant. Transforming code to
+be faster takes time. The faster you want the code to be, the more analysis the
+JIT compiler has to do, and that takes more time and power. Additionally, the
+JIT compiler has to store the newly-transformed code somewhere, and that takes
+up precious memory. On top of that, using more memory can sometimes incur a time
+penalty, too.<p>So in some cases, the net effect of JIT can be negative; in other cases, it’s
+worth it but expensive. If you turn off JIT compilation, you can potentially
+improve correctness and security (no JIT → no JIT bugs), and you might not
+notice a performance penalty. (See <a href=https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/>turning
+off JIT in Edge</a>, and <a href=https://chromeenterprise.google/policies/#DefaultJavaScriptJitSetting>in
+Chrome</a>. Note that you will possibly see a compatibility penalty: pages that
+use WebAssembly won’t work in JITless mode.)<p>This too is an ecosystem problem. If, hypothetically, 1 JS implementation
+were to unilaterally take a less aggressive approach to JIT compilation (for
+example, only doing JIT compilation after observing strong signals that it is
+really necessary, rather than doing it eagerly), the tech press and competing
+firms would publish misleading micro-benchmarks showing that in certain
+circumstances other JS implementations ran ‘faster’. Even if the total system
+performance that people actually experience (including heat, battery life,
+memory consumption, other applications starving for resources, et c.) improved
+under the ‘gentle JIT’ policy, it might not be tenable (or, at least not easy)
+to ship under existing market(ing) conditions.</ul><h2>So What Are We Supposed To Do?</h2><p>Given that we are drowning in the personal, ecosystem, and political
+consequences of C/C++ UB bugs and vulnerabilities, but that reimplementing is
+expensive and difficult, what in the actual shit are we supposed to do right now
+with the systems we depend on?<p>First and foremost, as a matter of professional ethics and responsibility, no
+green-field development must be done in unsafe languages. The behind-the-curve
+technology of the 1970s has not enabled and will not enable us to meet the
+requirements of the 2020s and 2030s. We have to put a lot of work into working
+around its problems, as I describe below, and we have to enter into that effort
+knowing that it is all repair work and not new advancement.<p>Complementarily, we must do everything we can to minimize the amount of
+maintenance and development we do in unsafe languages. That means gradually
+migrating old code to safer languages, developing the new features of existing
+systems in safer languages, replacing or removing components implemented in
+unsafe languages, and so on.<p>In the limited and blocked-off area of maintenance and development in unsafe
+code, there is actually a lot we can do to improve things. First, take the
+micro-performance heat off by exploring solutions to the macro-performance
+problems, whatever they might be. (Look for amplifiers at the application level.
+Does 1 click incur 100 requests or operations?) When the micro-heat is off, you
+can breathe a little and start looking into correctness and security.<p>Keep testing. Incentivize testing and bug finding. More. Incentivize fixing
+bugs, polish, quality. More. It must be possible to get promoted to and
+compensated at a high level for measurably improving code quality, instead of
+shipping new features. It does sometimes happen, but overall most software
+development organizations need a significant culture change.<p>Although C/C++ cannot be ‘fixed’, there is quite a bit we can do to minimize
+and avoid the problems of these languages.<ul><li><p>Ignore and replace the standard libraries. They are riddled with historical
+and recent design bugs. Fortunately, alternatives exist: for example, you can <a href=https://github.com/abseil/abseil-cpp/blob/master/absl/base/options.h#L211>harden
+Abseil</a>, and/or write your own replacements that prioritize your
+requirements. It’s sad that we have to do this, but we do.<p>On the bright side, we stand to gain a lot of efficiency <b>and</b>
+correctness <b>and</b> ergonomics —  the standard libraries leave us in the rare
+position of not necessarily having to trade these things off. Take this
+opportunity! Abseil did, and it’s great.<p>From an ecosystem perspective, it would be much better if the correctness-
+and safety-interested C++ communities rallied around a few new API designs and
+new implementations: a new standard built to modern expectations.<li><p>Paper over the core language semantic problems to the extent possible. You
+can do this with non-standard compiler flags: turn on bounds-checking for
+arrays, turn on Undefined Behavior Sanitizer in trapping mode in production, and
+turn on all compiler warnings and actually think about them. (Even the annoying
+ones can point to real bugs —  yes, even <code>-Wpadded</code>.)<p>Create new types to replace the built-in types. (Many people have made their
+own integers, for example; here’s <a href=https://github.com/Google/integers>my start at a run at the integer
+semantics problem</a>. I include pointers to several other designs on the idea.
+I don’t claim mine is perfect, but I do think some form of integer improvement
+is critical.)<li><p>Push the type system as far as you can, to assert correctness. C++ might not
+have as fancy a type system as Haskell or Rust, but it is flexible, and you can
+establish new patterns and helper libraries to get a more ergonomic experience.
+For example, you could certainly implement the typestate pattern, or traits, or
+spiffier <code>enum</code>s (<code>enum class</code> exists!) in C++. It might
+require establishing new idioms, but, we can do that. It’s a lot cheaper than
+reimplementing everything, and it might make gradual migration and
+interoperability easier, too.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

@@ -1,0 +1,91 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Security Engineering As Caring-For</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Security Engineering As Caring-For</h1><p><time>27 March 2016</time><blockquote>On security nihilism — I recently read <a href=https://www.dukeupress.edu/the-theater-of-operations>Joe Masco’s
+<em>Theater of Operations: National Security Affect from the Cold War to the War
+on Terror</em></a> (VERY GOOD). I was struck by the massive extent to which the
+discourse around [computer] security borrows from and follows military discourse
+and metaphor. We see this in the increasing departure from probabilistically
+provable models to black swan paranoia — the terrorist with the WMD, the hacker
+and the power grid. We accept that we must defend against catastrophe without a
+good way to estimate its likelihood, and so our defenses and imaginations have
+no limits. The hunched paranoid position forever. Any fallibility is a loss, any
+weakness a crisis. We are aligned forever against a bad “other.” Who wouldn’t be
+exhausted, say fuckit it’s impossible? But...what if we reimagined computer
+security as an act of caring-for, as a practice of maintenance and nurturing, as
+a vigilant attention to whether the machines and systems we instruct are
+respecting the right boundaries, and ensuring others respect them, and working
+for those they are meant to serve respectfully? This stance seems much easier to
+sustain indefinitely, and IMO much more closely captures the daily nuts and
+bolts of security engineering anyway. (I’m sure it makes crappier movie plots,
+but...) — <a href="https://www.facebook.com/permalink.php?story_fbid=231689823833308&id=100009768763867&comment_id=232319317103692&comment_tracking=%7B%22tn%22%3A%22R%22%7D">Meredith
+Whittaker</a></blockquote><p>Meredith makes an important point well (something she often does). I have
+seen so many of my past and present colleagues struggle to find ways to cope
+with the pain of dealing with what seems like a Sisyphean task. I developed a
+pretty severe eye twitch and an ambient low-grade panic when I was doing the
+security consulting gig, for example.<p>If the problem of security engineering were merely <em>difficult</em>, that
+would be one thing. (Indeed, that’s the part of this job I most love!) But then
+there’s the negligence, efforts to externalize costs and avoid accountability,
+the sexism and racism, the juvinility, the <a href=http://www.theatlantic.com/technology/archive/2015/11/programmers-should-not-call-themselves-engineers/414271/>ignorant
+hootings of nay-sayers</a>... well, it wears a person down pretty quick.<p>Part of the low-grade panic comes from the moral and ethical dilemmas we
+sometimes face. I’m sure we could all tell hair-raising stories. (And I think we
+should. Perhaps in a future post...)<p>Even when there’s nothing shady going on, the ability of programmers to avoid
+learning anything is as confounding as it is depressing. Many engineers know
+what they know from early in their careers, and have never felt the need to
+learn much new —  even as the junior engineers rely on them for mentorship.<p>One winter, after doing a series of unnecessarily frightening security
+reviews at healthcare and financial institutions, I did a very short (1 person,
+2 weeks) engagement at a small startup. They didn’t have much money, but their
+thing was important enough that they decided they needed some security review,
+so they paid for as much as they could afford. This company was small but
+staffed by experienced engineers from [redacted], and they had done a very good
+job at minimizing their attack surface, sticking to secure network protocols,
+using a memory-safe language well, and so on.<p>If this company had their service compromised, it definitely would matter.
+The people who use the company’s service (probably numbering now in the 10s of
+millions?) would have some of their definitely-somewhat-interesting information
+leaked, and it could spell the end of the company. It probably would hurt the
+entire (emerging) market. But, they had their security situation as well in-hand
+as I had yet seen. By contrast, I know first-hand that many of the systems that
+affect people’s lives are compromised. I have seen the security engineers (when
+there are any) at the organizations that run those systems despair, and I have
+seen the executives egregiously deprioritize utter pwnage that wouldn’t even be
+too expensive to fix.<p>In my experience, the more important a system is, the worse its security is.
+(You might think the problem is particular to large, old enterprises, and that
+new business segments and small startups in old segments are doing well because
+they are new or small. Well, <a href=https://twitter.com/internetofshit>about
+that</a>.)<p>Many security engineers feel like, or fear feeling like, <a href=http://www.npr.org/sections/thetwo-way/2016/02/25/466555217/your-letters-helped-challenger-shuttle-engineer-shed-30-years-of-guilt>Bob
+Ebeling, who warned about the dangers of launching the Space Shuttle
+Challenger</a> but was overruled. As Meredith characterizes it, we feel we must
+“defend against catastrophe without a good way to estimate its likelihood”.
+Sometimes, we even do know the likelihood, but find that we can’t get the
+resources we need to protect people.<p>So, sometimes we cope by getting angry, or mean, or indulging in gallows
+humor, or pretending like we don’t really care (“I’m just in this for the <a href=http://web.cs.ucdavis.edu/~rogaway/papers/moral-fn.pdf>interesting
+puzzles</a>”), or whatever. It’s not good, and I don’t think any of us enjoys
+resorting to those coping mechanisms. I certainly engage in all of them myself,
+and I hate doing it, and I hate myself for it. Which, of course, only
+exacerbates the feelings of burn-out and despair, which leads to more coping,
+which...<p>It’s certainly not good engineering practice. Good engineering requires
+actually believing in the possibility of a real solution, being pro-social,
+communicating well, and engaging with the full difficulty of the problems.
+Security problems are, after all, most often social problems and communication
+problems. (Does your root cause analysis really go all the way to the
+<em>real</em> root?)<p>So how can we do our jobs —  making driverless cars safe, keeping health
+records accurate and private, keeping voting accurate and not coerced,
+maintaining people’s rights to read and speak, keeping fraud and theft down to a
+dull roar —  without falling into despair? Can we even dream of... <em>being
+happy?</em> Can we not fall into a siege mentality? Can we not blame
+technology’s victims for its failures?<p>Following Meredith’s advice, I believe that we can. When we re-frame security
+engineering as caring-for, progress starts seeming possible. Each small victory
+starts looking like a tile in a mosaic, rather than as a futile gesture. We can
+see the faces of people we’ve helped in the mosaic. We can expand the scope of
+our work —  yes, security engineering includes securing the right to read! —  not
+with fatigue or dread, but with purpose and meaning. And we must argue for <a href=/2016/01/28/against-security-nihilism/>what we know works, and against
+what we know does not work</a> with confidence.<p>As we do this, our skills and usefulness will increase. Our ability to
+negotiate and plan, rather than make demands as we frantically react, will
+improve. We can leave unethical and dysfunctional organizations and communities,
+and move to ethical and functional ones. We must, <a href=http://www.sheepdressedlikewolves.com/self-care/>because we cannot care
+for others until we have begun to care for ourselves</a>.<blockquote>The viability of technology, like democracy, depends in the end on
+the practice of justice and on the enforcement of limits to power. —  Ursula M.
+Franklin, <em>The Real World Of Technology</em>, p. 5</blockquote><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

@@ -1,0 +1,35 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Fun Lil Hacks</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Fun Lil Hacks</h1><p><time>30 August 2021</time><p>Here are some fun hacks I’ve been working on lately.<h2>Run Python</h2><p><a href=https://github.com/noncombatant/run-python>Published on
+GitHub</a>.<p>This little snippet of Python and a macOS Automator workflow allow me to run
+Python code in almost any text input widget of almost any application on my Mac.
+(Gmail’s message compose window is not a regular text input, sadly. Everything
+else works, though, including vim in Terminal.<p>I’ve bound it to the global hotkey ⌘-\. I just select any text, hit that
+hotkey, and the selection is replaced with the result of evaluating the text as
+Python 3 code. I have it run a Python imterpreter that has a lot of extra
+modules imported so that I have easy access to common functionality.<p>You take this:<figure><img src=run-python-01.png width=556 height=155 alt="A screen shot
+of the text “Hey Bob, what’s up. When the nurse said my body temperature was
+u.Quantity(98.6, u.degF).to(degC), I just about frrrreaked out. But it turns
+out that’s normal.” in a message compose window in Slack." loading=lazy><figcaption>Python code in any text area.</figcaption></figure><p>Select the Python expression, hit ⌘-\, and get this:<figure><img src=run-python-02.png width=557 height=159 alt="A screen shot
+of the text “Hey Bob, what’s up. When the nurse said my body temperature was
+<Quantity(37.0, degree_Celsius)>, I just about frrrreaked out. But it turns
+out that’s normal.”" loading=lazy><figcaption>Evaluating
+Python.</figcaption></figure><h2>HTTP Nowhere</h2><p><a href="https://chrome.google.com/webstore/detail/http-nowhere/bjaonomdmphjeieijhhjpcdekcdahlpl/related?hl=en&authuser=0">Published
+in the Chrome Web Store</a> and <a href=https://github.com/noncombatant/http-nowhere>on GitHub</a>.<p>This browser extension upgrades all HTTP and WS requests to HTTPS and WSS,
+respectively. It then blocks HTTP and WS. Ideally, with this extension, no
+plaintext web requests will ever hit the wire. You can (and should) verify this
+with <a href=https://www.wireshark.org/download.html>Wireshark</a>.<p>HTTP Nowhere cannot turn on DNS-over-HTTPS for you, however, because there is
+currently no extension API to do that. You’ll have to enable secure DNS
+manually, in Settings (chrome://settings/security) Definitely turn this on!<p>This extension might soon be obviated or partially obviated by the coming
+HTTPS First mode. (HTTPS First is currently available in Chrome Canary behind a
+flag: chrome://flags/#https-only-mode-setting.)<h2>Uncover UI</h2><p><a href="https://chrome.google.com/webstore/detail/uncover-ui/gjjmcgdmihdajcgogajilcpollahpkgf?hl=en&authuser=0">Published
+in the Chrome Web Store</a> and <a href=https://github.com/noncombatant/uncover-ui>on GitHub</a>.<p>This browser extension removes unnecessary UI elements that cover up
+necessary UI elements. For some reason I do not understand, UI designers seem to
+really like covering up their own UI with other UI.<p>Uncover UI currently only works in Gmail and Google Docs. I am thinking about
+extending it to remove all those pop-up screens that news and shopping sites
+like to use to stop you from reading their content and buying their
+products.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

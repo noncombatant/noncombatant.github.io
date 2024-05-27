@@ -1,0 +1,61 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>What Is HPKP For?</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>What Is HPKP For?</h1><p><time>24 November 2015</time><aside><p>Note: Slightly edited for clarity 25 Nov 2015 03:40 UTC.</aside><p>Every time <a href=https://www.duosecurity.com/blog/dude-you-got-dell-d-publishing-your-privates>something
+like this happens</a> (<a href=/2015/02/21/superfish-round-up/>...again</a>),
+people start clamoring for public key pinning to ‘solve’ the problem.<p>The core problem here is that, although the people who bought the computers
+did not want a certificate installed that makes MITM attacks easy, the computer
+vendors sold them that way anyway. The people who bought the computers did not,
+in effect, really have full ownership of what they bought. Additionally, people
+did not come to realize this until many months after the computers were sold!
+(See also <a href=http://arstechnica.com/security/2015/11/dell-does-superfish-ships-pcs-with-self-signed-root-certificates/>Ars
+Technica’s coverage</a>.)<p>People who want HPKP to solve the problem wish that, when setting public key
+pins, servers should be able to expect clients to perform Pin Validation
+unconditionally — to <em>always</em> obey the server’s requirements, regardless
+of the client’s configuration. Even, if necessary, taking priority over the
+requirements of the client machine’s owner. This would be a weak form of Remote
+Attestation. The goal, in this case, is to make things like the Superfish and
+Dell certificates ineffective for use in attacks or mischief: the interloper
+certificates just wouldn’t work, and would hence be discovered immediately.<p>However, it is not possible for a low-privilege application to defend against
+the platform it runs on, if the platform is intent on undermining the
+application’s expectations. To try would be futile, and would necessarily also
+violate a crucial digital rights principle: The computer’s owner should get to
+decide how the computer behaves. Dell and Lenovo let their customers down in
+that way, but for better and for worse, it’s not something that a web browser
+can fix.<p>Our idea when designing HPKP was to <a href=/2015/05/01/about-http-public-key-pinning/>allow a site to reduce the
+number of issuers that can issue certificates for the site</a> — assuming the
+client is not already compromised. We assumed that because we must: as <a href=https://www.chromium.org/Home/chromium-security/security-faq>the Chromium
+Security FAQ</a> and <a href=http://blogs.technet.com/b/rhalbheer/archive/2011/06/16/ten-immutable-laws-of-security-version-2-0.aspx>Microsoft’s
+10 Immutable Laws Of Security</a> document, if a computer’s operating system is
+compromised, there is nothing certain that a mere userland application — which
+must depend on the underlying layers, including the OS — can do.<p>Specifically, browsers do not perform Pin Validation when the presented
+certificate chain chains up to a locally-installed, ‘private’, or ‘non-system’
+trust anchor. (Microsoft ships a standard set of trust anchors for the system,
+but also enables the system’s administrators/owners to install additional, local
+anchors.) There are 3 reasons for this:<ul><li>There are legitimate reasons to proxy TLS connections — <a href=http://www.telerik.com/fiddler>not least of
+which is debugging</a>.
+Personally I am extremely skeptical of the value of AV/IDS/IPS/DLP proxies, but
+some people use them on the computers they own. To them, that’s legitimate use,
+too.<li>A user program cannot defend against software running at the same or a
+higher level of privilege, and it is pointless to try. The effort will be either
+entirely wasted, or will outweigh any marginal, temporary gains.<li>Computers should do what their owners want, or at least give the owner
+priority over the desires of a remote server operator.</ul><p>All the same, people seem to wish that servers could say to clients, “Here
+are my expected keys, and you should fail to connect to me if I seem to present
+different keys, <em>even if the person who owns the computer wants to connect
+anyway</em>.” That would be beneficial in that non-consensual proxying would be
+exposed sooner and with somewhat more certainty. But if a server could get such
+a guarantee, it could also be used in ways very much counter to the open
+Internet we know and love. Thus, frankly, I’m glad that Remote Attestation is
+impossible. (Or, if you prefer, so impractical and theoretical as to be
+impossible for now.)<p>There are many, many ways in which the higher-privilege operating system or
+other software can force the lower-privilege client program to connect through a
+proxy, in spite of a hypothetical ‘strict’ HPKP behavior. Here are a few
+examples — I don’t imagine this list is exhaustive:<ul><li>Installing a new trust anchor in the local store<li>Installing a new trust anchor in the system store<li>Injecting a DLL that overrides the usual Pin Validation and X.509 validation
+code<li>Overwriting the application’s code on disk<li>Overwriting the application’s code in memory at run-time<li>Installing a <a href=https://en.wikipedia.org/wiki/Layered_Service_Provider>layered service
+provider</a> (LSP)</ul><p>The ironic thing is that, if clients did implement the ‘strict’ form of Pin
+Validation, many of the same people who are now calling for it would either
+resort to the above means to do their legitimate proxying, or would buy their
+proxy software from someone who does.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

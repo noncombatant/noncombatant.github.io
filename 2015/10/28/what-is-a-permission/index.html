@@ -1,0 +1,174 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>What Is A ‘Permission’?</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>What Is A ‘Permission’?</h1><p><time>27 October 2015</time><aside><p>Updated 28 October 2015 to clarify a bit, and to elaborate on what
+choosers provide.</aside><p>Every application platform needs to decide on 1 or more <em>protection
+mechanisms</em> to protect <em>principals</em> from each other — and thereby to
+protect the <em>assets</em> that the principals operate on. (If you are
+wondering what those words mean, start by reading the classic <a href=http://www.cs.virginia.edu/~evans/cs551/saltzer/>“The Protection Of
+Information In Computer Systems”</a> by Saltzer and Schroeder.)<p>Of course, platforms don’t <em>need</em> to provide a protection mechanism; I
+was being a bit hyperbolic in the previous paragraph. For example, DOS and Mac
+OS Classic had no protection mechanisms. But, well, they’re dead, aren’t they?
+It’s no coincidence: they are dead in part due to their lack of protection.<p>So, platforms need to provide some protection mechanism to be viable on the
+modern internet. This includes <a href=https://en.wikipedia.org/wiki/Open_Web_Platform>the Open Web Platform</a>
+(OWP). As a Chrome security engineer, I am obviously interested in what
+protection mechanisms the OWP provides; as a Chrome secure usability engineer, I
+am interested in how well people can understand and use those protection
+mechanisms, and how we can improve their effectiveness and usability.<p>Most platforms, including the OWP, use a hybrid design in which more than 1
+protection mechanism is at play. As we’ll see, there are reasons for this.
+However, the more mechanisms there are, the more complicated their interaction
+and the more complicated the overall system. That complexity makes it more
+difficult it is for the system’s designers, developers, and users to build
+accurate mental models of the system.<p>Thus, we should like to have a ‘pure’ system: a system that uses a single,
+solid, understandable protection mechanism. When that is not possible, the
+system should strive to make 1 of the mechanisms primary, and use the other
+mechanism(s) to bootstrap the primary mechanism.<p>In the context of the OWP, we want to understand what we call ‘permissions’:
+special powers that the person browsing a web origin gives to that origin, such
+as the ability to determine the person’s computer’s geolocation, to read and
+upload a file from the computer’s local storage, to listen on the computer’s
+microphone, and so on.<h2>Definitions</h2><p>A <em>permission</em> is a (possibly persistent, possibly ephemeral)
+capability grant. Think of a <code>Permission</code> as a hypothetical abstract
+superclass that the hypothetical subclasses <code>ObjectCapability</code> and
+<code>SymbolicCapability</code> implement. I’ll try to explain what I mean by
+that in the rest of this post.<p>I use the term <em>capability</em> in the sense of a <a href=https://en.wikipedia.org/wiki/Capability-based_security>capability-based
+protection mechanism</a> (as opposed to an <a href=https://en.wikipedia.org/wiki/Access_control_list>access
+control
+list-based protection mechanism</a>). (In other contexts ‘capability’ can mean
+other things — naming things remains a Hard Problem in computing science.)<p>The key features of capabilities are:<ul><li><strong>Unforgeability</strong>: A process cannot falsely claim to hold a
+capability. The system will detect and reject false claims.<li><strong>Transferability</strong>: A process can (generally) pass a
+capability on to another process. In some systems (‘pure’ capability systems),
+this may be the only way any process ever gets any capabilities.<li><strong>Inherent authorization</strong>: A process that holds a capability
+is <em>by that fact alone</em> known to be authorized to use the capability.<blockquote>In some systems, that is not true, or sometimes not true. <a href=http://blogs.technet.com/b/markrussinovich/archive/2005/10/19/the-bypass-traverse-checking-or-is-it-the-change-notify-privilege.aspx>Windows
+includes an option to re-check that the bearer of a capability is still
+authorized on each access</a>. This setting is almost always disabled — except
+in Chrome’s sandboxed renderer processes! Weird but true.</blockquote><li><strong>Opacity</strong>: A capability is some kind of opaque reference — the value of the reference has no special meaning to its holder. Different
+processes holding the same capability might possibly have different opaque
+representations of a reference to the same underlying object. (Compare e.g. a
+pointer in C, on which the ++ operator is meaningful, to a POSIX file
+descriptor.) Opacity and unforgeability are closely related but distinct.</ul><p>By contrast, <em>access control list</em>-based mechanisms have only
+unforgeability. As an example, consider the POSIX file permissions model (which
+is relatively simple, compared to e.g. Windows). For each file, there are 3
+principals: the user-owner, the group-owner, and ‘other’ (all other principals).
+Each principal has 0 or more of 3 access rights on the file: read, write, or
+execute. Whenever a process tries to <code>open</code> the file, the operating
+system kernel checks the process’ principal (user ID and group ID) against the
+file’s access control list.<pre>
+$ <strong>ls -l /Music/Thelonious\ Monk/Brilliant\ Corners/</strong>
+total 48392
+-rwxr-xr-x 1 chris chris  8392333 Sep  8  2009 01 Brilliant Corners.mp3
+-rwxr-xr-x 1 chris chris 15283234 Sep  8  2009 02 Ba-Lue Bolivar Ba-Lues-Are.mp3
+-rwxr-xr-x 1 chris chris 10443816 Sep  8  2009 03 Pannonica.mp3
+-rwxr-xr-x 1 chris chris  7029272 Sep  8  2009 04 I Surrender, Dear.mp3
+-rwxr-xr-x 1 chris chris  8395820 Sep  8  2009 05 Bemsha Swing.mp3
+</pre><p>The user <strong>chris</strong> can read, write, and execute these MP3 files;
+any user in the <strong>chris</strong> group can read or execute them; and any
+other user can read or execute them.<p>User <strong>chris</strong> can change the permissions:<pre>
+$ <strong>chmod -x /Music/Thelonious\ Monk/Brilliant\ Corners/*</strong>
+$ <strong>ls -l /Music/Thelonious\ Monk/Brilliant\ Corners/</strong>
+total 48392
+-rw-r--r-- 1 chris chris  8392333 Sep  8  2009 01 Brilliant Corners.mp3
+-rw-r--r-- 1 chris chris 15283234 Sep  8  2009 02 Ba-Lue Bolivar Ba-Lues-Are.mp3
+...
+</pre><p>including granting write access to ‘other’:<pre>
+$ <strong>chmod o+w /Music/Thelonious\ Monk/Brilliant\ Corners/*</strong>
+$ <strong>ls -l /Music/Thelonious\ Monk/Brilliant\ Corners/</strong>
+total 48392
+-rwxr-xrwx 1 chris chris  8392333 Sep  8  2009 01 Brilliant Corners.mp3
+-rwxr-xrwx 1 chris chris 15283234 Sep  8  2009 02 Ba-Lue Bolivar Ba-Lues-Are.mp3
+...
+</pre><p>which is kind of like transferability. But it’s better to read
+transferability as meaning “transference to a <em>specific</em> process or
+principal”. And we can see that this is not possible with POSIX file
+permissions:<pre>
+$ <strong>grep nobody /etc/passwd</strong>
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+$ <strong>chown nobody /Music/Thelonious\ Monk/Brilliant\ Corners/*</strong>
+chown: changing ownership of ‘/Music/Thelonious Monk/Brilliant Corners/01 Brilliant Corners.mp3’: Operation not permitted
+chown: changing ownership of ‘/Music/Thelonious Monk/Brilliant Corners/02 Ba-Lue Bolivar Ba-Lues-Are.mp3’: Operation not permitted
+...
+</pre><p>A good example of transferability is <a href=http://blog.varunajayasiri.com/passing-file-descriptors-between-processes-using-sendmsg-and-recvmsg>sending
+a file descriptor from 1 process to another over a UNIX domain socket using
+<code>sendmsg</code> and <code>recvmsg</code></a>.<h2>Prefer Capabilities Over ACLs</h2><p>On the web platform we would like to use a capability-based protection
+mechanism to the greatest extent possible, rather than an ACL-based mechanism.
+There are a few reasons for this.<h3>Capabilities Make For Good UX</h3><p>Capabilities are a good fit for a well-known secure UX pattern: the
+<em>chooser</em>. An untrustworthy process (like a web renderer) can ask a
+trustworthy process (like the browser) for a capability (say, a file descriptor
+from which to read data to upload to the web origin). Only the trustworthy
+process can grant it. The trustworthy process shows the person a chooser UX, the
+person selects a file (or, no file), and the trustworthy process opens the file
+and passes the descriptor to the untrustworthy process. The untrustworthy
+process has no ambient authority, and the user gets an understandable,
+empowering interface to selectively grant authority.<figure><img src=chooser-example.png loading=lazy width=852 height=679 alt="A screenshot of a file chooser"><figcaption>The return value of the file
+chooser UX flow is, or should be, a file descriptor or other
+capability.</figcaption></figure><p>Choosers can let people choose much more than just files and directories. A
+chooser can return any kind of object. Everything that a computer program can
+represent can be handled as an <em>object capability</em>: any kind of <a href="https://technet.microsoft.com/en-us/library/cc781716(v=ws.10).aspx"><em>securable
+object</em></a> that the operating system can process; any kind of function,
+object, closure, or continuation.<p>Additionally, choosers can grant specific objects at a specific time in a
+specific context. For example, maybe you would like to grant hangouts.google.com
+access to the external USB camera just this once, not all the time. Choosers
+make that easy; by contrast, setting an ACL on <code>/dev/camera</code> may turn
+out to be a surprisingly broad grant.<h3>ACLs Can Make For Bad UX</h3><p>ACLs are a pain in the ass (a) generally; (b) especially when the principals
+are complex (as web origins + Chrome profiles + people are); and (c) when the
+principals are numerous (how many web origins do you visit? 90 billion per
+day).<h3>Namespaces Are Ambient Authority</h3><p>The ambient namespace that most ACL-based mechanisms provide (e.g. the
+filesystem, the namespace of named pipes on Windows, et c.) often turns out to
+provide more information and authority to untrustworthy processes than the
+person intended. For example, the pathnames themselves might give away
+information, ACLs have a notable tendency to diverge from the intended
+permission grant (because they impose a maintenance burden), et c.<p>Closing the gaps left open in ACL-based systems has proved difficult and
+inelegant. (See e.g. <a href=https://msdn.microsoft.com/en-us/library/bb625963.aspx>Windows integrity
+levels</a>, or <a href=https://en.wikipedia.org/wiki/Security-Enhanced_Linux>SELinux</a>.)<blockquote>“Applications can be designed to run at a low integrity level.
+Protected Mode Internet Explorer is an example of a Windows Vista application
+that is designed to run at low integrity. Applications at low integrity might
+need folders in the file system where they can write temporary files or
+application data. In the case of Protected Mode Internet Explorer, the Temporary
+Internet File folder in the user’s profile is used. How can a low application
+write to a file system folder? The folder must be assigned an explicit mandatory
+label that permits write access from a low integrity process.” — <a href=https://msdn.microsoft.com/en-us/library/bb625963.aspx>MSDN, “Windows
+Integrity Mechanism Design”</a></blockquote><p>ACLs (especially highly <a href="https://technet.microsoft.com/en-us/library/cc781716(v=ws.10).aspx">complex
+ACLs like in Windows</a>) have proved to be hard to use. By contrast, choosers
+are so easy to use they are now nearly invisible — even engineers often don’t
+realize how large of a problem they handily solve.<h2>Ephemeral vs. Persistent Capabilities</h2><p>Normally, “capability” means <em>object capability</em> (such as a POSIX file
+descriptor, a Windows <code>HANDLE</code>, a Python object reference, et c.).
+However, in the context of the web platform, we often need to persist
+capabilities across instantiations of the principal. That is, different renderer
+processes running the origin (https, www.example.com, 443) on behalf of profile
+1 owned by chris@goatbeast.localdomain might all need to get a reference to the
+same capability, even across browser restart or computer reboot.<p>For persistent capabilities, we need to persist a symbolic representation: a
+<em>symbolic capability</em> instead of an object cap. (This is a limitation of
+the memory persistence mechanisms in common operating systems, not of objects
+caps themselves; see below.) There must be a way to bootstrap the symbolic cap
+into an object cap. 1 way to do this is with an ACL, although ACLs are not
+the only way to achieve this.<blockquote>Cryptographic capabilities are another form of symbolic cap that a
+process can bootstrap into an object cap; for example, consider encrypted and
+integrity protected HTTP cookies that store the session state. In effect, this
+cookie is an opaque, transferable reference to the next continuation in the
+session — a persistent capability that requires no ACL to bootstrap. — <a href=https://en.wikipedia.org/wiki/Capability-based_security#Sharing_of_capabilities_between_processes>Wikipedia,
+“Capability-based security”</a></blockquote><p>In Chrome, we persist capabilities as symbolic caps coupled with a simple
+form of ACL. In this picture, the <strong>Hostname Pattern</strong> names a
+(group of) origins, and the <strong>Behavior</strong> describes the access
+grant.<figure><img src=permission-list.png width=555 height=357 loading=lazy alt="A screenshot of Chrome’s ACL for the Notifications API"><figcaption>This is
+an ACL for persisted, symbolic capabilities to the browser’s Notifications
+API.</figcaption></figure><p>Finally, if we had <a href=https://en.wikipedia.org/wiki/Persistence_(computer_science)#Orthogonal_or_transparent_persistence>operating
+systems that could persist the live object graphs of processes</a>, we wouldn’t
+need the bootstrapping step, and we could have all object caps all the time.
+When booting up, the operating system would resuscitate a live object graph from
+non-volatile storage into working memory, and all object capabilities would be
+live. That would be nice and fancy, but it’s not strictly necessary. ACLs can be
+a perfectly good way to bootstrap caps — <em>if and only if bootstrapping is the
+only action that uses ACLs</em>. (Consider the design of POSIX, which has both
+<code>stat</code> and <code>fstat</code>, <code>open</code> and
+<code>openat</code>, <code>unlink</code> but not <code>funlink</code>, and so
+on. It would be better — “more cappy” — if POSIX provided only
+<code>openat</code>, <code>fstat</code>, <code>funlink</code>, and so on.) For
+example, all sorts of <a href=https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use>time-of-check/time-of-use</a>
+(TOCTOU) and other vulnerable race conditions are a direct result of operations
+on file pathnames (symbolic capabilities) rather than on file descriptors (live
+object capabilities).<h2>Therefore</h2><p>Hybrid ACL/cap platforms should strive to use only object capabilities
+wherever possible. Where persistence is necessary, we should persist symbolic
+capabilities and ACLs which we use only to bootstrap live object caps.<h2>Stay Tuned</h2><p>I’ve got a draft half-written that talks about a few other protection
+mechanisms, and their engineering trade-offs.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

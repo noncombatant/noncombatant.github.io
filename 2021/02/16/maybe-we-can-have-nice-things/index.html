@@ -1,0 +1,160 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Maybe We Can Have Nice Things</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Maybe We Can Have Nice Things</h1><p><time>16 February 2021</time><p><aside>18 February: See below for some nice updates!</aside><p>Programming languages advance by introducing new constraints. A key reason we
+don’t use assembly language for everything is that the lack of constraints make
+it too hard to use for everyday programming. Before <a href=https://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF><code>goto</code>
+was considered harmful</a>, people wrote machine code that jumped all over the
+place, and programmers had to maintain a mental model of the complete machine
+state and the full implications of each jump —  a recipe for bugs.<p>Then, <a href=https://en.wikipedia.org/wiki/Structured_programming>structured
+programming</a> was introduced: structured languages still compiled down to
+<code>goto</code>s (or arbitrary jumps), but the programmer could think in terms
+of more limited jumps: <code>if</code>, <code>switch</code>/<code>case</code>,
+<code>call</code>, <code>return</code>, <code>for</code>. These constrained
+jumps are much easier to understand; for example, when you’re reading code, you
+can know that <code>return</code> doesn’t return just anywhere. It returns only
+to the caller, as identified by a pointer on the stack. Later, language
+designers added additional constrained jumps like
+<code>throw</code>/<code>catch</code>, and virtual function calls.<p>(<code>throw</code> is a little bit too <code>goto</code>-y for my taste,
+since you can’t tell locally where the relevant <code>catch</code> block is. But
+that’s a story for another time.)<p>A key innovation of C++ was to introduce <a href=https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization>RAII</a>,
+which essentially ‘piggybacks’ on the value of the stack and enriches it with a
+lot more power. (The additional complexity is usually manageable, and worth it.)
+It allows you extend the automatic memory management that the stack provides,
+initializing and cleaning up complex resources instead of just primitive values
+like integers and floats. You can automatically close open files, release
+dynamic storage, and so on. And it’s deterministic.<p>But there was still the problem of the heap: a free-fire zone with no
+constraints, riddled with memory leaks (heap resources allocated but never
+released) and use-after-free bugs (heap resources re-used even after having been
+released).<p>A key innovation of Rust has been to <a href=https://doc.rust-lang.org/1.8.0/book/references-and-borrowing.html>statically
+constrain the lifetimes of heap resources</a>, enabling us to more completely
+solve the worst remaining memory unsafety problem. (Previous solutions to the
+heap lifetime problem were <a href=https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)>dynamic</a>,
+not static, and hence expensive in space and time —  as well as being
+non-deterministic. These limitations reduce the applicability of
+dynamically-managed languages to applications and environments where these costs
+are affordable.)<p>And, of course, taming object lifetimes greatly eases the problem of safe,
+efficient concurrency. Concurrency is the key to improving performance in modern
+systems.<p>Beyond memory safety, Rust makes more use of typefulness than I typically see
+in other mainstream languages in its niche. For example, Rust’s rich
+<code>enum</code>s and pattern matching make it easier to write state machines,
+<a href=https://doc.rust-lang.org/rust-by-example/generics/new_types.html>the
+new type idiom</a> makes it easier to get additional type safety (and improves
+the interface-as-documentation factor), and so on. You can work to get similar
+benefits in other languages, but Rust’s syntactic mechanisms and idiomatic usage
+create affordances for these easier patterns.<p>Another freeing constraint Rust has introduced has been to systematize and
+automate dependency management: the Cargo package management system. Good
+dependency management is a <a href=https://research.swtch.com/deps>monstrously
+hard problem</a>. Any dependency management system, including manual or ad hoc
+management, poses a variety of problems:<ul><li><b>Version conflicts:</b> Inevitably, the latest version of the foo package
+has changed its API in such a way that it can’t interoperate with the bar
+package. Now resolve these conflicts all up and down the dependency tree.
+Fun!<li><b>Supply-chain security:</b> When you pull in a dependency, you must trust
+the transitive closure of all the authors who have committed to that dependency
+sub-tree. This includes not just the code and the programs you can build with
+it, but build scripts themselves.<li><b>Micro- and even pico-dependencies:</b> The tendency to multiply the
+previous 2 problems by creating <a href=https://www.npmjs.com/package/is-odd>extremely tiny</a>, <a href=https://www.npmjs.com/package/is-even>single-use packages</a>.<li><b>Proliferation:</b> The tendency to multiply the previous 3 problems by
+creating several packages that serve the same basic need, leading to a situation
+in which effort solving the same problem is fragmented —  including
+documentation, training, code reviewer/auditor hours, and so on. (I call this
+the “Occam’s Razor now has <a href=https://www.theonion.com/fuck-everything-were-doing-five-blades-1819584036>5
+blades</a>” problem.)</ul><p>The NPM ecosystem provides the clearest modern illustration of these
+problems. (See page 11 of <a href=https://octoverse.github.com/static/github-octoverse-2020-security-report.pdf>GitHub’s
+report on security</a>, for example.)<p>However, for all of NPM’s problems, <b>at least it is a package management
+system at all</b>! It’s easy to pick on NPM (or predecessors like <a href=https://www.cpan.org/>CPAN</a>, or <a href=https://ctan.org/>CTAN</a>,
+or...), but even at its worst it’s a <b>huge improvement</b> over manually
+managing dependencies (such as by manually vendoring them into your source tree,
+or just telling the user to install such-and-such libraries before attempting to
+compile).<p>Life is better with NPM, and with Rust’s Cargo, Go’s <code>go get</code>, and
+so on. Even when they aren’t perfect yet, they provide a framework for
+improvement, by constraining where dependencies come from and how we maintain
+them.<p>But a lot of work is still necessary. As an example of a Nice Thing Indeed,
+Cargo has this add-on package called <a href=https://github.com/rust-secure-code/cargo-supply-chain>supply-chain</a>,
+which will show you all the packages a given package depends on. It will also
+estimate how many individual publishers author those dependencies. Here is what
+happens when you run supply-chain on itself:<pre>
+~/src/rust/cargo-supply-chain % <b>cargo supply-chain publishers</b>
+
+The following crates will be ignored because they come from a local directory:
+ - cargo-supply-chain
+
+The `crates.io` cache was not found or it is invalid.
+  Run `cargo supply-chain update` to generate it.
+
+Fetching publisher info from crates.io
+This will take roughly 2 seconds per crate due to API rate limits
+Fetching data for "adler" (0/79)
+[<i>77 items, including some surprising ones, elided...</i>]
+Fetching data for "xattr" (78/79)
+
+The following individuals can publish updates for your dependencies:
+
+ 1. alexcrichton via crates: flate2, wasm-bindgen-backend, wasi, bitflags, proc-macro2, wasm-bindgen-macro, wasm-bindgen, openssl-probe, unicode-xid, wasm-bindgen-macro-support, filetime, semver, tar, unicode-normalization, libc, js-sys, bumpalo, log, wasm-bindgen-shared, cfg-if, cc, web-sys
+ [<i>55 authors elided...</i>]
+ 57. zesterer via crates: spin
+
+Note: there may be outstanding publisher invitations. crates.io provides no way to list them.
+Invitations are also impossible to revoke, and they never expire.
+See https://github.com/rust-lang/crates.io/issues/2868 for more info.
+
+All members of the following teams can publish updates for your dependencies:
+
+ 1. "github:rustwasm:core" (https://github.com/rustwasm) via crates: web-sys, js-sys, wasm-bindgen-macro, wasm-bindgen-macro-support, wasm-bindgen-backend, wasm-bindgen, wasm-bindgen-shared
+ 2. "github:servo:cargo-publish" (https://github.com/servo) via crates: core-foundation-sys, percent-encoding, form_urlencoded, unicode-bidi, core-foundation, idna, url
+ 3. "github:servo:rust-url" (https://github.com/servo) via crates: percent-encoding, form_urlencoded, idna, url
+ 4. "github:rust-bus:maintainers" (https://github.com/rust-bus) via crates: security-framework-sys, security-framework, tinyvec
+ 5. "github:rust-lang-nursery:libs" (https://github.com/rust-lang-nursery) via crates: bitflags, log, lazy_static
+ 6. "github:serde-rs:owners" (https://github.com/serde-rs) via crates: serde_derive, serde, serde_json
+ 7. "github:rust-lang:libs" (https://github.com/rust-lang) via crates: libc, cfg-if
+ 8. "github:rust-lang-nursery:log-owners" (https://github.com/rust-lang-nursery) via crates: log
+ 9. "github:rust-random:maintainers" (https://github.com/rust-random) via crates: getrandom
+
+Github teams are black boxes. It's impossible to get the member list without explicit permission.
+
+~/src/rust/cargo-supply-chain % <b>cargo supply-chain update</b>
+Note: this will download large amounts of data (approximately 250Mb).
+On a slow network this will take a while.
+</pre><p>Now, that’s a lot of dependencies by a lot of publishers whom I don’t know.
+(Although it’s not automated, if you dig around you’ll find that many of those
+authors are well-established members of the Rust development team, so trusting
+them is an easier sell.) Another bummer is that, when I built supply-chain, my
+default <code>$CFLAGS</code> broke the build (<b>Update 18 Feb:</b> with an
+almost certainly spurious and not security-relevant warning,
+<code>-Wunused-macros</code>). (My flags are quite persnickety:
+<code>-Weverything -Werror -std=c11</code>. Very little code builds with these
+flags. 😇) Apparently, some of supply-chain’s own dependencies depend on C code.
+Alas.<p>But that’s OK! Cargo provides a framework for working on these problems. Over
+time, I’d like to see things move along these lines:<ul><li>Replace C/C++ dependencies with Rust, and reduce the use of
+<code>unsafe</code>. This has been happening, and will continue to, over time.
+(See <a href=https://github.com/rust-secure-code/safety-dance>the Safety Dance
+project</a>, which is a focused on reducing the use of
+<code>unsafe</code>.)<li>Coalesce the most common dependencies into a (semi-)official ‘extended
+<code>std</code>’, so that they can appear as a single dependency with a single
+publishing team. This is controversial in some communities, but I think it would
+go a long way toward reducing the problems.<li>Obviate some of the micro-dependencies by folding them into larger, more
+general packages including the language itself, <code>std</code>, and ‘extended
+<code>std</code>’ (where and if appropriate). This is also sometimes
+controversial, but again I think it would help.<li>Perhaps supply-chain, check, clippy, or a new tool could provide some
+indication of a package’s reputation or something like what the Perl community
+jokingly calls <a href=https://metacpan.org/pod/Test::Kwalitee>kwalitee</a>:
+Not quality, but overall ‘smells’. Good test coverage? Is the package version
+greater than 1.0? Actively maintained? Frequently used? Maintained by the same
+people for a long time? A low proportion of lines of code in <code>unsafe</code>
+blocks, or in C/C++/assembly? Some of these things can be more or less
+automatically determined, and tooling could flag packages that stand out.<aside>Fun update: Such a thing exists, and is called <a href=https://github.com/crev-dev/cargo-crev/>crev</a>. Awesome!</aside></ul><p>Another good thing about Rust is its friendly community. Not all systems
+programming communities are as welcoming as Rust’s is. Rust, and some other
+communities, have taken <a href=https://www.rust-lang.org/policies/code-of-conduct>proactive steps to
+maintain a healthy community</a>. I think it’s fair to say the Rust community is
+doing relatively well, especially in the systems programming niche.<p>Like all language communities, whether of natural languages or artificial
+languages, the community and the body of literature and the oral tradition are
+what matter. In its niche, Rust looks like the option with the most momentum
+around a more positive, healthier community. The community and the language are
+probably not perfect — nothing is, if perfect is even a thing —  but Rust looks
+like the community most open to solving its problems, and most capable of
+solving systems programming problems.<aside><p>Thanks to Adrian Taylor for reminding me to mention typefulness, concurrency,
+and Safety Dance.<p>Thanks to Sergey Davidoff, supply-chain maintainer, for pointing me at crev
+and noting that Safety Dance is more about reducing <code>unsafe</code> than
+C.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

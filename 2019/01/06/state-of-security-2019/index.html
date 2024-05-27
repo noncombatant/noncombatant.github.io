@@ -1,0 +1,202 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>The State Of Software Security In 2019</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>The State Of Software Security In 2019</h1><p><strong>...And What To Do About It</strong><p><time>6 January 2019</time><div id=toc></div><p>My goal in this post is to skim my observations on the state of software
+design and development over the past year, and to try to find a meaningful way
+forward for myself for 2019. My perspective is limited by the fact that I have
+worked exclusively in client-side software security for the past 7.5 years.
+Still, I think there are broad trends visible even to me, and some clear signs
+about where we need to go as an industry.<p>I hope that this post is useful to a variety of security people: not just
+engineers, but also UX designers and researchers, project/product/program
+managers, people and business managers, and operations. In any case, all paths
+to success require the help of all those kinds of people. This post is even more
+of a link-fest than usual; I hope that’s useful.<p>The high-order bit in much of the below is complexity. Hardware, software,
+platforms, and ecosystems are often way too complex, and a whole lot of our
+security, privacy, and abuse problems stem from that.<h2>The Good</h2><p><a href=https://twitter.com/__apf__/status/1072199572628299776>Encrypting
+the web is going swimmingly</a>! Also, <a href=https://blog.chromium.org/2018/05/evolving-chromes-security-indicators.html>marking
+non-secure web origins as non-secure, and marking secure origins as neutral</a>,
+is moving right along. It’s amazing and wonderful that we’ve improved so much so
+quickly, and it gives me hope for other huge efforts (see below). Thanks as
+always to <a href=https://letsencrypt.org/donate/>Let’s Encrypt</a>, and to
+the other browsers who are moving in a similar direction!<p>Although <a href=https://en.wikipedia.org/wiki/Memory_corruption>memory
+corruption</a> vulnerabilities remain prevalent, iOS, Chrome OS, and Chrome are
+existence proofs that, with good effort in design (privilege reduction) and
+unreasonably high effort in implementation (actually making privilege reduction
+work, <a href=https://github.com/google/oss-fuzz/blob/master/docs/clusterfuzz.md>bug
+hunting</a>, bug fixing, and rapid deployment of bug fixes), it is <strong>just
+barely</strong> possible to significantly raise the cost of exploiting memory
+corruption vulnerabilities for projects implemented in unsafe languages. Against
+modern targets, exploiting memory corruption is nowhere near as easy as it was
+in the 1990s or the 2000s.<p><a href=https://9to5mac.com/2018/01/19/ios-11-adoption-65-percent/>iOS
+continues to have excellent update adoption</a> (<a href=https://david-smith.org/iosversionstats/>see also</a>), even though it’s
+voluntary —  a sign that people perceive the value of the updates. It’s unlikely
+people are making their choice on the basis of security per se, of course. But
+<a href=https://twitter.com/mattblaze/status/1081384425416470528>security and
+privacy are key parts of iOS’ value proposition</a>, and I do think at least
+some customers perceive them.<p><a href=https://blog.github.com/2018-11-15-state-of-the-octoverse-top-programming-languages/>Memory-safe
+programming languages dominate the landscape</a>. Additionally, the
+fastest-growing languages are memory-safe. Some popular languages are even
+type-safe. (Some might consider type safety a mere bonus, but to me, <a href=http://lucacardelli.name/Papers/TypefulProg.pdf>typefulness</a> is a
+crucial building block for reliable and safe software.) There is even good news
+in systems software, previously the unchallenged and most undeserved domain of
+unsafety: Go is big there, and Rust is boopin’ right along (see e.g. <a href=https://servo.org/>Servo</a>, <a href=https://chromium.googlesource.com/chromiumos/platform/crosvm/>CrOS
+VM</a>, <a href=https://github.com/xi-editor/xi-editor>the Xi editor</a>, <a href=https://fuchsia.googlesource.com/docs/+/d4f9b980f18fc6722b06abb693240b29abbbc9fc/rust_quickstart.md>parts
+of Fuchsia</a>). Although we mourn <a href=https://en.wikipedia.org/wiki/Midori_(operating_system)>Midori</a>, it
+can still teach us <a href=http://joeduffyblog.com/2015/11/03/blogging-about-midori/>broadly
+applicable, deep lessons</a>. (See especially <a href=http://joeduffyblog.com/2015/11/03/a-tale-of-three-safeties/>A Tale Of
+Three Safeties</a> and <a href=http://joeduffyblog.com/2016/02/07/the-error-model/>The Error
+Model</a>.)<p>Memory tagging, a new (and <a href=https://en.wikipedia.org/wiki/Tagged_architecture>old</a>) feature of
+hardware, can help with memory safety problems. <a href=https://llvm.org/devmtg/2018-10/slides/Serebryany-Stepanov-Tsyrklevich-Memory-Tagging-Slides-LLVM-2018.pdf>People
+are working on making it happen on modern systems</a> (<a href=https://arxiv.org/pdf/1802.09517.pdf>paper</a>). I don’t think it’s a
+replacement for fixing bugs in as systemic a way as possible (ideally, in the
+source language), but it has great potential to increase safety.<p>Static checkers —  compilers — and dynamic checkers (e.g. <a href=https://clang.llvm.org/docs/AddressSanitizer.html>Address Sanitizer</a>
+and the rest of the LLVM sanitizers) have advanced very far in the past 20
+years. What was once bleeding-edge research now comes for free with
+off-the-shelf compilers. This is fantastic! (Start with <code>-Wall
+-Werror</code> in Clang or GCC, but I like to use <code>-Weverything
+-Werror</code>, with a few exceptions like <code>-Wno-padded</code>.
+Really.)<p><a href=https://blog.chromium.org/2018/10/trustworthy-chrome-extensions-by-default.html>Chrome
+is making some structural improvements to the extensions platform</a>, which
+should reduce <a href=https://www.wired.com/story/chrome-extension-malware/>some of the worst
+abuses we see in that ecosystem</a>.<p>Parts of the software industry are having <a href=https://www.amazon.com/World-Technology-Massey-Lectures-Revised/dp/088784636X>an
+ethical and moral awakening</a>:<ul><li><a href=https://www.bbc.com/news/technology-46054202>Google
+Walkout</a><li><a href=https://static01.nyt.com/files/2018/technology/googleletter.pdf>Cancel
+Maven</a> (<a href=https://www.armscontrol.org/pressroom/2018-acpoy-winner>see
+also</a>)<li><a href=https://medium.com/s/powertrip/im-an-amazon-employee-my-company-shouldn-t-sell-facial-recognition-tech-to-police-36b5fde934ac>Against
+Amazon Rekognition</a><li><a href=https://www.telegraph.co.uk/technology/2018/10/13/microsoft-workers-protest-bid-build-pentagons-10bn-ai-warfare/>Microsoft
+workers protest AI warfare</a><li><a href=http://humanetech.com/>Time Well Spent</a><li><a href=https://medium.com/@googlersagainstdragonfly/we-are-google-employees-google-must-drop-dragonfly-4c8a30c5e5eb>Google
+Must Drop Dragonfly</a></ul><p>You don’t have to agree with all those positions to find it good news that
+our generation of engineers is growing beyond the “I could build it, so I did;
+what are consequences?” mentality. <a href=https://en.wikipedia.org/wiki/Computer_Professionals_for_Social_Responsibility>Previous
+generations had to make very similar choices</a>.<p>(I do happen to agree with all those positions, and I will not work on
+machines designed for war or police, nor on Big Brotherly, censored search
+engines. And I support the efforts for equality and fair treatment for everyone.
+The Walkout was a good day, but it was just a beginning. There’s a long way to
+go.)<p>The increasing awareness and adoption of <a href=https://en.wikipedia.org/wiki/Universal_2nd_Factor>Universal 2nd Factor
+authentication</a> is great news. (U2F has been standardized as <a href=https://www.w3.org/TR/webauthn/>WebAuthn</a>, which is considerably more
+complex than most security people would like. Expect bugs to come of that...)
+The high degree of phishing resistance it offers is at least as important as the
+protections HTTPS provides. Phishing and account take-over have consistently
+been 1 of our biggest problems, and WebAuthn can put a big dent in them. You can
+use it now with Google, Facebook, Twitter, Dropbox, login.gov, and others.<h2>The Bad</h2><p>C++ continues to be untenably complex and wildly unsafe:<ul><li><a href=http://www.stroustrup.com/P0977-remember-the-vasa.pdf>C++’s
+creator finds himself on the other side of the community</a> on the issue of
+C++’s growing complexity. Stroustrup correctly identifies C++’s growing
+complexity as a potentially fatal risk for the language.<li><a href="https://bugs.llvm.org/show_bug.cgi?id=34729">The new, safe APIs are
+not safe</a>. (“WONTFIX”.)<li><a href=https://blog.regehr.org/archives/213>C and C++ compilers continue
+to exploit undefined behavior</a> —  something that should not exist —  for the
+dubious goal of micro-optimizations. (John Regehr: “A compiler that is very
+smart at recognizing and silently destroying Type 3 functions becomes
+effectively evil, from the developer’s point of view.”)<li>C++ is so complicated that <a href=https://groups.google.com/a/chromium.org/forum/#!topic/cxx/2UTgWpM5N0c>expert
+programmers cannot find a universal way to find the size of a static array</a>,
+other than the classic vanilla C macro. Maybe simple is good, after all? 🤔</ul><p>I can’t possibly select and link to a list of the infinite bug reports whose
+root causes are memory unsafety. A fun exercise is to skim through a good source
+of vulnerability write-ups (<a href=https://googleprojectzero.blogspot.com/>the Project Zero blog</a> is one
+of my favorites), and count how many of the bugs are even in the application
+domain at all.<p>(Of course, if you find that there are more memory safety bugs than
+application-domain bugs or other bugs, that could just as well be due to the
+researchers’ biases. But I think we can all agree that memory corruption bugs
+simply should not exist at all, yet are numerous and often exploitable.)<p>Designing a language that achieves all of memory safety, high performance,
+and good usability remains very hard. The Rust compiler notices and rejects
+safety bugs that C and C++ compilers don’t notice/can’t notice/purposefully
+accept. 🤪🔨 That is to Rust’s credit, but <a href=https://rcoh.me/posts/rust-linked-list-basically-impossible/>this
+discipline can be extremely difficult to learn</a>.<p>Among the programming language research community’s goals is proving programs
+safe. Gradually and increasingly, that work trickles down into real languages
+that people can really use to ship real software. <a href=https://www.imperialviolet.org/2014/09/07/provers.html>The difficulty of
+using academic tools</a> is partly a natural consequence of their small
+audience, but some of the difficulty is unavoidable: proof of safety means
+<strong>proof</strong>, that difficult thing that people get PhDs for.
+Ultimately, the software engineering community is going to have to commit to
+meeting this standard, gradually and increasingly.<p>Obviously, 2018 was the year everyone became aware of <a href=https://meltdownattack.com/>Spectre & Meltdown</a>, <a href=https://foreshadowattack.eu/>Foreshadow</a>, <a href=https://www.intel.com/content/www/us/en/architecture-and-technology/l1tf.html>L1TF</a>,
+and the idea of micro-architectural <a href=https://pdfs.semanticscholar.org/2209/42809262c17b6631c0f6536c91aaf7756857.pdf>side-channels
+generally</a>. Shared resources abound, unfortunately. Of course, other
+show-stopper security problems (typically due to <a href=https://people.kth.se/~maguire/DEGREE-PROJECT-REPORTS/100402-Vassilios_Ververis-with-cover.pdf>monstrous
+complexity</a>) have been known for a long time (<a href=https://www.ssi.gouv.fr/archive/fr/sciences/fichiers/lti/cansecwest2006-duflot.pdf>see
+also</a>, <a href=https://en.wikipedia.org/wiki/System_Management_Mode#Problems>see
+also</a>). Although those links refer mostly to Intel Architecture systems,
+there’s no reason to think that (e.g.) ARM is inherently safer. In particular,
+the micro-architectural side-channel problems are the natural result of
+designing for maximum performance —  which almost every chip designer is trying
+to do, because that’s what almost every customer wants.<h2>The Ugly</h2><p>Abuse (the malicious use of legitimate functionality) affects more people’s
+lives in more ways than does the exploitation of bugs. Although hacking can have
+a surprising influence, such as in the form of political fallout or mass data
+breaches, the reasons your friends and family are sad are much more prosaic —  and harder to solve:<ul><li>Phone scams; <a href=https://en.wikipedia.org/wiki/Technical_support_scam>tech-support
+scams</a>; <a href=https://medium.com/@nancynakamoto_11949/the-princess-bride-and-the-mystery-of-the-tether-business-model-d76a08c94734>cryptocurrency
+scams</a> and <a href=https://www.howtogeek.com/359129/don%E2%80%99t-fall-for-the-new-cryptoblackmail-scam-here%E2%80%99s-how-to-protect-yourself/>extortion</a>.<li>Malware, crapware, or ‘unwanted software’ that people purposefully install.
+(These are often listed in legitimate stores, shipped with the device drivers of
+hardware, or bundled with marginalware.)<li>The scourge of <a href=https://motherboard.vice.com/en_us/article/53vm7n/inside-stalkerware-surveillance-market-flexispy-retina-x>spouseware
+and stalkerware</a>.</ul><p><a href=https://www.theguardian.com/technology/2018/nov/05/energy-cost-of-mining-bitcoin-more-than-twice-that-of-copper-or-gold>Proof-of-work
+continues not to work</a> 😵, <a href=https://www.cl.cam.ac.uk/~rnc1/proofwork.pdf>as foretold by prophecy</a>
+😑. The coming decades are going to bring increasing climate, uh, ‘challenges’,
+and all computing systems are going to have to prove their worth relative to the
+sum of <strong>all</strong> their costs —  including carbon and e-waste. We won’t
+be able to laugh those off as externalities any longer. Proof-of-work systems
+will continue to be unable to show sufficient value for the cost, and may even
+be the wedge for regulation (if they don’t starve themselves or crash
+first).<p><a href=https://infrequently.org/2018/09/the-developer-experience-bait-and-switch/>The
+web performance crisis</a> (see also <a href=https://idlewords.com/talks/website_obesity.htm>a hotter take</a> 🥵) is a
+similar situation: hugely wasteful, but not (yet...?) self-limiting. In the past
+I’ve had to argue that <a href=https://conferences.oreilly.com/web2expo/webexsf2009/public/schedule/speaker/1016>security
+is affordable</a> even given performance constraints. It was possible to get
+both performance and security then, by reducing obvious bloat and enabling
+less-obvious optimizations, and it’s possible now. The root cause then was the
+same as it is now: too many developers don’t use the same client systems as
+their userbase does, and they don’t know what network, memory, and CPU costs
+they are incurring. Previously, those costs were hard to see. Now, they are
+definitely not: every browser has a very good Dev Tools console, and there is no
+excuse for not using it.<p>Dependency slurping systems like NPM, CPAN, <code>go get</code>, and so on
+continue to freak me out. They might potentially be more dangerous than manual
+dependency management, despite the huge risks of that practice, precisely
+because they make it ‘easy’ to grow your project’s dependency graph —  and hence
+the number of individuals and organizations that you implicitly trust. (And <a href=https://www.theregister.co.uk/2018/11/26/npm_repo_bitcoin_stealer/>their
+trustworthiness can suddenly change for the worse</a>.) When there are
+significant gaps in a language’s standard library, third-party developers will
+eagerly fill those gaps with new dependencies for you to (not always knowingly)
+inherit. There is <a href=https://github.com/tc39/proposal-javascript-standard-library/issues/19>an
+effort underway to fill gaps in JavaScript’s standard library</a>, which I
+strongly support for this reason.<p>Social media continues to amplify the worst in people, and <a href=https://www.nytimes.com/2018/11/29/technology/george-soros-facebook-sheryl-sandberg.html>some
+executives of social media companies continue to be part of the problem</a>.
+Dealing with the toxicity and abuse of social media is a long-term,
+multi-pronged effort, but 1 thing that we can immediately do as engineers, PMs,
+designers, and managers is to push back on ‘engagement’ as the primary or only
+metric for ‘success’. It’s game-able and heavily gamed, and does not remotely
+capture the real experiences of real people on social media. People’s
+experiences are often <a href=http://seriouspony.com/trouble-at-the-koolaid-point/>profoundly
+awful</a>, and we as software developers are responsible for dealing with the
+consequences of what we’ve built. Are we empowering people to learn and grow, or
+are we amplifying the fuckery of Nazis and Chekists? Clinging to <a href=https://www.eff.org/deeplinks/2018/04/platform-censorship-wont-fix-internet>a
+simplistic view of free speech</a> is not going to get us out of having to
+answer that question.<h2>The Future</h2><p>Unfortunately for me, I want to work on all of these problems. I had a good
+fun time in 2018 working on defense at a low-level (<a href=/2018/07/19/application-principals/>just one of many adventures</a>), and
+there’s still plenty of work to be done there. (There’s lots of ambient
+privilege still crying out to be reduced!) It has been rewarding to play my
+small part in helping get HTTPS where it needs to be.<p>And unfortunately, the problems that I find the most vexing —  the abuse
+category generally —  are not in my area of greatest expertise. My heart is
+really in the language problem: meaningful interfaces, ergonomic and safe
+libraries, memory safety, and type safety. But it’s the abuse that makes my
+heart sick.<p>Still, I see people really shipping software improvements that seemed
+impossible 20 or 10 or 5 years ago. We really are making progress. Here’s what I
+want to see in 2019:<ul><li>Throwing away the idea of using ‘engagement’ as the sole or primary
+metric.<li>Socializing policy thinking in the engineering community. It’s time to put
+on our grown-up clothes. The stuff we do matters (otherwise we wouldn’t do it,
+right?), and that means we need to think about and deal with the
+consequences.<li>Affordances to improve web performance across the board: a larger JavaScript
+standard library; performance improvements in frameworks; improvements in
+tooling; client-side interventions and budgets.<li>Eroding the idea that memory-unsafety is acceptable, and shipping more
+software in safe languages that would previously have been written in an unsafe
+language. This includes not so much straight-up rewrites of existing
+applications (<a href=https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/>which
+Joel says is bad</a>); mostly, I see piecemeal, in-place rewrites of components
+(like Servo), and also new applications in well-established categories (like Xi
+and CrosVM). New applications also give us a chance to re-think old designs, as
+Xi notably does (with its cross-platform, client/server, multiple-front-end
+design).<li>Socializing the value of simplicity, and throwing away complexity, at all
+levels: UX, languages, libraries, frameworks. In particular, nobody should start
+a new project in C++.</ul><p>Smart people are already hard at work on all these things! We can get the
+industry closer to where it needs to be, and serve people better. Tomorrow is
+Monday...<aside><p>Thanks to Alex Gaynor, Emily Schechter, Emily Stark, Eric Mill, Kate
+Conger, Stephan Somogyi, and Tom Ptacek for feedback and encouragement. Errors,
+omissions, and confusions are still mine, of course. You might also like <a href=https://alexgaynor.net/2019/jan/06/security-wish-list-2019/>Alex’
+security wishlist for 2019</a>.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

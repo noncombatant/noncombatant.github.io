@@ -1,0 +1,297 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Some Problems Of URLs</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Some Problems Of URLs</h1><p><time>7 November 2017</time><aside><p>Update 09 Dec 2017 18:09 UTC: A reader pointed me to <a href=https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf>this
+delightful Black Hat talk by Orange Tsai about exploiting URL grammar
+problems</a>.</aside><div id=toc></div><h2>Background</h2><p>The <a href=https://tools.ietf.org/html/rfc1738>uniform resource locator
+(URL)</a> is a data structure and an associated serialization format that aims
+to uniquely identify any resource on the Internet (and other networks). (See
+also <a href=https://tools.ietf.org/html/rfc3986>uniform resource identifier
+(URI)</a>.) That’s a lofty goal, but it has proven more or less tractable and
+practical. Which is astounding and great! A global network namespace enables
+powerful applications, and powerful interactions between applications.<p>However, URLs have some problems of usability, security, and economics. Many
+of us have wished for a global namespace with fewer problems. I’ll address that
+first, and then I’ll have some fun with the technical aspects of the problem.
+You can skip that stuff, if you like.</p><a id=names-are-power></a><h2>Names Are Power</h2><p>URLs have very poor usability both because they are structurally complex, and
+because their textual representation is unnecessarily ambiguous and ugly (<a href=#syntaxyness>syntaxy</a>). Some of
+the structural complexity is
+necessary, and some of it is not.<p>The poor usability of URLs is a weak spot for advocates of semi-decentralized
+naming schemes like URLs and the DNS. People sometimes propose that a
+centralized naming scheme would be less chaotic and hence more usable and more
+safe. They do have a point, and we should address it.<p>For example, my colleague <a href=https://medium.com/@owencm/rethinking-url-bars-as-primary-browser-ui-e2118339d2c0>Owen
+Campbell-Moore argues that URLs are un-fixably terrible</a>, and advocates for
+search engines to provide the trusted, and hopefully trustworthy, mapping
+between human-meaningful names and origins or URLs.<p>However, that requires the search engine, or other centralized naming
+authority, to be trustworthy. This proves difficult:<figure><img src=whatsapp-minefield.jpg width=552 height=459 alt="A
+screenshot of Google Play Store showing search results for “whatsapp”, with
+numerous perfect spoofs." loading=lazy><figcaption>“This is horrible..
+minefield” —  <a href=https://mobile.twitter.com/deathy/status/926861685440249857>Cristian Vat
+on Twitter</a></figcaption></figure><p>Similarly, a Google search for [ <a href="https://www.google.com/search?q=download+chrome">download chrome</a> ] has
+lots of legitimate and correct results up top, but there are still fakes on the
+first page of results (at least at the time of writing, and for as long as I can
+remember). In fact, we used to have a recurring problem that obvious spoofs were
+at the very top of the results. Google’s search engine could not reliably find
+Google’s browser. In one sense, that indicates trustworthiness —  Google doesn’t
+seem to put its thumb on the scale. In another sense... sigh. 🤷🏻‍♂️<p>Perhaps ✨ machine learning ✨ could be useful in identifying spoofs, such as
+by comparing names and icons for similarity and raising them for human review.
+That would speed up the process of finding potential spoofs, potentially
+improving the centralized naming authority’s trustworthiness. But we’d still be
+trusting the authority with a lot of power.<p>Obviously, in most of this post, I agree with Owen about the badness of URLs.
+But ultimately I do not agree that a centralized authority would be better, nor
+that we should switch to one.<p>I think the problem Owen poses can be resolved by investigating this
+question:<blockquote>“Origins are not very user-friendly”</blockquote><p>I fully agree that <strong>URLs</strong> are not usable, but I do believe
+that <strong>origins</strong> (the <a href=https://tools.ietf.org/search/rfc6454>scheme, host, port tuple</a>) are
+or can be made usable —  and that if we succeed at that technical problem, we can
+reduce some of the pressure to centralize power.<h3>Making Origins Usable</h3><p>I think we can make origins more usable by doing the following things in the
+Location Bar:<ul><li>Show only the hostname. Not the port, not the scheme. If necessary or
+useful, we can also consider showing only the effective TLD + 1 label
+(eTLD+1). In fact I think it will prove necessary and useful.<li>Show a negative security indicator, like Chrome’s <strong>Not
+Secure</strong> chip, for non-secure schemes.<li>Show no indicator for secure schemes.<li>Continue to deprecate and remove non-secure schemes. Ideally, the ongoing
+project to HTTPS-ify the web could get the number of schemes people regularly
+see down to 1.</ul><p>Note that Safari already does most of the above, although it commits what I
+consider an error: for sites with Extended Validation (EV) certificates, it
+shows the EV name instead of the eTLD+1. This opens a whole other can of
+goat-worms (which I have <a href=/2017/02/15/decoding-chromes-https-ux/#what-about-extended-validation-certificates>yelled
+about elsewhere</a>). But you can get a glimpse of a better naming future by
+trying out Safari. Brave for desktop also shows only the hostname until you
+focus the Location Bar.<figure><img src=safari-etld.png width=648 height=135 alt="A screenshot of
+Safari showing only the eTLD+1." loading=lazy><figcaption>Glorious, isn’t
+it?</figcaption></figure><p>As a practical matter, eTLD+1 names, hostnames, and copied-and-pasted blobs
+are all people really use in the real world. Very few people use URLs as such —  and that is perfectly fine! To improve URL usability and safety, application
+and platform developers need only go with the flow. Let’s.<p>However, some more-or-less tractable problems remain even after we do all of
+the above.<ul><li>Ill-formed hostnames will still be confusing.<ul><li>I believe confusingness is by itself a useful indicator for people, and that
+well-formed hostnames like “facebook.com” and “baidu.com” make good brands.
+Hostnames are ubiquitous in advertising and pop culture.<li>Ill-formed hostnames are inherently fishy, and people have a decent chance
+to distinguish “facebook.com” from “facebook.com.wumpgarble.phishing.blog”,
+especially if we show only eTLD+1: “phishing.blog” is clearly not
+“facebook.com”.<li>As baidu.com and mixi.jp show, they are even usable across a language and
+character set barrier, although IDNs also exist and can help.</ul><li>People will still need to share links, and developers will still need to
+read, write, and modify them.<ul><li>I think we can handle this by making the full URL visible and editable when
+the Location Bar takes focus.</ul><li>Homoglyph attacks will continue to exist.<ul><li>Note that centralized naming authorities also have this problem.<li>I believe that the mechanisms for coping with it can work either in
+centralized or decentralized naming schemes.</ul></ul><h2>The Problem</h2><p>URLs became user interface components almost immediately: people are expected
+to be able to type in URLs, copy and paste them, and (at least partially) parse
+them to extract security-relevant information, and sometimes to modify them. All
+this, including on tiny phone screens.<p>This turns out to be not-so-great, because in order to meet their goal, URLs
+have to be fairly complex, and object serialization and deserialization is a
+surprisingly hard problem even in simple cases. The end result is that most
+people have a very hard time actually using URLs in practice.<h3>URLs Are Surprisingly Complex</h3><p>Although <a href="https://cs.chromium.org/chromium/src/url/gurl.h?sq=package:chromium&dr=CSs&l=472">the
+implementation Chrome uses is more complex</a> (see also <a href="https://cs.chromium.org/chromium/src/url/third_party/mozilla/url_parse.h?sq=package:chromium&dr=CSs&l=77"><code>url::Parsed</code></a>),
+we might imagine that the structure of a URL object need not be too complex. For
+example:<pre>
+class URL {
+  string scheme
+  string username
+  string password
+  string host
+  string port
+  string path
+  string query
+  string ref    // Also called "fragment".
+}
+</pre><p>Well, that’s a bit too simple. First, TCP and UDP port numbers are unsigned
+16-bit integers, not arbitrary strings. Then, the host could be an IPv4 address,
+an IPv6 address, or an address in another network type. Or it could be a DNS
+hostname, a NetBIOS hostname, or a name in some other domain. Even considering
+just DNS and NetBIOS names, simple strings don’t quite capture the type
+information we need.<ul><li>The DNS is hierarchical (having up to 127 levels), and a name consists of 1
+or more <em>labels</em>, each containing 1 to 63 octets, and the total length of
+the internal representation of a name can be at most 255 octets. (<a href=https://en.wikipedia.org/wiki/Domain_Name_System#Domain_name_syntax>Wikipedia</a>)<li><a href=https://en.wikipedia.org/wiki/NetBIOS#Name_service>Wikipedia
+says</a> that “NetBIOS names are 16 octets in length and vary based on the
+particular implementation. Frequently, the 16th octet, called the NetBIOS
+Suffix, designates the type of resource, and can be used to tell other
+applications what type of services the system offers.” That leaves a lot of
+questions open, but we won’t dig into them here.</ul><p>So, we’ll have to complicate our representation a bit. Let’s try this:<pre>
+abstract class NetworkAddress { ... }
+
+class IPv4NetworkAddress extends NetworkAddress { ... }
+
+class IPv6NetAddress extends NetworkAddress { ... }
+
+abstract class HostName { ... }
+
+class DNSName extends HostName { ... }
+
+class NetBIOSName extends HostName { ... }
+
+class HostIdentifier {
+  enum Type {
+    Address,
+    Name
+  }
+
+  union {
+    NetworkAddress address
+    HostName name
+  }
+}
+
+class URL {
+  string scheme
+  string username
+  string password
+  HostIdentifier host
+  uint16_t port
+  string path
+  string query
+  string ref  // Also called "fragment".
+}
+</pre><p>We’ve more tightly specified the port, and <code>HostIdentifier</code> is a
+sum type of 2 abstract <code>NetworkAddress</code> and <code>HostName</code>
+types. In turn, the abstract types are made concrete for specific addressing and
+naming systems; we’ve given some modern examples for each.<p>Although the real details are madness-inducing, let’s further assume for the
+moment that the <code>string</code> type is a sequence of Unicode
+characters.<p>The real-world analogues to each of these hypothetical classes has at least 1
+serialization function and least 1 deserialization function or parsing
+constructor. Even the IPv4 address, a humble 4-octet data structure, has a
+delightfully wacky set of representations. <a href=ipv4-parser.c>A simple
+program</a> that uses the BSD functions <code>inet_aton</code> (deserializer)
+and <code>inet_ntoa</code> (serializer) produces the following
+equivalencies:<pre>
+Serialized       Deserialized  Reserialized   
+222.173.190.239  0xDEADBEEF    222.173.190.239
+0xDEADBEEF       0xDEADBEEF    222.173.190.239
+033653337357     0xDEADBEEF    222.173.190.239
+222.11386607     0xDEADBEEF    222.173.190.239
+222.173.48879    0xDEADBEEF    222.173.190.239
+127.0.0.1        0x7F000001    127.0.0.1      
+0x7F000001       0x7F000001    127.0.0.1      
+127.1            0x7F000001    127.0.0.1      
+127.0.1          0x7F000001    127.0.0.1
+</pre><p>As of this writing, Chrome will indeed take <code>http://0x9765C143</code>,
+convert it to <code>http://151.101.193.67/</code>, and navigate to it. Firefox
+navigates directly to <code>http://0x9765C143</code> without first converting it
+to dotted decimal in the Location Bar.<p>IPv6 addresses have their own various representations, <a href=https://en.wikipedia.org/wiki/IPv6_address#Representation>as Wikipedia
+discusses</a>. Notably, to disambiguate colon-separated hextets of the IPv6
+address from the colon-separated port number in URL string representations, IPv6
+addresses must be surrounded with square braces in URLs:<pre>
+https://[2001:db8:85a3:8d3:1319:8a2e:370:7348]:443/foo/bar/noodles
+         +------- IPv6 address -------------+   ^
+                                                |
+                                               port
+</pre><a id=syntaxyness></a><h3>Syntaxyness</h3><p>Whenever a language has lots of syntactic meta-characters, especially when
+some of the meta-characters have multiple meanings depending on their context, I
+say the language is “syntaxy”. If you try to write a URL parser, you’ll find
+that it has to keep a fair amount of state to know whether this <code>:</code>
+is part of the scheme separator <code>://</code>, or a hextet separator, or the
+port number separator. Similarly, <code>/</code> has at least 2 meanings.<p>Unconsciously perhaps, humans need to build the same state machine in their
+minds to parse URLs —  or fail to, and get confused. Add on top of that the fact
+that many URL schemes are not real words, <code>/</code> looks kind of like
+<code>\</code>, and so on, and and pretty soon people are just plain confused
+about the URL language. It’s not a language people can speak easily.<h2>Goals For A Solution</h2><p>An ideal solution to the URL usability problem would have (at least) the
+following properties:<ul><li>unambiguous grammar<li>clear delineation of the security-relevant origin<li>not too tedious to write<li>not too tedious to read (low in syntaxyness)<li>fewer components to avoid confusion and to reduce the need for syntactic
+complexity</ul><h2>Mitigations</h2><p>We can’t truly solve the problem without fundamentally re-thinking URLs. URLs
+are ubiquitous, and their problems are <code>struct</code>ural: there are just
+too many things in the data structure.<p>Perhaps what we can do is mitigate the badness somewhat. Arguably, it is fun
+to brainstorm about how.<h3>Deprecate And Remove Fields From URLs</h3><p>First, we can remove parts of the URL we don’t need or which exacerbate our
+problems. There is a beautiful example of syntaxyness gone wrong in <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=661005">Chromium
+issue 661005</a>:<pre>
+Steps to reproduce the problem:
+1. navigate to https://www.google.com:443+q=elon@tesla.com
+2. the resulting page should be https://www.tesla.com
+
+What is the expected behavior?
+Warn the user that they are about to post credentials
+      - username : "www.google.com"
+      - password : "443+q=elon"
+</pre><p>A more important problem with usernames and passwords in URLs is that they
+obfuscate the URL’s hostname, potentially improving the effectiveness of
+phishing attacks. For example, people might think that the URL
+<code>https://paypal@phishing.com</code> points to PayPal, but in fact it points
+to phishing.com.<p><a href=https://support.microsoft.com/en-us/help/834489/internet-explorer-does-not-support-user-names-and-passwords-in-web-sit>Internet
+Explorer dropped support for credentials embedded in URLs a long-ass time
+ago</a>. Wisely, Edge has not resumed supporting them.<p>Firefox supports embedded credentials, but warns you about the ambiguity.<figure><img src=firefox-warning.png width=671 height=261 alt="Firefox
+warns you when you browse to a URL that contains embedded credentials." loading=lazy><figcaption>Firefox warns you when you browse to a URL that
+contains embedded credentials.</figcaption></figure><p>Chrome does not support embedded credentials in URLs for subresources, but <a href=https://xkcd.com/1172/>inevitably</a>, <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=779116">that broke
+someone’s use case</a>.<p>If we consider that the problem with embedded credentials is that they
+confuse people, it would seem that we could break as few use cases as possible
+by allowing them in subresource URLs, and (like Firefox) warning the person
+about the ambiguity for top-level navigations.<p>But if we consider that the problem is not only that embedded credentials
+confuse people, but that they also increase the complexity, decrease the
+reliability, and decrease the uniformity of our URL parsers, then that suggests
+the minimal-breakage approach does not solve the whole problem.<p>Since IE and Edge do not support embedded credentials, they are effectively
+dead as a reliable web platform feature, and have been for over a decade. Why
+should Chrome and Firefox continue to indulge this phishiness?<p>(Other <a href=http://seriot.ch/parsing_json.php>partially-specified
+languages, like JSON, suffer from terrible reliability and uniformity
+problems</a>. A forward-looking platform, as I believe the web should be, should
+seek to gradually, gently, definitely shed these ambiguous legacy interfaces.
+And here’s an interesting <a href=https://github.com/brave/browser-laptop/issues/10825>problem related to
+the non-uniformity of URL parsers</a>.)<h3>Deprecate And Remove Weird Host Address Representations</h3><p>There’s no credible, user-focused reason to support hexadecimal, octal, or
+other strange IP address representations. They might be used in attacks to
+obscure things somewhat (although even a dotted-quad representation might
+sufficiently obscure the nature of the host). <a href=https://blogs.msdn.microsoft.com/ieinternals/2014/03/06/browser-arcana-ip-literals-in-urls/>Internet
+Explorer once granted special privileges (‘Intranet Zone’) to URLs with no dots
+in the host component</a> —  including URLs using these obscure forms.<p>Other than for attacks, I would bet that nobody uses or wants these address
+forms. Probably at least some people reading this, already a technical audience,
+were surprised to learn that the strange representations exist at all. So let’s
+just get rid of these historical quirks.<h2>Imaginary Approaches</h2><p>These are mitigation approaches that perhaps might be nice to do, but which I
+suspct it’s too late to try. Alas. But still...<h3>Hierarchical Names That Go In The Same Direction</h3><p>2 of the several namespaces in URLs, DNS hostnames and pathnames, are
+hierarchical. But textually, they go in opposite directions!<p>In the DNS name www.example.com, com is the parent of example is the parent
+of www. The labels go left to right, child to parent. I’ll call this <a href=https://en.wikipedia.org/wiki/Endianness>little-endian</a> naming.<p>In the pathname /noodles/doodles/poodles.php, noodles is the parent of
+doodles is the parent of poodles.php. The components go left to right, parent to
+child —  the opposite relationship of DNS names. I’ll call this big-endian
+naming.<pre>
+https://www.example.com/noodles/doodles/poodles.php
+        --------------- +++++++++++++++++++++++++++
+        little-endian   big-endian
+</pre><p>That’s confusing enough on its own, but it gets weirder when you consider <a href=https://en.wikipedia.org/wiki/Internationalized_domain_name>internationalized
+domain names</a>, and other Unicode URL components. What makes it extra tricky
+is that some languages read right to left (RTL), like Arabic or Hebrew, instead
+of left to right (LTR), like English. Consider further that URLs can contain
+both LTR and RTL components. (Indeed, all URLs with RTL hostnames still have to
+have at least one LTR component: the leading <code>https</code> or other
+scheme.)<p><a href=https://twitter.com/typhoonfilsy/status/927701344185491456>typhoonfilsy</a>
+provided a nice example of this:<figure><img src=mixed-ltr-rtl-url.png alt="URL with both Arabic and English
+in both the hostname and path components." width=399 height=42 loading=lazy><figcaption>URL with both Arabic and English in both the hostname
+and path components.</figcaption></figure><p>So now we have both little- and big-endian names, each containing
+sub-components that go LTR and RTL. Imagine trying to read that (a) at all; and
+(b) correctly; and (c) when trying to make a security decision about an
+origin!<p>So it sure would be helpful if the namespace hierarchies all went in the same
+direction, you know? That would reduce at least 1 aspect of the confusion.<pre>
+https://com.example.www/noodles/doodles/poodles.php
+        +++++++++++++++ +++++++++++++++++++++++++++
+        big-endian      big-endian
+</pre><p>This would be less confusing in an RTL language:<pre>
+php.seldoop/seldood/seldoon/www.elpmaxe.moc://https
++++++++++++++++++++++++++++ +++++++++++++++
+                 big-endian      big-endian
+                        RTL             RTL     LTR
+</pre><p>However, the <a "href=https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains>proliferation
+of new top-level domain names</a> (TLDs) reduces the effectiveness of the
+hypothetical plan to make DNS names big-endian. For example, both blog.google
+and google.blog are legal DNS hostnames with valid TLDs. (Only the former is
+currently registered and serving a live site. Another huge problem with the
+proliferation of TLDs is the creation of new spoofing opportunities.) Swapping
+the endianness of the names would create more confusion, not less, at least for
+these pathological cases.<h3>Minimizing Syntaxyness</h3><p>We could also imagine a new URL syntax, with fewer and less ambiguous
+syntactic meta-characters. Just as a thought experiment and not as a serious
+proposal, imagine using only the comma <code>,</code> to separate URL
+components, and using the slash <code>/</code> only to separate tokens in
+namespaces:<pre>
+https,com/example/www,,noodles/doodles/poodles.php
+https,com/example/www,443,noodles/doodles/poodles.php
+https,com/example/www,,noodles/doodles/poodles.php,q=cute%20puppies
+https,com/example/www,,noodles/doodles/poodles.php,q=cute%20puppies,table-of-contents
+</pre><p>As always, the meta-characters must be escaped when used inside a given
+component. Here, the <code>,</code> is escaped as <code>%2C</code> in the query
+string:<pre>
+https,com/example/www,,noodles/doodles/poodles.php,q=cute%2C%20puppies
+</pre><p>If the <code>,,</code> indicating the default port for the scheme bothers
+you, and it probably should, we could imagine something like this:<pre>
+https/443,com/example/www,noodles/doodles/poodles.php
+https/8443,com/example/www,noodles/doodles/poodles.php
+</pre><p>We could also imagine tagging each component with its name, rather than
+relying on their order. This would remove the requirement of empty placeholders
+for optional or default components. The result is harder to write, but perhaps
+easier to read:<pre>
+scheme:https,port:443,host:com/example/org
+scheme:https,port:443,host:com/example/org,path:a/b/c
+scheme:https,host:com/example/org,path:a/b/c
+host:com/example/org,path:a/b/c,scheme:https
+</pre><p>Now we have a third meta-character to escape (<code>,</code>, <code>/</code>,
+and now <code>:</code>) as well.<p>Anyway, you get the idea: other, arguably better and/or differently-bad
+syntaxes are possible. Or, were possible.<p>That’s more than enough for now. Time for beeeeeeerrrr...<aside><p>Thanks to Eric Lawrence and Yan Zhu for providing some additional
+examples of problems, and thanks to Emily Stark-Dunn and Owen Campbell-Moore for
+reading an early draft and providing helpful thoughts.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

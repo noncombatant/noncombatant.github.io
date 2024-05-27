@@ -1,0 +1,116 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Getting Into Security Engineering</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Getting Into Security Engineering</h1><p><time>20 June 2016</time><aside><p>Update 2016-07-06: I added 2 additional books to the reading
+suggestions at the bottom.</aside><aside><p>Update 2016-07-28: You’ll definitely also want to read my excellent
+colleague <a href=https://medium.com/@laparisa/so-you-want-to-work-in-security-bc6c10157d23>Parisa
+Tabriz’ take on the same topic</a>.</aside><p>I’ve been talking with various people lately about how to get started in
+software security engineering. I noticed I’ve been having similar conversations
+with both newbies and experienced engineers, and I figured I should write things
+down in 1 place rather than keep repeating myself! I hope someone will find this
+useful.<h2>Know Your Reasons</h2><p>Know your reasons for wanting to specialize in security. Here are some
+examples; you’ll probably have more of your own:<ul><li>The intellectual challenge excites you<li>You want to help people by making software safer<li>You want to help people by stopping or catching crime<li>You want to refute, ✨with science✨, the false and dangerous claims that
+software vendors sometimes make<li>You want to help people by <a href=https://en.wikipedia.org/wiki/Privilege_escalation#Jailbreaking>giving
+them control of closed platforms</a><li>You like the money<li>...</ul><p>You might want to rank your reasons, so that when you’re faced with career
+choices you know what path to follow. For example, you might have a job you like
+because it’s intellectually challenging, but someone comes along and offers you
+more money to do less-interesting work. You’ll have to decide which is more
+important to you. I find it comforting to have ranked my reasons and goals ahead
+of time, because for me it makes the choices much less stressful. And you will
+most certainly need a moral compass as you progress through this adventure.<h2>Go For It!</h2><p>You can, and should, get started right away! Yes, there is a lot to learn,
+but you can do it, and you can start being effective immediately. I know this
+from first-hand experience, and from seeing other people do it. You might feel
+daunted by the size of the problem — everyone is, whether they admit it or not.
+The only way anyone has ever made progress is bit by bit, and you can too.<p>There are more security problems right now than there are problem solvers. We
+need you!<h2>Security Engineering Is Just Engineering</h2><p>Security is a specialization within the overall field of software
+engineering. In that sense, it is no different than any other specialization
+like networking, databases, performance, games, or whatever else. And software
+engineering is much more than just reading and writing code —  it also includes
+design, technical and non-technical writing and communication, interpersonal and
+political skills, at least some understanding of business and economics, and
+more. Security engineers need those skills, too. Code is definitely important
+but it is not the whole story.<p>You can learn the general partly by focusing on the specific — and you can
+learn the specific by learning the general. That is, you can learn engineering
+by diving right into security specifically, and you can also learn about
+security by learning engineering generally. (After all, security is really just
+another form of engineering quality.)<p>I find it’s best to try to view things from both perspectives. In my
+experience, it has been productive to focus on security specifically for a
+while, then focus on application development for a while, and then iterate.<p>Within the field of software security engineering, there are
+sub-specializations. My main area is application security engineering: figuring
+out what kinds of assets and attacks on those assets are relevant in a
+particular application’s domain, and then trying to design and implement the
+application to best defend its assets. But there are other sub-specializations
+in security, such as digital forensics and incident response (DFIR), network
+security, anti-fraud (a close relative of actuarial science and statistics),
+anti-abuse/pro-social design, and more.<h2>The Security Mindset: Doubt Abstractions And Dependencies</h2><p>The most important thing about a good security engineer is their mindset:
+skeptical. A regular engineer is trying to build something that works; a
+security engineer is anxious until they’ve found a few new ways in which it
+doesn’t work.<p>Much of computing science and software engineering is about managing
+complexity by creating abstractions. For example, consider this Python code:<pre>
+f = open("something.txt", "r")
+</pre><p>Python gives us this simple way to say, “Give me an object that represents a
+persistent data store, and let me read that data.” But that straightforward code
+hides tons and tons of complexity. For example, we have no idea (without reading
+the Python interpreter and standard library source code) exactly how that object
+<code>f</code> works (nor what it costs). It could be a thin wrapper around the
+C library’s <code>FILE</code> type, which itself is a rather thick (and useful)
+wrapper around the operating system’s <em>file descriptor</em> or
+<em>handle</em> concept. In turn, file descriptors are abstract representations
+of a wide variety of hardware and software systems:<ul><li>Possibly volatile, possibly not<li>Possibly stored on a device attached to this computer —  or possibly
+remote, retrieved over the network in a way that might violate your expectations
+for integrity or confidentiality<li>Possibly stored on any kind of hardware: spinning disk, tape, SSD —  all with
+wildly different performance and reliability properties<li>Possibly cached at 1 or more places in the <a href=https://en.wikipedia.org/wiki/Memory_hierarchy>memory hierarchy</a> —  and
+possibly stale or inconsistent</ul><p>The <em>pathname</em> of the file, in this case <code>something.txt</code>,
+is also a very high-level abstraction. Different platforms implement different
+pathname interpretation semantics, but most do a lot of work to hide complexity.
+For example, on Unix-like platforms, pathnames can refer to a variety of kinds
+of things:<ul><li>Hardware devices (e.g. <code>/dev/disk1</code>)<li>Software ‘pseudo-devices’ (e.g. <code>/dev/pty0</code>)<li>Special operating system facilities (e.g. <code>/dev/bpf3</code>,
+<code>/dev/urandom</code>)<li>Remote services on the network (e.g.
+<code>/mnt/nfs/your-companys-file-server/accounting/FY2016Q3
+Report.xls</code>)<li>And more...</ul><p><a href=https://googleprojectzero.blogspot.com/2016/02/the-definitive-guide-on-win32-to-nt.html>Windows
+systems have even stranger pathname semantics</a>. PHP will also interpret
+pathnames as URLs and <a href=http://php.net/manual/en/wrappers.php>will
+perform certain transformations of the data based on the URL scheme!</a><h3>Abstractions Are Lossy —  And Vulnerable</h3><p>They have to be —  that’s their value! The purpose of an abstraction is to
+hide complexity, and thereby help you get work done faster. An abstraction that
+does not hide something from its caller is not an abstraction at all.<p>But a security engineer is always skeptical, because they know that in the
+gap between what the abstraction <em>seems to provide</em> and what it
+<em>actually provides</em>, there are exploitable vulnerabilities.<p>Neal Stephenson called this <em>metaphor shear</em> (like windshear) in his
+hilarious essay <a href=https://www.amazon.com/Beginning-was-Command-Line/dp/0380815931/>In The
+Beginning Was The Command Line</a>.<p>In general, it’s good engineering practice to <strong>understand the layer
+below where you’re working, and understand the layer above</strong>. Another way
+to say this is, <a href=/2014/08/10/security-as-a-class-of-interface-guarantee/><strong>know your
+callees, and know your callers</strong></a>. The difference between an engineer
+and a security engineer is that the security engineer is looking for the tension
+and friction in those edges.<h2>Skills</h2><p>For the rest of this post, I’ll talk about what skills I have found useful in
+application security. But there are other areas, and other paths into them —  this is just one person’s perspective!<h3>Foundations</h3><p>Certain skills will be of use throughout your career and will help you build
+a foundation from which you can learn anything else you need to learn.<ul><li>Know at least 1 programming language (C, Ruby, Python, Java, et c.) in
+depth.<li>Know the standard library of your programming language as well as possible.
+This includes collections types (lists, <a href=/2014/03/02/maps-and-their-applications/>maps</a>, et c.), basic file
+I/O, basic networking, basic text processing, and so on.<li>Know at least 1 platform (iOS, Linux, web, Windows, et c.) in depth.<li>Know at least the basics of TCP/IP. Spend some quality time with <a href=https://www.amazon.com/TCP-Illustrated-Protocols-Addison-Wesley-Professional/dp/0321336313/><em>TCP/IP
+Illustrated</em></a> and <a href=https://www.wireshark.org/>Wireshark</a>.</ul><h3>Progressing</h3><p>After some years building your foundations, there are more things to learn
+and more adventures to enjoy. Here are some:<ul><li>Master additional languages and platforms<li>Contribute to the implementation of a language or platform<li>Learn about cryptography, and what it does and does not provide<li>Learn about hardware engineering<li>Learn programming language theory<li>Branch out into platform security engineering (changing platforms, and
+developing new platforms, to better serve application security needs)<li>Study distributed systems theory<li>Learn about performance engineering —  it’s important to make sure that
+security mechanisms are not the cause of performance problems!<li>Learn user experience design, so you can build secure <a href=https://eprint.iacr.org/2007/399.pdf><em>ceremonies</em></a></ul><h2>Some Light Reading</h2><p>To thoroughly learn a programming language, I find it useful to read 1 very
+well written book that covers the language’s syntax, semantics, standard
+library, and usage conventions. I like to read the book cover to cover, and then
+re-read all or part of it periodically. Preferably, 1 or more of the language’s
+inventors or implementors should have written the book. The canonical example is
+<em>The C Programming Language</em> by Kernighan and Ritchie, and other books
+have continued and improved on the tradition: <em>The Go Programming
+Language</em> by Donovan and Kernighan; <em>JavaScript: The Definitive
+Guide</em> by Flanagan; <em>The Java Programming Language</em> by Arnold,
+Gosling, and Holmes; and <em>Effective C++</em> by Meyers. People on Twitter say
+that <a href=http://docs.python-guide.org/en/latest/><em>The Hitchhiker’s
+Guide To Python</em></a> by Reitz is a good Python book.<p>Saltzer and Schroeder’s <a href=http://www.cs.virginia.edu/~evans/cs551/saltzer/><em>The Protection Of
+Information In Computer Systems</em></a> is a foundational text.<p>For web security, I recommend <em>The Tangled Web</em> by <a href=http://lcamtuf.coredump.cx/>Michal Zalewski</a>. Zalewski also has
+another excellent book, <em>Silence On The Wire</em>, about techniques for
+passive surveillance in a variety of domains. Zalewski is also the author of <a href=http://lcamtuf.coredump.cx/afl/>American Fuzzy Lop</a>, an excellent <a href=https://en.wikipedia.org/wiki/Fuzz_testing>fuzzer</a>.<p><em>Cryptography Engineering</em> by Ferguson, Schneier, and Kohno is a good
+introduction to applied cryptography.<p><em>TCP/IP Illustrated</em>, at least volume 1, is crucial.<p>For understanding C and doing reverse engineering, you’ll want a good
+assembly language book, such as <a href=https://www.nostarch.com/assembly2.htm><em>Art Of Assembly Language</em>
+by Hyde</a>.<p>Ross Anderson’s excellent omnibus, <em>Security Engineering</em>, is <a href=http://www.cl.cam.ac.uk/~rja14/book.html>available online</a> and on
+paper. Another great book is <a href=https://www.amazon.com/Art-Software-Security-Assessment-Vulnerabilities/dp/0321444426><em>The
+Art Of Software Security Assessment</em></a> by Dowd, McDonald, and Schuh.<p>There are many also good blogs and magazines. A random sampling might include
+<a href=https://googleprojectzero.blogspot.com/>the Project Zero blog</a>, <a href=https://www.alchemistowl.org/pocorgtfo/>PoC||GTFO</a>, <a href=http://blog.invisiblethings.org/>Joanna Rutkowska’s blog</a>, and <a href=http://blog.cryptographyengineering.com>Matthew Green’s blog</a>.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

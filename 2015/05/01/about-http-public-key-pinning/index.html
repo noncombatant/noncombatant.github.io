@@ -1,0 +1,197 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>About Public Key Pinning</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>About Public Key Pinning</h1><p><time>1 May 2015</time><div id=toc></div><aside><p>postd.cc has posted <a href=http://postd.cc/about-public-key-pinning/>a Japanese translation of this
+article</a>.</aside><aside><p>My colleague Emily Stark has posted <a href=https://developers.google.com/web/updates/2015/09/HPKP-reporting-with-chrome-46>an
+introduction to HPKP reporting</a> that you might also find useful.</aside><aside><p>Scott Helme has developed <a href=https://scotthelme.co.uk/hpkp-toolset/>a set of tools to make deploying
+HPKP a bit easier</a>. He also runs <a href=https://report-uri.io/>report-uri.io</a>, a service endpoint for
+collecting HPKP and CSP reports.</aside><h2>Introduction</h2><p>At long last, the Internet Engineering Task Force (IETF) has published <a href=https://tools.ietf.org/html/rfc7469>RFC 7469, Public Key Pinning
+Extension for HTTP</a> (HPKP). Thanks to my colleagues Ryan Sleevi, Adam
+Langley, and Chris Evans for coming up with the idea; and thanks to Ryan and
+Chris E. for helping me write the many drafts that preceded the final RFC.
+Thanks also to the many IETF participants who commented on the drafts and helped
+shepherd the document through to RFC status.<h2>What Is Pinning, And What Does It Solve?</h2><p>HPKP is an attempt to solve 1 of the big problems in the <a href=https://datatracker.ietf.org/wg/wpkops/charter/>Web PKI</a>: the fact
+that essentially any certification authority (CA) or intermediate issuer can
+issue end-entity (EE, or “leaf”) certificates for essentially any web site. For
+example, even though the certificate for mail.google.com is issued by “Google
+Internet Authority G2”, which in turn is issued by the root CA “GeoTrust Global
+CA”, <a href=https://en.wikipedia.org/wiki/DigiNotar>an obscure Dutch CA can
+also try to issue certificates for mail.google.com</a>. So, we’d really like
+some way to stop clients from having to trust such <em>misissued</em>
+certificates.<figure><img src=certificate-viewer-mail.png alt="The Chrome Certificate
+Viewer showing the mail.google.com issuance chain." width=227 height=279 loading=lazy><figcaption>The Chrome Certificate Viewer showing the
+mail.google.com issuance chain.</figcaption></figure><p>Often, people propose to solve this problem by partitioning the web: either
+they would like to configure their clients to trust only CAs from their own
+nation; or they would like for CAs of nation <var>X</var> to be banned from
+issuing certificates for organizations from nations <var>Y</var> and
+<var>Z</var>; or both. There are a couple problems with this. Crucially, the Web
+is World-Wide by nature and its many great benefits flow directly from that.
+Additionally, it is not always clear what nation a given organization is really
+‘from’, and hence it is not always clear what CA ‘should’ have issued the
+organization’s certificates.<p>There can be no perfect set of ‘golden roots’ — you cannot construct a
+minimal set of issuing certificates whose operators are more certain than some
+other set not to mis-issue (whether on purpose or by accident). If you partition
+the web, you reduce its value without actually reducing the threat of
+mis-issuance. So we need something else.<p>HPKP is 1 way to do that. HPKP enables a web server to tell clients (like
+browsers) to expect the server to always present, in its X.509 certificate
+chain, at least 1 of a set of public keys; and otherwise to to reject the
+certificate chain. Thus, a web site operator can effectively reduce the set of
+issuers that can issue for their site, without partitioning the web.<h2>How Does Pinning Work?</h2><p>To understand key pinning, first consider the classic simple case: SSH host
+key management. When you first connect to an SSH server with a client that has
+no previous knowledge of the server, you see this:<pre>
+chris@goatbeast:~ $ <strong>ssh freebsd</strong>
+The authenticity of host 'freebsd (10.0.0.4)' can't be established.
+ECDSA key fingerprint is b0:79:74:0f:58:20:80:fd:c7:47:33:d6:9c:40:df:20.
+Are you sure you want to continue connecting (yes/no)? 
+</pre><p>My server, freebsd, is presenting its public key to the SSH client to prove
+its identity. The problem is, my client has no knowledge of that
+(<var>server-name</var>, <var>public-key</var>) pair. So it asks me to resolve
+the confusion. I am supposed to perform some out-of-band check that the key
+fingerprint is correct, and say Yes or No.<p>Assuming I say Yes, my client will henceforth expect this server to present
+that key <em>and only that key</em>. If my server ever presents a different key — whether due to legitimate key rotation or an actual network attack — my client
+will refuse to connect, and print a message like this:<pre>
+No ECDSA host key is known for freebsd and you have requested strict checking.
+Host key verification failed.
+</pre><p>The reason this works for SSH is that almost everyone who uses SSH is an
+expert user: a systems administrator, devops engineer, or software engineer.
+They understand the error message, know what to do in case of key verification
+failure, and can act on it. The community of people who use any given server is
+small. They can simply talk to each other: “Hey, did you rotate the keys for the
+server?”<p>But on the world-wide web, that won’t fly. Key rotation is common, we need a
+friction-free introduction for that first connection, and the people using
+browsers have no special knowledge of cryptographic authentication. Therefore,
+we must still rely on CAs to provide the introductions, and we still use chains
+of certificates to give us flexible continuity for our web servers’
+cryptographic identities. And rather than pinning a <em>single</em> end-entity
+key, as in SSH, we can pin a <em>set</em> of keys — potentially at several
+places in the certificate chain. As we’ll see below, this can greatly increase
+reliability.<p><a href=https://tools.ietf.org/html/rfc7469#section-2.6>HPKP Pin
+Validation</a> is essentially <em>set intersection</em>: given the set of public
+keys in the signed certificate chain, are <em>any</em> of them the same as any
+of the keys the server has asserted (“pinned”) as known-good? If so, Pin
+Validation succeeds; if not, the client should behave like an SSH client: drop
+the invalid connection. In Chrome, that looks like this:<figure><img src=pin-validation-failure.png alt="A screenshot of Chrome
+rejecting an invalid pin set." width=421 height=328 loading=lazy><figcaption>Chrome rejecting an invalid pin
+set.</figcaption></figure><h2>How Do I Configure HPKP For My Site?</h2><blockquote><strong>WARNING:</strong> Public key pinning for web sites can be
+very dangerous. If you make a mistake, you might cause clients to pin a set of
+keys that validates today but which stops validating a week or a year from now,
+if something changes. In that case, you’ll end up denying service to your own
+site! People won’t be able to connect. (We call this “bricking your site”.)
+Unless you are very confident that you understand the Web PKI, and unless you
+are very confident that you can manage your site’s cryptographic identity very
+well, you should not use key pinning. Stick to regular, un-pinned Web PKI until
+you get more confident.</blockquote><p>There are several steps you have to take to pin 1 or more of the public keys
+in your site’s certificate chain(s):<ol><li>Figure out your site’s certificate chain(s) <em>as served</em> and <em>as
+validated by clients</em><li>Decide where in the chain(s) you’d like to pin<li>Set up 1 or more backup pins<li>Configure your (test) server to issue a short-lived HPKP header and test it
+out<li>Gradually increase the lifetime of the pin set as you get more comfortable
+with it</ol><p>In the following sections I’ll describe how to do each step.<h3>Determine Your Site’s Certificate Chain(s)</h3><p>As we saw in the Certificate Viewer screenshot, a site’s certificate is at
+the end of a chain of (usually) at least 3 certificates: the <em>root
+certificate</em> or <em>trust anchor</em>, 1 or more <em>intermediate issuer
+certificates</em>, and finally the <em>end-entity certificate</em>. Typically,
+the web server must serve as part of its TLS handshake all of these certificates
+except the root or trust anchor — the client maintains a set of trust anchors
+and finds 1 that signed the top-most intermediate. In certain cases, a server
+can serve only its EE and the clients will discover the intermediate issuers,
+but this often leads to trouble. Generally, expect to have to serve a chain
+containing the intermediate issuer(s).<p>However, be aware that the chain you serve is not necessarily the chain that
+clients will (re)build when validating the chain! This is due to
+<em>cross-signing</em>, and the generally <a href=http://tools.ietf.org/html/rfc5280#section-6>surprisingly complicated way
+in which clients build and validate certificate chains</a>. You can partially
+control this by ensuring that you serve good chains with well-known intermediate
+issuers that chain up to a single well-known trust anchor. Even so, you must
+test with a variety of clients to make sure you know what chains clients will
+really build and validate.<p>Crucially, clients perform Pin Validation on the chain they build during
+chain validation, which is not necessarily the same as the chain you serve. So,
+unfortunately, you can’t always simply pin the keys in the chain you serve and
+be certain that Pin Validation will succeed. (Although see the next section for
+ways to get better coverage.)<p>Some sites use a distinct EE certificate for each distinct server in a
+cluster. Perhaps each EE is issued by the same issuers, but perhaps not. If not,
+your situation is likely very complex and key pinning might not work for you.
+(Or, it may only work with a very large pin set.)<h3>Decide What Keys To Pin</h3><p>Now that you have a grip on what certificate chain(s) clients will build and
+validate, it’s time to decide where in that chain to pin. For the sake of
+discussion, I’ll assume a simple server deployment model:<ul><li>the organization has 2 data centers, each hosting a cluster of web servers<li>the organization obtains 1 EE certificate for 1 cluster, and another EE
+certificate for the other cluster<li>the organization has the same CA issue both EEs<li>the CA issues through 1 intermediary</ul><p>Thus, we have 2 certificate chains in production: CA → intermediary → EE1,
+and CA → intermediary → EE2. The servers in the 2 clusters are configured,
+correctly, to serve the chains intermediary → EE1 (for data center 1) and
+intermediary → EE2 (for DC 2).<p>Let’s further assume for simplicity that clients do indeed build a path
+through the intermediary to the same CA certificate as we expect. (Again, in
+reality, you <em>cannot simply assume this</em>.)<p>We can choose to pin the keys of any of the 4 certificates: CA, intermediary,
+EE1, and EE2. The implications of pinning at different levels vary:<dl><dt>Pinning at the EE(s).<dd>This gives the site operator a security
+guarantee as strong as SSH: any misissuance will cause clients to reject the
+misissued chain. The downside is that the server operator ties themselves to
+those specific EE public keys — simply getting a new EE issued by the same
+issuer(s) will not work (although see below about backup pins).<dt>Pinning at the intermediary/ies.<dd>This reduces the threat of
+misissuance to only the pinned intermediary/ies — a significant improvement over
+the status quo, but not strictly as strong as pinning to only the EEs. By the
+same token, any new certificate issued for the site by those issuers will pass
+Pin Validation.<dt>Pinning at the root(s).<dd>This is similar to pinning to the
+intermediary/ies. Often, the same organization controls the private keys of the
+root and the intermediary/ies. If that is not the case, then this option becomes
+different from pinning to intermediaries: the site operator now trusts more or
+different private key holders not to misissue.</dl><p>By pinning at multiple levels in the certificate chain — e.g. the EEs and the
+intermediaries, the EEs and the root, the intermediaries and the root, or at all
+3 — the site operator can trade off trusting more issuers with greater ease of
+avoiding bricking the site.<h3>Generate A Backup Pin</h3><p>The RFC mandates that hosts MUST provide a backup pin: A pin that is
+<em>not</em> present in the chain that the client validates. This is for your
+own good: if you lose control of your private keys and need to re-key your site
+and get new certificates, you don’t want your site to have any down time — and
+certainly not to be bricked! Unless clients have already pinned your backup key,
+your site would be bricked until the max-age timed out.<p>In this example, I’ll use a backup EE certificate as a backup pin. (You
+could, and likely should, also use an alternate intermediary or root issuer
+certificate for your backup. Additionally, it is best to get your backup signed
+by a valid issuer, <em>before</em> disaster strikes, so that you really can put
+it into production at a moment’s notice!)<p>This script generates a new key and an associated certificate signing request
+(CSR; which is what you would send to a CA for them to sign). This is a way to
+generate a primary and/or backup EE key and CSR for your site. Again, the safest
+thing to do is to actually get your backup key in a valid certificate issued by
+a real issuer, so that you could put it into production immediately if
+necessary.<pre>
+#!/bin/sh
+
+openssl genrsa -out "$1".key 2048
+openssl req -new -key "$1".key -out "$1".csr
+</pre><h3>Test The HPKP Header</h3><p>This script makes a key pin: it reads in either an X.509 certificate (in PEM
+format) or a certificate signing request (also in PEM format), extracts its
+subject public key info (SPKI) section, hashes the SPKI with SHA-256, and then
+base 64-encodes that:<pre>
+#!/bin/sh
+
+type="x509"
+case "$1" in
+  x509)
+    type="x509"
+    ;;
+  req)
+    type="req"
+    ;;
+  *)
+    echo "Usage: $0 x509 certificate-pathname"
+    echo "       $0 req certificate-signing-request-pathname"
+    exit 1
+esac
+
+openssl $type -noout -in "$2" -pubkey | \
+  openssl asn1parse -noout -inform pem -out public.key
+openssl dgst -sha256 -binary public.key | openssl enc -base64
+</pre><p>The output of this script is what you will put in your PKP headers. For
+example, this is an example Apache header directive that I am currently using
+for nonfreesoftware.org (lines folded to fit):<pre>
+Header add Public-Key-Pins "max-age=500; includeSubDomains;
+    pin-sha256=\"wBVXRiGdJMKG7vQhr9tZ9br9Md4l7cO69LF2a88Au/o=\";
+    pin-sha256=\"fv1+PWVvrBGKldX8uRtODY3sDbBKlsJOa48mI9s+6Mk=\";
+    pin-sha256=\"lT09gPUeQfbYrlxRtpsHrjDblj9Rpz+u7ajfCrg4qDM=\""
+</pre><p>I’ve pinned my end-entity, an issuer, and a backup key. I’ve set the max-age
+for 500 seconds, so that I can’t brick the site for very long. And, of course,
+I’ve pinned only an alternate name for the site, not the canonical name (which
+is noncombatant.org).<p>Finally, check to make sure that your client has read and understood the key
+pins. In this screenshot, you can see that Chrome has recognized my
+Public-Key-Pins header:<figure><img src=hsts-internals.png alt="A view of
+chrome://net-internals/#hsts showing key pins for nonfreesoftware.org" width=539 height=354 loading=lazy><figcaption>chrome://net-internals/#hsts allows you to query the
+state of Chrome’s HSTS and HPKP database.</figcaption></figure><aside><p>Update 08 Mar 2017: A previous version of this post used the word
+‘Balkanize’ to mean ‘partition’. A nice reader took the time to email me to say
+that the term is offensive to people from the Balkans —  something that I admit I
+had not realized or considered. I’ve switched to using the term ‘partition’
+instead. I apologize for that! And thanks to the helpful reader.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

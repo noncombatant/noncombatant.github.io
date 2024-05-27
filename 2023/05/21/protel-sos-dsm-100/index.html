@@ -1,0 +1,188 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Protel, SOS, And The DMS-100</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Protel, SOS, And The DMS-100</h1><p><time>21 May 2023</time><p><a href=https://en.wikipedia.org/wiki/Protel>Protel</a>, the The PRocedure
+Oriented Type Enforcing Language, and the operating system SOS (for the Digital
+Multiplex Switch, DMS-100) that was built with it, give us an interesting
+snapshot of the early history of software engineering (as opposed to
+programming, and as opposed to computing science: programming integrated over
+time). Naturally, my focus is on the safety affordances of the language, but the
+Nortel engineers had a whole lot of modern design going on.<p>The language was in use starting in 1975, so it’s almost as old as C, and
+also used for systems programming. It’s a familiar ALGOL derivative. The
+official papers I could find (so far) are short and serve only to tantalize:<ul><li><a href=https://ieeexplore.ieee.org/document/762490>Protel: a high level
+language for telephony</a> by Foxall, Joliat, Kamel, and Miceli, 1979<li><a href=https://dl.acm.org/doi/pdf/10.5555/800078.802525>Experience With A
+Modular Typed Language: Protel</a> by Cashin, Joliat, Kamel, and Lasker (<a href=cashin-experience-with-protel.pdf>local copy</a>), 1981</ul><p>I also found some useful reminiscences from a former Nortel engineer, Frazer
+Clement:<ul><li><a href=https://messagepassing.blogspot.com/2009/04/protel-i.html>Protel
+I</a><li><a href=https://messagepassing.blogspot.com/2009/04/protel-ii.html>Protel
+II</a><li><a href=https://messagepassing.blogspot.com/2008/12/what-is-sos.html>What
+Is SOS?</a><li><a href=https://messagepassing.blogspot.com/2009/01/what-is-sos-part-ii.html>What
+Is SOS? Part II</a><li><a href=https://messagepassing.blogspot.com/2009/03/what-is-sos-part-iii.html>What
+Is SOS? Part III</a></ul><p>There are more (offline, sadly) citations at <a href=https://museum.eecs.yorku.ca/collections/show/18>The York
+University
+Computer Museum</a>. Searching the web for some of the citations can get you
+closer, but the holy grails that I haven’t found yet are H. Johnson, “PROTEL: A
+programming Language for Large Real-Time Applications” (1984); and <i>Protel
+Technical Notes, BNR, Language Development Group</i>; issues: vol. 1, nr. 1 – 7,
+1980.<p>The broad view these sources provide of Protel and SOS is of a type-checked
+and spatially memory-safe systems programming language, compiled into
+dynamically linkable and swappable shared objects, which all run as real-time,
+pre-emptively scheduled threads in a single shared address space.<p>The systems ran with volatile storage as their primary storage, rather than
+treating volatile storage as a fast cache for non-volatile storage. Instead,
+production systems had redundant power supplies and battery-backed power, and
+used an explicit delineation of memory types for reliability and recovery.
+Certain memories were explicitly temporary, while others would be restored from
+disk or tape only in escalated outages. See <a href=https://messagepassing.blogspot.com/2008/12/what-is-sos.html>Clement,
+especially “Multiple memory types”</a>.<p>Protel’s type system was somewhat richer than C; from Foxall, et al.:<blockquote><pre>
+TYPE digit-value, terminal-id {0 TO 9}
+    status_condition {busy, idle, blocked, ready},
+    out_of_service BOOL,
+    protocol_ptr PTR TO status_condition;
+
+TYPE digit_register TABLE [0 TO 19] OF digit_value,
+    special_feature SET {abbreviated_dial, add_on,
+                  call_transfer, do_not_disturb},
+    time_interval
+       STRUCT
+          amount {0 TO 255},
+          unit {ten_ms, secs, mins, hours}
+       ENDSTRUCT;
+</pre></blockquote><p>I find ranged integers notable; <a href=https://github.com/google/integers/blob/main/ranged.h>even now, we have
+to roll our own</a>, but I suspect their ergonomic definition could have
+prevented many bugs.<p>Foxall, et al. describe descriptors:<blockquote>A descriptor consists of two parts: a descriptor part and a table
+part. The descriptor part contains the table element count, the size of these
+elements, and a pointer to the base of the table part. The table part contains
+the elements of the current array. At execution time a descriptor may be made to
+point at any table of the correct type. This results in modification of the
+element count and pointer fields of the descriptor part.</blockquote><p>The area type seems to provide a form of abstract class inheritance via
+C-<code>union</code>-like structured type punning:<blockquote><pre>
+TYPE daddy AREA (6 * byte-width)
+   i integer
+ENDAREA;
+
+TYPE son AREA REFINES daddy
+   t TABLE [0 TO 15] OF BOOL
+ENDAREA;
+
+TYPE daughter AREA REFINES daddy
+   j integer,
+   k BOOL
+ENDAREA;
+</pre></blockquote><p>I don’t see discussion of down-casting safety with areas, though. As for C
+<code>union</code>s and C++ without RTTI, areas may be unsafe.<p>Protel also had function types:<blockquote><pre>
+TYPE get_channel PROC (terminal terminal_id)
+     RETURNS integer;
+TYPE transfer PROC (REF t time_interval,
+     UPDATES feature_table DESC OF BOOL);
+</pre></blockquote><h2>Early Modern Engineering</h2><p>Although that method of operation is different from what we use now, we can
+see from these sources that Protel, SOS, and the DMS-100 embodied very early
+forms of what we now consider a baseline for modern software engineering and
+site reliability engineering culture. Some examples:<ul><li><p>A complete suite of language support tooling (the Protel Library System, PLS
+and PLS-II), including <a href=https://en.wikipedia.org/wiki/Source_Code_Control_System>a source code
+control system (SCCS)</a>/software configuration management system (SCM). From
+Cashin, et al.:<blockquote>In a production environment, however, the need for parallel support
+of both old and new software is a fact of life. Therefore, a successor, PLS-II,
+was designed to simplify the handling of multiple versions of both source code
+and system structure. A tool called source manager, similar in spirit to SCCS
+[DHM 78], is used to simplify maintenance and reduce storage for nearly
+identical source versions. Compatible lineups of system versions are maintained
+in the PLS database which refers to the named issues kept by source
+manager.</blockquote><li><p>Recognition of interfaces as executable, enforceable documentation and
+automated discovery of dependencies at compile- and run-time (Cashin, et al.,
+“Interfaces as Documentation”).<li><p>Technical structures aligned with social structures (“Modularity as a
+Project Manager’s Tool”, Cashin et al.). This is perhaps more arguable and more
+fluid, now.<li><p>Recognition of the need to ‘shift bugs left’, preferably discovering them
+during type-checking (Cashin, et al.):<blockquote>By performing strict type checking on intermodule references, we
+have found that many of the errors which, in other languages, would have been
+detected at run time are flagged by the compiler. This permits easy repair early
+in the development process when bugs can be fixed cheaply.</blockquote><li><p>The familiar pain of long compilation times, exacerbated by thorough
+type checking, in section “Building Systems”, Cashin et al. But: “We feel that
+the difficulty inherent in this process is preferable to the mammoth debugging
+sessions which are required when analogous changes are made to programs written
+in more loosely typed languages.”<li><p>Access control enforced by the type system (as seen in the JVM and the .NET
+CLR, for example) (Cashin, et al.):<blockquote>We have found multiple interfaces to be an extremely useful concept.
+They allow the separation of module functions by user. Thus, functions intended
+for general users may be separated from those intended for more ‘privileged’
+users. For example, a file system may have a general user interface which
+supports operations such as <code>OPEN</code>, <code>CLOSE</code>,
+<code>GET</code> and <code>PUT</code>. A second, more privileged, interface may
+support operations which are only used by maintenance and audit
+software.</blockquote><li><p>Dynamic configuration via function pointers (which Cashin, et al. call
+“procedure variables”; see “Modularity
+as a Tool for Flexible Configuration”). This includes the possibility of
+selecting implementations at run-time:<blockquote>Since interface specifications allow a clear distinction between
+what a module provides and how it provides it, it is possible to design a single
+interface and several implementations for the same module. Any of these
+implementations can then be used transparently in different system
+configurations.</blockquote><li><p>Recognition of the complexity of dependency management, even in purely
+1st-party codebases (see “Type Transitivity” in Cashin, et al.).<li><p>An early form of <a href=https://semver.org/>semantic versioning</a>.
+From “Configuration Control” in Cashin, et al.:<blockquote>A version code consists of two parts: A major number that is
+incremented when non-upwards compatible changes are made and a minor number
+incremented when upwards compatible changes are made. Many, but by no means all,
+interface changes are upwards compatible. The check used for consistency is as
+follows: when a module is loaded, the major number of each module in its
+<code>USES</code> list is compared with that of the version of the module
+already existing in the system. If they are not equal, the configuration is
+inconsistent. If they are, then compare the minor numbers. If the minor number
+in the <code>USES</code> list is greater than that of an existing module then it
+is possible that the module to be loaded relies on features not yet implemented
+in the existing module and the configuration is inconsistent.</blockquote><li><p>Early understanding of <a href=https://www.hyrumslaw.com/>Hyrum’s
+Law</a>. From Cashin, et al.: “Although implementation sections are hidden from
+the outside world, there is a fundamental problem in ensuring that an
+implementation change has not altered the semantics of the interface, even when
+there is no direct change to the interface itself. The detailed implications of
+changes to all users requires careful consideration which is not encouraged by
+the knowledge that most changes really are well hidden and do not compromise
+system integrity.”<li><p>The <code>DESC</code> (“descriptor”) type was what we now call
+<code>span</code> or <code>slice</code>: A pointer to a (sub-)region of
+elements, together with the number of elements in that (sub-)region. This
+provided spatial safety —  the bounds were checked. They also recognized that
+built-in mechanisms for safety can yield efficiency improvements. From
+Clement:<blockquote>A Protel <code>DESC</code>riptor is used to refer to a range of
+elements in an array of &lt;type&gt;. It is used in the same way [as] an array — with a subs[c]ript as an lvalue or rvalue to an expression (though the usual
+meaning of those terms is confused by <a href=https://en.wikipedia.org/wiki/Protel#GAZINTA>the Gozinta
+operator</a>!).
+The compiler is aware of the of the slice being <code>DESC</code>ribed, and by
+inference the size of the elements. In the storage allocated to the
+<code>DESC</code> itself, it stores a pointer to the zeroth element and an
+upperbound in terms of elements. In this way it can provide bounds checking on
+accesses through the <code>DESC</code>. When an out-of-bounds exception is hit,
+the actual upperbound and the supplied subscript are available in the exception
+report, often allowing debugging straight from the trace. The array slice
+abstraction can be a nice way to deal with zero-copy in a protocol
+stack.</blockquote><p>Thus it would seem that Canadian telecommunications systems programming
+language designers were, as usual, more polite than their cousins a little to
+the south.<li><p>An A/B update scheme not entirely unlike what we now use in e.g. Android
+and ChromiumOS; see <a href=https://messagepassing.blogspot.com/2009/03/what-is-sos-part-iii.html>the
+“One Night(mare) Process” in Clement</a>.</ul><h2>Musings</h2><p>I used to think (<a href=https://en.wikipedia.org/wiki/Singularity_(operating_system)#Security_design>and
+so did the designers of Microsoft’s Singularity operating system</a>, so at
+least I was in good company) that language safety could obviate protected memory
+(as mediated by a privileged supervisor). Clearly, the SOS designers were hoping
+for that, too, and like the Singularity designers they really wanted to get rid
+of the overhead of context switching and virtual memory. (The overhead is
+amazingly high! We’ve just come to accept it as normal, which really <a href=https://alexgaynor.net/2019/apr/21/modern-c++-wont-save-us/>puts
+micro-performance concerns into perspective</a>.)<p>Similarly, <a href=https://www.usenix.org/conference/enigma2021/presentation/palmer>it’s
+obvious (even to me) now</a> that memory protection alone can never suffice:
+untrustworthy programs can call and corrupt a program even from outside its
+protection zone (and even, of course, from other machines entirely). Add to that
+side-channels and the practical difficulty of maximally reducing the privilege
+of programs in real-world systems, and you have a recipe for sadness.<p>Having no memory protection does make language safety paramount —  clearly, we
+must have at least one of language safety and protected memory. But we also know
+that there will always be unavoidable zones of language un-safety, even if they
+are few and small. (Although it’s worth noting that, according to Foxall, et
+al., “Furthermore, it was decided that PROTEL should be the only implementation
+language — no assembly language was provided for DMS-100.”) In the end, even
+Singularity had to provide virtual memory protection. I do think, though, that
+strong language safety provides trustworthiness that can allow us to reduce the
+proliferation of memory protected address spaces, and hence to regain some
+efficiency.<p>Here’s a simple example of scripting in the DMS-100 shell —  it was still in
+use at least as late as 2012:</p><iframe width=560 height=315 src=https://www.youtube.com/embed/6r151EuVlfQ title="YouTube video player" frameborder=0 allow="accelerometer; autoplay;
+clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading=lazy></iframe><p>And, finally, your moment of Zen (Cashin, et al.):<blockquote>Rather than increasing complexity by allowing module nesting as in
+ADA, our experience leads us to believe that even our current structure may be
+more complex than necessary. Instead, it may be sufficient to have a structure
+consisting of a linear chain of interface sections and a single implementation
+section. This would increase the efficiency of the support system since symbolic
+information would no longer need to be placed in implementation section object
+files thus eliminating the need for a linker.</blockquote><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

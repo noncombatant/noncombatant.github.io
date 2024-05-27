@@ -1,0 +1,58 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Maps And Their Applications</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Maps And Their Applications</h1><p><time>2 March 2014</time><p>This morning I was hanging out with my <a href=http://hackbrightacademy.com/>Hackbright</a> mentee, and we discussed
+how one of her programming problems could be solved using a Python
+dictionary or JavaScript object. In fact, you can use a dictionary in lots
+of ways. Here are some:<ul><li>As a set (an unordered group of elements, each element appearing only
+once). For example, you can get the unique elements of a list or array by
+collapsing them into the keys of a dictionary.<li>As the underlying storage for the fields of a dynamic object. “Dynamic
+object” here means “an object that gets fields added or removed”. E.g. in
+JavaScript, you can add new fields and values at any time to an object,
+while in Java or C the fields of an object are static and unchanging once
+defined. (And, for that reason, accessing the fields of a Java or C object
+can be done in a much faster way.)<li>As a <a href=http://en.wikipedia.org/wiki/Sparse_array>sparse
+array</a>.<li>As the storage for a <a href=http://en.wikipedia.org/wiki/Memoization>memoized function</a> (which
+can, in turn, be a way to optimize expensive functions, including expensive
+recursive functions). <a href=https://wiki.python.org/moin/PythonDecoratorLibrary#Memoize>With
+Python decorators, you can easily memoize any function</a>, and the
+canonical way to do that is with a dictionary.<li>Many other cache applications.<li><a href=http://en.wikipedia.org/wiki/Dictionary_coder>Data compression</a>.</ul><p>For the rest of this post I’ll use the term <em>map</em> to refer to what
+various languages/APIs/sources in the literature call <em>dictionaries</em>,
+<em>hashes</em>, “objects” (only? in a JavaScript context), <em>associative
+arrays</em>, <em>symbol tables</em>, or <em>tables</em>. A map is any data
+structure that groups a dynamic number of <em>key-value pairs</em> together,
+and allows us to retrieve values by key, to insert new key-value pairs, and
+to update the values associated with keys. We almost always require that the
+data structure allow us to do these operations very quickly. (After all,
+we’re going to be using them all the time to solve lots of problems!)<p>Most, but not all, languages come with some kind of map interface built-in. Notably, the C language does not (but C++ does).<p>You can implement a map in many ways. Here are some examples:<ul><li>A simple <a href=http://en.wikipedia.org/wiki/Linked_list>linked
+list</a> of pairs. This will be slow (O(n)), and insufficient for general
+use.<li>A <a href=http://en.wikipedia.org/wiki/Hash_table>hash table</a>. This
+is generally very fast (roughly O(1)), although it requires you to have a
+good hash function for your key type. Most languages allow you to provide a
+custom hash function for your object types (e.g. the <code>__hash__</code>
+method in Python, or the <code>hashCode</code> method in Java).<li>A <a href=http://en.wikipedia.org/wiki/Binary_search_tree>binary
+search tree</a>. Fast (O(lg n)). Unlike in a hash table, the keys will be
+ordered.  This could be a useful property.<li>A <a href=http://en.wikipedia.org/wiki/Skip_list>skip list</a>.</ul><p>Note that although a general-purpose map is useful for many problems, it is
+not always ideal for a particular problem. For example, although you can use a
+map as a set, it’s a bit of a waste of space — it’s a set of key-value pairs,
+but you only need the key. Similarly, maybe you need not only to take the unique
+elements from a group of elements, but also to print them out in sorted order.
+If your dictionary type is implemented as a hash table, you’ll have to sort the
+keys (at an additional cost of O(n lg n) plus the memory allocation to store the
+keys in an array). By contrast, if your dictionary is implemented as a binary
+search tree, after you are done inserting all the elements, they’ll already be
+sorted. (The trade-off is that it might have cost more to insert the elements.
+When in doubt, test!)<p>Because one size does not fit all, many languages provide a variety of
+map and set implementations. For example, C++ has <a href=http://www.cplusplus.com/reference/map/map/>map</a>, <a href=http://www.cplusplus.com/reference/set/>set</a>, <a href=http://www.cplusplus.com/reference/unordered_map/>unordered_map</a>,
+and <a href=http://www.cplusplus.com/reference/unordered_set/>unordered_set</a>.
+The <a href=http://docs.oracle.com/javase/7/docs/api/java/util/Map.html>Java Map
+interface</a> has many implementations. Other languages, like Python, Perl,
+Ruby, and JavaScript, provide just one map implementation — usually a hash
+table of some kind. Some, like Python, also provide a distinct <a href=http://docs.python.org/2/library/stdtypes.html#set>set</a> type or
+API, and you should use it when it fits your needs.<p>It’s a good exercise to implement a map yourself, in at least one way, in
+at least one language. I recommend starting with a simple hash table, and
+then working up to a good binary search tree like a <a href=http://en.wikipedia.org/wiki/Red%E2%80%93black_tree>red-black
+tree</a>.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

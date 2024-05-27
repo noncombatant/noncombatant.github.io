@@ -1,0 +1,76 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Thoughts On Platform Security Features</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Thoughts On Platform Security Features</h1><p><time>2 January 2015</time><p>Here are some off-the-cuff thoughts on security features that are
+available, and which I would like to see.<p>We need a superset of a subset of the union of the security features of
+“mobile” platforms and “desktop” platforms. Although these are not
+clearly-defined terms, I’ll try to roughly characterize them by naming
+examples. Desktop platforms as of 2015 include:<ul><li>Mac OS X<li>Windows<li>Desktop and server Linux and BSD distributions, e.g. FreeBSD,
+Ubuntu</ul><p>Mobile platforms include:<ul><li>Chrome OS<li>iOS (Apple, not Cisco)<li>Android</ul><p><a href=https://www.webplatform.org/>The web platform</a> seems to straddle
+the line in some ways.<p>The key differentiators between the 2 classes of platform are security
+features and userland APIs. (And the hardware they run on.) Obviously, I’ll
+focus on security features, and touch on userland APIs only insofar as they
+affect security.<p>Here are the security features of mobile platforms that I think we need
+in all platforms going forward:<ul><li>A 2-part principal: (user, source of code); the code source must be
+cryptographically authenticated. For example, Android gives each package (or,
+package signing key) its own Linux user ID, isolating it from other packages.
+(<a href=https://source.android.com/devices/tech/security/overview/app-security.html>More
+details</a>.) iOS puts each app in a sandbox and isolates its storage; again all
+code is signed. The open web uses the <a href=https://tools.ietf.org/html/rfc6454>origin model</a>, with optional
+cryptographic code authentication (HTTPS).<li>Usable ways to share resources between 2-part principals (strongest on
+Android; OK on iOS; rather ad hoc on the web). This is mostly a consequence
+of the userland APIs that the platform makes available to applications;
+Android is rich here.<li>Tamper-evident storage, verified at least on boot (“secure boot”, e.g. <a href=https://code.google.com/p/cryptsetup/wiki/DMVerity>dm-verity</a>).<li>Encrypted storage, preferably on by default, preferably
+whole-device.<li>The integrity checking and the encryption should both be backed by hardware,
+e.g. a <a href=https://en.wikipedia.org/wiki/Trusted_Platform_Module>TPM</a>.<li>Privilege reduction, a way for userland programs to reduce their own access
+to the kernel. Chrome OS, Mac OS X, iOS, and someday soon Android, have such
+mechanisms: <a href=https://www.kernel.org/doc/Documentation/prctl/seccomp_filter.txt>Seccomp-BPF</a>
+and <a href=https://developer.apple.com/library/mac/documentation/Security/Conceptual/AppSandboxDesignGuide/AboutAppSandbox/AboutAppSandbox.html>Seatbelt</a>.</ul><p>By contrast, there are security features desktop platforms have that
+mobile platforms lack:<ul><li>Considerably greater owner control over the device —  debuggers, root and
+ring 0 access, et c. “Digital rights management” seems to have caught on more
+strongly on mobile platforms. <a href=https://www.chromium.org/chromium-os/poking-around-your-chrome-os-device>Chrome
+OS has a Developer Mode</a>; I wish more closed platforms would follow
+suit.<li>Memory and CPU powerful enough to rebut the (usually, but not always,
+mistaken) arguments against using <a href=https://en.wikipedia.org/wiki/Type_safety>type-safe</a> or at least <a href=https://en.wikipedia.org/wiki/Memory_safety>memory-safe</a> code. Current
+mobile devices are as powerful or moreso as desktop computers of a decade ago,
+so we do technically have the horsepower to run e.g. Java, C#, F#, Haskell, et
+c. in these devices. In fact, Android, iOS, and the web all make heavy use of
+languages with expensive features like late binding, object orientation,
+run-time type checking, interpreted non-native code, and so on. Yet it has
+proven hard to actually use those expensive features for safety —  people always
+want to call into C/C++ code for “efficiency”, and then find out the hard way
+how easy it is to write unsafe C/C++. Developers seem happy to traverse many
+pointers to finally get to a callable method but are not happy to check the
+bounds on arrays. Although unsafe code will always seem marginally faster than
+safe code, at some point we have to draw the line: <em>this</em> is fast enough,
+<em>that</em> is not safe enough.</ul><p>Things we still need on both classes of platform, or which I’m not sure
+we have yet:<ul><li>A <a href=https://en.wikipedia.org/wiki/Secure_attention_key>secure
+attention sequence</a>. iOS’ Home button might actually be one; I don’t know the
+implementation. I am not certain if Control-Alt-Delete still is a SAS on Windows — please email me if you know more. SAS is a simple and powerful idea but it
+depends crucially on implementation details that are hard to keep robust as
+products change over time.<li>UI isolation: each application should only be able to “see” its own windows,
+should be able to reliably know when they have the highest z-order, and should
+be able to reliably know when input events are really coming from the user (via
+the kernel). (See <a href=https://www.usenix.org/legacy/publications/library/proceedings/sec04/tech/full_papers/shapiro/shapiro.pdf>Design
+Of The EROS Trusted Window System</a>.) Android almost has this, at least last
+time I looked. Windows are accessible only through a capability, but as of
+Honeycomb (?) there can be windows that overlap and the active application is
+not necessarily the highest in z-order. I could be wrong about that. I also
+don’t know the iOS implementation; it may provide some or all of this. (Please
+email me if you know more!)<li>A kernel with high (...or any) unit test coverage.<li>Robust defense against malicious peripherals and I/O devices (e.g. <a href=http://arstechnica.com/security/2014/07/this-thumbdrive-hacks-computers-badusb-exploit-makes-devices-turn-evil/>“BadUSB”
+exploit makes devices turn “evil”</a> and <a href=http://gizmodo.com/5832167/public-charging-kiosks-may-steal-your-data>Public
+Charging Kiosks May Steal Your Data</a>). Device firmwares, kernel device
+drivers, and filesystems must all be robust against malicious inputs, but
+typically are not.<li>Safe, sane firmware written to semi-modern standards of code quality,
+including open source solutions. There is <a href=http://www.coreboot.org/>CoreBoot</a>, but as far as I know only <a href=https://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices/custom-firmware>Chrome
+OS uses it and successors</a>. Unfortunately I know nothing of iOS
+firmware.<li>Safe, sane baseband operating systems written to semi-modern standards of
+code quality, including open source solutions. <a href=http://archive.hack.lu/2010/Weinmann-All-Your-Baseband-Are-Belong-To-Us-slides.pdf>All
+your baseband are belong to Ralf-Philipp Weinmann</a> (<a href="https://www.youtube.com/watch?v=TzR7R6fBr00">video</a>).<li>Error-recovering filesystems or block devices, such as with <a href=https://en.wikipedia.org/wiki/Erasure_code>erasure coding</a>. Due to
+their wonderfully high capacities, <a href=http://www.storagenewsletter.com/rubriques/market-reportsresearch/why-raid-dead-for-big-storage-cleversafe/>modern
+storage devices are highly likely to experience unrecoverable block errors</a>,
+making it impossible to read back data previously stored.</ul><p>I’m sure I’m forgetting something crucial, and that I got at least 1
+thing wrong, and that you’ll let me know. :)<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

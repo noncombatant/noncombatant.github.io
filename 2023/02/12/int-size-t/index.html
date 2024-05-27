@@ -1,0 +1,410 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>size_t Is Not int</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1><code>size_t</code> Is Not <code>int</code></h1><p><time>12 February 2023</time><p><b>Update, 13 February:</b> I made an amusing and instructive error, detailed
+below!<p>Many C and C++ programmers write code as if they believe that
+<code>size_t</code> is a <code>typedef</code> for, or otherwise equivalent to,
+<code>signed int</code>. Such code is unnecessarily buggy and unsafe, because
+that belief is not true. It never could have been true, and never has been. Yet
+classes of bugs are pervasive because the false belief persists.<h2>Definitions</h2><p>Let’s look at the first real C standard, C89. (Well, <a href=https://port70.net/~nsz/c/c89/c89-draft.html>a copy of
+the draft</a>,
+since that’s all we can get for free.) Modern C and C++ standards documents
+state matters somewhat more completely (and sometimes more clearly), but I want
+to show that the distinction between <code>size_t</code> and <code>int</code>
+goes back 2 generations. In any case it is fair to say that code written after
+1989 must show awareness of this crucial distinction.<p><a href=https://port70.net/~nsz/c/c89/c89-draft.html#4.1.5>Section
+4.1.5</a> defines the type <code>size_t</code>:<blockquote><code>size_t</code>[,] which is the unsigned integral type of the
+result of the <code>sizeof</code> operator;</blockquote><p><a href=https://port70.net/~nsz/c/c89/c89-draft.html#3.3.3.4>Section
+3.3.3.4, The <code>sizeof</code> operator</a>, explains what <code>sizeof</code>
+is all about:<blockquote><p>The <code>sizeof</code> operator yields the size (in bytes) of its operand,
+which may be an expression or the parenthesized name of a type. The size is
+determined from the type of the operand, which is not itself evaluated. The
+result is an integer constant.<p>[...] When applied to an operand that has array type, the result is the total
+number of bytes in the array. When applied to an operand that has structure or
+union type, the result is the total number of bytes in such an object, including
+internal and trailing padding.<p>The value of the result is implementation-defined, and its type (an unsigned
+integral type) is <code>size_t</code> defined in the &lt;stddef.h&gt;
+header.<p>[...] A principal use of the <code>sizeof</code> operator is in communication
+with routines such as storage allocators and I/O systems. A storage-allocation
+function might accept a size (in bytes) of an object to allocate and return a
+pointer to void. For example:<pre>
+extern void *alloc();
+double *dp = alloc(sizeof *dp);
+</pre><p>[...] Another use of the <code>sizeof</code> operator is to compute the
+number of members in an array:<pre>
+sizeof array / sizeof array[0]
+</pre></blockquote><p>In the example, <code>alloc</code> is a hypothetical memory allocation
+function, but we find also that C89’s actual allocation functions,
+<code>calloc</code>, <code>malloc</code>, and <code>realloc</code>, also use
+<code>size_t</code> for their size arguments<a id=fn1_back></a><a href=#fn1>①</a>. For example, from <a href=https://port70.net/~nsz/c/c89/c89-draft.html#4.10.3.3>section
+4.10.3.3</a>:<blockquote><pre>
+void *malloc(size_t size);
+</pre></blockquote><p>and similarly, <a href=https://port70.net/~nsz/c/c89/c89-draft.html#4.10.3.1><code>calloc</code>
+is defined as</a>:<blockquote><pre>
+void *calloc(size_t nmemb, size_t size);
+</pre></blockquote><p>Although <a href=https://port70.net/~nsz/c/c89/c89-draft.html#3.3.2.1>section 3.3.2.1,
+Array subscripting</a>, says only vaguely that a subscript of an array “shall
+have integral type”, we know from the above that that integral type must
+ultimately be <code>size_t</code>. This is for 2 reasons.<p>First, <code>size_t</code> must be an unsigned integral value with the width
+of a machine word, so that it can be possible for a C program to index any
+position in the machine’s address space. (See <a href=#practical-implications>Practical Implications</a>.)<p>Second, since it’s unsigned, <code>size_t</code> may have twice (or more) the
+positive range of a <code>signed int</code>. So if the subscript type were
+<code>signed int</code>, it might be possible to allocate (using
+<code>size_t</code>) an array with more elements than can be indexed (using
+<code>int</code>).<p><b>Therefore, we must conclude that <code>size_t</code> is the only correct
+type for all sizes, lengths, object counts, and indices/subscripts.</b> C89 and
+its standard library use it pervasively for these purposes; not just in
+allocation functions but in functions like <code>strlen</code>,
+<code>memset</code>, <code>memcpy</code> —  <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12>all those old
+friends</a>.</p><a id=practical-implications></a><h2>Practical Implications</h2><p>I have a 64-bit machine with 32 GiB of memory. On this system,
+<code>int</code> is 32 bits and <code>size_t</code> is 64. Using C++ to get
+access to <code>std::is_signed</code>, we see:<pre>
+% <b>cat <a href=types.cc>types.cc</a></b>
+#include &lt;stdio.h&gt;
+#include &lt;limits&gt;
+#include &lt;type_traits&gt;
+
+using namespace std;
+
+int main() {
+  constexpr bool is_int_signed = is_signed&lt;int&gt;::value;
+  printf("sizeof(int): %zu; signed: %d\n", sizeof(int), is_int_signed);
+  printf("largest int value: %d\n", numeric_limits&lt;int&gt;::max());
+
+  constexpr bool is_uint_signed = is_signed&lt;unsigned&gt;::value;
+  printf("sizeof(unsigned): %zu; signed: %d\n", sizeof(unsigned), is_uint_signed);
+  printf("largest unsigned value: %u\n", numeric_limits&lt;unsigned&gt;::max());
+
+  constexpr bool is_size_t_signed = is_signed&lt;size_t&gt;::value;
+  printf("sizeof(size_t): %zu; signed: %d\n", sizeof(size_t), is_size_t_signed);
+  printf("largest size_t value: %zu\n", numeric_limits&lt;size_t&gt;::max());
+}
+% <b>make types && ./types</b>
+clang++ -Weverything -Werror -std=c++20 types.cc -o types
+sizeof(int): 4; signed: 1
+largest int value: 2147483647
+sizeof(unsigned): 4; signed: 0
+largest unsigned value: 4294967295
+sizeof(size_t): 8; signed: 0
+largest size_t value: 18446744073709551615
+</pre><p>As you can see, if <code>malloc</code> and friends took <code>int</code>
+arguments, it would be possible to allocate only 2 GiB (2,147,483,647 bytes).
+Even if these functions took <code>unsigned int</code> arguments, it would be
+possible to allocate only 4 GiB (4,294,967,295 bytes). For my fancy modern
+machine, these would be unacceptable limitations.<p>On a 32-bit machine, which can only address 4 GiB, <code>size_t</code> is
+indeed equivalent to <code>uint32_t int</code>. But on a 64-bit machine,
+<code>size_t</code> must be equivalent to <code>uint64_t</code>, and so it is.
+That is why this works:<pre>
+% <b>cat <a href=large.c>large.c</a></b>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main() {
+  size_t gib = 1 &lt;&lt; 30;
+  size_t ten_gib = 10 * gib;
+  printf("About to allocate %zu bytes\n", ten_gib);
+  char* large = malloc(ten_gib);
+  memset(large, 'A', ten_gib);
+  printf("The last byte is: %c\n", large[ten_gib - 1]);
+}
+% <b>make large && time ./large</b>
+clang -Weverything -Werror -std=c2x large.c -o large
+About to allocate 10737418240 bytes
+The last byte is: A
+./large  2.49s user 3.40s system 90% cpu 6.540 total
+</pre><p>Even on a 32-bit machine, where <code>size_t</code> is <code>uint32_t</code>,
+i.e. there is no difference in width, the difference in signedness still
+matters. You might think that, on machines of this era, since the kernel used up
+half of the 4 GiB the address space and userland got the other half, it would be
+OK for <code>size_t</code> to be a signed 32-bit type —  you can only allocate at
+most 2 GiB anyway, right?<p>Well, no. First, it is possible, desirable, and commonplace for <a href=https://www.kernel.org/doc/html/v5.0/vm/highmem.html>the kernel to use 1
+GiB of the address space, leaving 3 GiB for userland</a> on 32-bit systems. If
+you want to write a program to operate on 2.5 GiB of data, <code>size_t</code>
+being unsigned makes that possible.<p>Second, you might not be writing code for a traditional operating system that
+puts the kernel and userland in the same address space (albeit with different
+page protections). You might be writing code for a special system for which even
+the application runs in kernel mode and needs to access all 4 GiB of the address
+space. Again, <code>size_t</code> being unsigned makes that possible.<h2>Bugs</h2><p>Using <code>int</code> as the type for sizes and subscripts would in
+principle lead not just to unnecessary limitations, but <b>actually does</b>
+lead to unnecessary bugs.<p>To see why and how, first remember that signed integer overflow is undefined
+behavior (UB) in C and C++. From <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.6.2>appendix 6.2</a>:<blockquote><p>The behavior in the following circumstances is undefined:<p>[...]</p><li>An arithmetic operation is invalid (such as division or modulus by 0) or
+produces a result that cannot be represented in the space provided (such as
+overflow or underflow) (3.3).</blockquote><p>That is, an expression such as <code>INT_MAX + n</code> (where <var>n</var>
+is an <code>int</code> greater than 0) has no particular meaning, and the
+compiler can therefore interpret it to mean anything. Usually this means the
+compiler will optimize away code that ‘cannot’ happen, or make other assumptions
+that might not match your own. Therefore, statements and expressions that
+exercise UB cannot in general be correct. Even if code with UB <b>appears</b> to
+work, the people affected by that code are just getting lucky. For now. New
+inputs, or new compilers, might change the program’s behavior.<p>However, in <a href=https://port70.net/~nsz/c/c89/c89-draft.html#3.1.2.5>section 3.1.2.5</a>,
+C89 provides a carve-out for unsigned arithmetic:<blockquote>A computation involving unsigned operands can never overflow,
+because a result that cannot be represented by the resulting unsigned integer
+type is reduced modulo the number that is one greater than the largest value
+that can be represented by the resulting unsigned integer type.</blockquote><p>That is, arithmetic on unsigned types is modular arithmetic: <code>UINT_MAX
++ 1</code> is defined to wrap back around to 0, like the odometer in a car.<p>This has important implications for correctness in memory allocation and
+subscripting. For example, this code has several bugs:<pre>
+  int count = ...;
+
+  // Implicit cast from `size_t` to `int`; possible (though not in this case)
+  // truncation.
+  int size = sizeof(Thing);
+
+  // The signed multiplication could overflow and is technically UB. If
+  // you’re lucky, your implementation might define it to be modular, and
+  // to wrap. But then you’re allocating a region that cannot hold `count`
+  // `Thing`s —  it will have wrapped around to a too-small value.
+  //
+  // In any case, the result of the multiplication is cast to `size_t` for
+  // the call to `malloc`, which may result in <a href=https://en.wikipedia.org/wiki/Sign_extension>sign extension</a>, which
+  // might result in even more weirdness.
+  Thing* things = malloc(count * size);  
+
+  // At this point, if the allocation succeeded and if `things` points to a
+  // region of memory large enough to hold `count` `Thing`s, it’s pure luck.
+  // This code is incorrect, even if it ‘seems to work’.
+
+  for (int i = 0; i &lt; count; i++) {
+    things[i] = ...;
+  }
+</pre><p>Code like this is widespread; I’ve seen it in the wild many times. Especially
+when the value of <code>count</code> and/or the data that get copied into
+<code>things</code> come from an untrustworthy source (like the network), such
+code is often straightforwardly exploitable<a id=fn2_back></a><a href=#fn2>②</a>.<p>We can make code like this less incorrect by doing something like this:<pre>
+#include &lt;stdckdint.h&gt;
+
+// ...
+
+  const size_t count = ...;
+  const size_t size = sizeof(Thing);
+  size_t total;
+  if (ckd_mul(&amp;total, count, size)) {
+    return ENOMEM;
+  }
+  Thing* things = malloc(total);
+</pre><p><code>ckd_mul</code> is a standard C23 function that returns true if the
+multiplication overflowed. Yes, <a href=https://gustedt.wordpress.com/2022/12/18/checked-integer-arithmetic-in-the-prospect-of-c23/>C
+will introduce checked arithmetic in November 2023</a>, 51 entire years after
+the language was born. Until then, you can (and should) use <a href=https://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins>non-standard
+compiler intrinsics</a>, or you can try to roll your own check:<pre>
+#include &lt;stdbool.h&gt;
+#include &lt;stddef.h&gt;
+
+// <b>Update:</b> This is wrong! See below.
+bool check_mul(size_t* result, size_t x, size_t y) {
+  size_t r = x * y;
+  if (r &lt; x || r &lt; y) {
+    return true;
+  }
+  *result = r;
+  return false;
+}
+
+// ...
+
+  const size_t count = ...;
+  const size_t size = sizeof(Thing);
+  size_t total = 0;
+  if (check_mul(&amp;total, count, size)) {
+    return ENOMEM;
+  }
+</pre><p><s>Note that you <b>must</b> use unsigned types in functions like
+<code>check_mul</code> above! (I.e. the ‘check if result was smaller’
+style.)</s> If you use signed types, the multiplication may overflow and will
+thus be undefined, and the compiler will therefore typically assume that
+overflow cannot happen. Then it will likely ‘optimize’ the code by removing your
+‘dead’ <code>if</code> block —  removing your safety check.<p><b>Update:</b> Inevitably, sigh 😅, I got this wrong, which I would have
+noticed if I had done an exhaustive check of <code>uint32_t</code> as I did for
+another problem, below. (There’s a lesson there!) Jann Horn points out that “you
+can get a multiplication overflow and still have a result that is bigger than
+the two operands”, e.g. 0x10000 * 0x11000 = 0x110000000. Thank you, Jann! Let’s
+stick with stdckdint.h or compiler intrinsics.<p>If you need to check signed arithmetic, you must check limits before doing
+the potentially undefined operation. For example:<pre>
+#include &lt;stdbool.h&gt;
+#include &lt;stddef.h&gt;
+
+bool checked_mul(int* result, int x, int y) {
+  if (x == 0 || y == 0) {
+    *result = 0;
+    return false;
+  }
+  if (x &lt; 0 || y &lt; 0) {
+    // TODO: You have even more work to do. See e.g.
+    // https://github.com/coreutils/gnulib/blob/master/lib/intprops-internal.h#L370
+    // for a type-generic macro that handles all cases. `ckd_mul` and the
+    // non-standard intrinsics are lookin’ pretty good right about now... 😉
+    abort(); 
+  }
+  if (INT_MAX / x &lt; y || INT_MAX / y &lt; x) {
+    return true;
+  }
+  *result = x * y;
+  return false;
+}
+</pre><p>If that all sounds like a pain in the ass (because it is), you can use
+<code>calloc</code>. In C23 (see section 7.24.3.2 of <a href=https://open-std.org/JTC1/SC22/WG14/www/docs/n3054.pdf>the C23
+draft</a>), and in responsible implementations going back 15+ years,
+<code>calloc</code> is defined to check the <code>count * size</code>
+multiplication and to return <code>NULL</code> if the product is too
+large<a id=fn3_back></a><a href=#fn3>③</a>.<p>Basically, do not use <code>malloc</code> directly. Idiomatic usage is
+typically incorrect and unsafe. Security reviewers like to find some easy
+pickins by looking at a codebase, running <code>grep -ri alloc *</code>, and
+looking for overflowing arithmetic expressions. They can find a lot of fun
+stuff. (Try it yourself! You can do much more along these lines with <a href=https://github.com/weggli-rs/weggli>weggli by Felix Wilhelm et
+al</a>.)<h3>These Bugs Are Old And Subtle</h3><p>In <a href=https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html>Extra,
+Extra - Read All About It: Nearly All Binary Searches and Mergesorts are
+Broken</a>, by Joshua Bloch in 2006, we learn that even the simple binary search
+turns out to be buggy due to the use of the wrong subscript type. In 2
+languages, no less! Java was defined to use <code>int</code> as its array index
+type, and <code>int</code> is defined as a signed 32-bit integer. Unlike C, Java
+<code>int</code> is defined to have modular behavior on overflow, like C’s
+unsigned types.<p>The buggy line is in finding a new midpoint for the search:<blockquote><pre>
+int mid = (low + high) / 2;
+</pre></blockquote><p>In C, this is UB and there are no guarantees whatsoever. (Bloch says that “In
+C this causes an array index out of bounds with unpredictable results”, but
+spatial unsafety is the outcome only if the people affected by your program are
+‘lucky’ and the arithmetic overflow is implemented to have modular behavior. But
+there’s no guarantee of that, so the C version of this program has extra bonus
+UB: arithmetic overflow and buffer overflow.)<p>In Java, the code is incorrect but safe, because the arithmetic overflow is
+defined and the invalid array access is defined. This is why I like to say,
+“Java actually is what people imagine C to be.” What is UB in C is very often
+well-defined in Java.<p>That said, Java is still wrong to have used <code>int</code> as the array
+index type, even if only because it is an unnecessary limitation on program data
+size (as discussed above). But it also leads to this incorrectness problem —  in
+Java, the program will <code>throw</code> when it actually could have
+successfully completed the binary search. Bloch notes that 1 way to fix it is to
+use (you guessed it) unsigned arithmetic:<blockquote><p>Probably faster, and arguably as clear is:<pre>
+int mid = (low + high) &gt;&gt;&gt; 1;
+</pre><p>In C and C++ (where you don’t have the <code>&gt;&gt;&gt;</code> operator),
+you can do this:<pre>
+mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1;
+</pre></blockquote><p>Those approaches will work when <code>low</code> and <code>high</code> are
+<code>int</code>s and thus their sum will always fit in <code>unsigned
+int</code>.<p>But if we used the correct index type, <code>size_t</code>, we don’t have the
+extra headroom of <code>unsigned</code> —  it’s already unsigned —  so we need to
+actually ensure that the overflow does not happen. Bloch’s first solution,<blockquote><pre>
+int mid = low + ((high - low) / 2);
+</pre></blockquote><p>is the only one that yields the correct midpoint in all cases.<p>To see why, consider an extreme case, in which we are indexing a giant array
+of bytes that holds all bytes in the address space. We can see that calculating
+the true midpoint requires care in modular arithmetic, both for 32- and 64-bit
+sizes. (For the 64-bit case, pretend for the moment that we can afford that much
+RAM, and that we have a machine that actually does use all 64 bits for
+addressing bytes.)<pre>
+% <b>cat <a href=midpoint.c>midpoint.c</a></b>
+#include &lt;assert.h&gt;
+#include &lt;inttypes.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+  {
+    static_assert(sizeof(unsigned) == sizeof(uint32_t),
+                  "Assuming `unsigned` is `uint32_t`");
+    printf("32-bit:\n");
+    const uint32_t low = UINT_MAX - 2;
+    const uint32_t high = UINT_MAX;
+    uint32_t mid = (low + high) / 2;
+    printf("(%" PRIu32 " + %" PRIu32 ") / 2 = %" PRIu32 "\n", low, high, mid);
+
+    mid = low + ((high - low) / 2);
+    printf("%" PRIu32 " + ((%" PRIu32 " - %" PRIu32 ") / 2) = %" PRIu32 "\n",
+           low, high, low, mid);
+  }
+
+  {
+    static_assert(sizeof(size_t) == sizeof(uint64_t),
+                  "Assuming `size_t` is `uint64_t`");
+    printf("64-bit:\n");
+    const uint64_t low = SIZE_T_MAX - 2;
+    const uint64_t high = SIZE_T_MAX;
+    uint64_t mid = (low + high) / 2;
+    printf("(%" PRIu64 " + %" PRIu64 ") / 2 = %" PRIu64 "\n", low, high, mid);
+
+    mid = low + ((high - low) / 2);
+    printf("%" PRIu64 " + ((%" PRIu64 " - %" PRIu64 ") / 2) = %" PRIu64 "\n",
+           low, high, low, mid);
+  }
+}
+% <b>make midpoint && ./midpoint</b>
+clang -Weverything -Werror -std=c2x midpoint.c -o midpoint
+32-bit:
+(4294967293 + 4294967295) / 2 = 2147483646
+4294967293 + ((4294967295 - 4294967293) / 2) = 4294967294
+64-bit:
+(18446744073709551613 + 18446744073709551615) / 2 = 9223372036854775806
+18446744073709551613 + ((18446744073709551615 - 18446744073709551613) / 2) = 18446744073709551614
+</pre><p>Obviously, on a 64-bit machine, we are highly unlikely to find ourselves
+exercising this edge case. ☺️ (Although <a href=https://www.qualys.com/2020/05/19/cve-2005-1513/remote-code-execution-qmail.txt>don’t
+get <b>too</b> complacent</a>.) But as you can see, with 32-bit
+<code>size_t</code>, we are well within range of trouble. (See demo below.)<p>In any case, I would rather have such foundational functions as binary search
+be correct because they are correct, rather than ‘good enough‘ contingent on the
+limitations of the platform the program runs on.<p>That said, on a 64-bit machine, we can emulate and exhaustively test what
+would happen in a 32-bit machine if we were to use <code>uint32_t</code> to
+emulate <code>size_t</code> as the index type. My example program, <a href=exhaustive.c>exhaustive.c</a>, creates an
+array with 4 billion elements,
+and then attempts to use binary search to find all of them. It shows that if you
+use an unsigned index type, you have to use (as midpoint.c suggests) the
+<code>low + ((high - low) / 2)</code> method to get a correct program. Using the
+correct arithmetic takes about 6 minutes on my laptop:<pre>
+% <b>date ; time ./exhaustive c ; date</b>
+Sat Feb 11 22:35:47 PST 2023
+Created sorted array of `uint32_t` values.
+./exhaustive c  347.17s user 8.99s system 95% cpu 6:13.90 total
+Sat Feb 11 22:42:01 PST 2023
+</pre><p>The incorrect arithmetic gets stuck in an infinite loop, unable to find a
+valid midpoint (as midpoint.c suggested will happen). In this example, I gave up
+after 18 minutes:<pre>
+% <b>date ; time ./exhaustive i ; date</b>
+Sat Feb 11 22:42:29 PST 2023
+Created sorted array of `uint32_t` values.
+^C
+./exhaustive i  1031.42s user 18.88s system 95% cpu 18:22.13 total
+</pre><h2>Conclusion</h2><p>Types matter. That ‘everything is an <code>int</code> in C’ is no more true
+than that ‘everything is a list in Lisp’ —  and we should be glad of that! <a href=https://en.wikipedia.org/wiki/B_(programming_language)>The nearly
+typeless B language</a>, and the untyped lambda calculus, are insufficient as
+programming tools. Application-domain types clearly matter, but primitive types
+matter too —  perhaps especially, since higher-level types and functions are
+built on the primitives.<p>Proofs of correctness of binary search are valid only on the assumption that
+languages can easily express correct integer arithmetic. (<a href=https://www.cs.cornell.edu/courses/cs211/2006sp/Lectures/L06-Induction/binary_search.html>See
+this one, for example</a>.) In fact, of course, our programming languages make
+expressing even simple arithmetic incredibly difficult and unwieldy. A complete
+proof must take the failures of real-world language design into account. This
+gap between theory and practice, between computing science and software
+engineering, is wider than people sometimes realize<a id=fn4_back></a><a href=#fn4>④</a>.<p>As for the not-fully-correct solution being ”probably faster”, that is
+unlikely to be significant. The practical performance difference between
+<code>mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1</code> and
+<code>int mid = low + ((high - low) / 2)</code> is 1 additional subtraction
+operation on registers, i.e. 1 machine cycle. (<a href=https://godbolt.org/z/sPqTG96fd>The <code>/ 2</code> gets
+optimized to
+<code>&gt;&gt; 1</code> on a modern optimizing compiler</a>.) In a loop
+involving non-local accesses to main memory —  you’re jumping around in the
+array, not processing it in a linear, cache-friendly way —  that fraction of a
+nanosecond is not going to make or break the performance-fitness of your
+program.<p>Assuming we’re already using the best available data structures and
+algorithms, the most significant way to make programs faster is by increasing
+parallelism. In general, correctness and safety are crucial to achieving
+parallelism. Observing the distinctions between types is a particularly
+effective way to improve program correctness and safety.<p>In any case, we’ve been living with unnecessarily buggy C/C++ programs since
+1989, even accounting for all the other kinds of bugs inherent and special to
+C/C++. 33 years of entirely preventable bugs and exploitable vulnerabilities,
+all because it’s too hard to express the 1 thing computers actually do:
+arithmetic.<p>A good engineer never blames their tools. But a good engineer is always
+searching for the best available tools.<hr><p><a id=fn1></a><a href=#fn1_back><b>1.</b></a> K&amp;R, 2nd edition,
+page 187 shows a version of <code>malloc</code> taking <code>unsigned</code>,
+while p. 167 has it correct as <code>size_t</code>. It seems likely that K&amp;R
+just forgot to update the example on p. 187 when updating the book for the 2nd
+edition, which was updated to describe C89.<p><a id=fn2></a><a href=#fn2_back><b>2.</b></a> When interviewing
+security-focused engineers, I often ask them to spot the bugs in code like this,
+and to explain how it could be exploited.<p><a id=fn3></a><a href=#fn3_back><b>3.</b></a> If application-specific
+macro-benchmarks and testing show that <code>calloc</code>’s zeroing memory
+makes the program too slow for its purpose, you can define your own allocation
+function that checks the multiplication and then passes the result to
+<code>malloc</code>. Of course, this point only applies if your application has
+performance fitness tests. Unless you have such tests, <code>calloc</code> is
+not too slow.<p><a id=fn4></a><a href=#fn4_back><b>4.</b></a> It reminds me a bit of
+how with big-O notation, we ignore constant factors because in principle they
+don’t matter —  but in practice, for actual inputs to algorithms implemented on
+actual computers, the constant factors can be decisive.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

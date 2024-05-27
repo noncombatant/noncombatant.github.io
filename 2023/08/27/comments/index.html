@@ -1,0 +1,153 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Comments On Comments</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Comments On Comments</h1><p><time>27 August 2023</time><p>Programmers sometimes argue about whether comments are good, or bad, or bad
+but necessary, or better than no comments, and so on. It’s one of those debates
+where everyone is right part of the time, and nobody really convinces anybody,
+and then we do it again next month.<p>Maybe a year or so ago, some colleagues and I were going around this
+merry-go-round again, and Drew Fisher actually shed some light on the discussion
+that I hadn’t seen before. He said, “Comments should explain why, not what.” I
+realized it’s the <i>what</i> comments that I dislike —  they are redundant at
+best, and contradict the actual code at worst (which happens frequently, in my
+experience). It’s the <i>why</i> comments that I like, and I bet most of us
+do.<p>There seem to be at least 3 kinds of comments in software code:<dl><dt><i>should</i> comments<dd>that talk about what the code should do, or
+what callers should do;<dt><i>what</i> comments<dd>that talk about what code does; and<dt><i>why</i> comments<dd>that explain why the code does what it does, or
+why or when callers should call it.</dl><p>The state of comments in many codebases is not ideal. Often, we can and
+should<ul><li>replace <i>should</i> comments with code that checks;<li>replace <i>what</i> comments with meaningful identifiers; and<li>explain <i>why</i> more often and more thoroughly.</ul><p>Code examples in this post are in Go, since I work in a Go shop these
+days.<h2>Replace Should Comments With Code</h2><p>Here’s an example of a <i>should</i> comment (that also does not explain
+why):<pre>
+// RunCommand runs command with the correct arguments for our application.
+//
+// The command should be one of "pumpkin", "noodle", or "tootle".
+func RunCommand(command string) error {
+	cmd := exec.Command(command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+</pre><p>The <code>command</code> argument is a shell command, so we can imagine that
+the <i>why</i> is that we need to restrict the commands to 1 of a few known-safe
+commands —  we don’t want to create a shell injection vulnerability! But it’s not
+great to make the reader imagine or guess. We should tell them.<p>This code enforces the should and avoids the vulnerability —  it’s safe even
+if the authors of callers didn’t read the comment:<pre>
+var SafeCommands = []string{
+	"pumpkin",
+	"noodle",
+	"tootle",
+}
+
+// RunCommand runs command (which must be one of the SafeCommands) with the
+// correct arguments for our application.
+func RunCommand(command string) error {
+	if !slices.Contains(SafeCommands, command) {
+		return fmt.Errorf("%q is not in SafeCommands", command)
+	}
+	cmd := exec.Command(command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+</pre><p>Explaining why commands must be safe is a good idea, too:<pre>
+// SafeCommands limits the commands that RunCommand will run. This limit is
+// necessary because we must prevent shell injection vulnerabilities and
+// because even without injection, some commands are dangerous to run. Before
+// you change this list, get approval from the SREs.
+var SafeCommands = []string{
+	"pumpkin",
+	"noodle",
+	"tootle",
+}
+</pre><p>This is now pretty good: we’ve replaced a should comment with an assertion
+that stops bad things from happening, and we explain why it’s necessary to stop
+bad things and why commands can be bad.<p>Personally, I’m still not entirely satisfied with this for 2 reasons:<ol><li>I’d like for attempted invocations of unsafe commands to fail early, at
+compile time rather than at run time.<li>The comments are duplicative, and will need to be updated if the names
+<code>RunCommand</code> or <code>SafeCommands</code> change. People don’t always
+remember to do this when making changes, and then the comments refer to things
+that no longer exist.</ol><p>This code, which creates a type that callers outside the current package
+can’t construct a meaningful instance of, gets closer to that ideal:<pre>
+// SafeCommands limits the commands that RunCommand will run. This limit is
+// necessary because we must prevent shell injection vulnerabilities and
+// because even without injection, some commands are dangerous to run.
+type SafeCommand struct {
+	command string
+}
+
+// Before you change or add to these SafeCommands, get approval from the SREs.
+var Pumpkin SafeCommand = SafeCommand{command: "pumpkin"}
+var Noodle SafeCommand = SafeCommand{command: "noodle"}
+var Tootle SafeCommand = SafeCommand{command: "tootle"}
+
+// RunCommand runs command with the correct arguments for our application.
+func RunCommand(command SafeCommand) error {
+	cmd := exec.Command(command.command, "woop", "boing")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+</pre><p>Callers outside this package cannot construct a meaningful, non-zero instance
+of <code>SafeCommand</code> because all 1 of its fields, <code>command</code>,
+begins with a lower-case letter. In Go, identifiers that begin with lower-case
+letters are visible only from inside the package.<p>Note that I removed the assertion <code>slices.Contains(SafeCommands,
+command)</code>. Now we use the <code>SafeCommand</code> type to enforce that
+commands are safe.<aside>Update 28 August 2023: Jacob Hoffman-Andrews pointed out that we could
+even make the type private, by naming it <code>safeCommand</code>. But having a
+public function that takes a private type feels weird to me. I slightly prefer
+having the zero-value of <code>SafeCommand</code> be meaningless and hence
+safe.</aside><p>From inside the package, it is still possible to create an arbitrary
+<code>SafeCommand</code>. Depending on the situation, dynamic safety checking
+may also still be necessary. Even if it is, I like the inherent
+documentation-like quality of the new type name and the named global instances.
+If you create a minimal package such that all callers are outside the package,
+you may be able to leave the dynamic check out.<p>This way of doing things is a bit outside the Go cultural norm, but I hope
+it’s not too far outside.<h2>Replace What Comments With Names</h2><p>Type names, variable names, function names, and so on (identifiers) are all
+documentation. Many or most what comments are obviated by carefully chosen,
+meaningful identifiers. This is the Javadoc problem: Most Javadoc tediously
+repeats information that is already present in the identifiers themselves.<p>What comments are the most likely to get out of sync with the actual code,
+which is often worse than not having comments at all. Readers easily get
+confused as to whether the comment or the code is correct, especially in the
+absence of tests.<p>I often see long functions broken up into sections headed with what comments.
+It’s often better to replace the sections with calls to smaller (usually)
+private functions that do the job, and whose names do the work of the what
+comment.<p>Code full of what comments, like this:<pre>
+func DownloadAndVerifyThing(path string) error {
+	// Build the URL for the thing
+	...
+
+	// Fetch the URL
+	...
+
+	// Now verify the file
+	...
+}
+</pre><p>can become:<pre>
+func DownloadAndVerifyThing(path string) error {
+	url := buildURL(path)
+	pathname, err := fetchURL(url)
+	if err != nil {
+		return error
+	}
+	return verifyFile(pathname)
+}
+
+func buildURL(path string) *URL {
+	return &amp;URL{
+		...
+	}
+}
+
+func fetchURL(u *URL) (string, error) {
+	...
+}
+
+func verifyFile(pathname string) error {
+	...
+}
+</pre><p>Now, <code>DownloadAndVerifyThing</code> is shorter, contains less state, and
+is more obviously a composition of several tasks.<h2>Explain Why Thoroughly</h2><p>Depending on the situation, there may be many questions starting with “Why?”
+that the reader of your code might have. Try to anticipate and answer them. Here
+are some ideas:<ul><li>Why is it necessary?<li>Why is it implemented this way and not in some other way?<li>Why is it so complicated? Are all these special cases/fancy
+algorithms/complex data structures necessary?<li>Why is it so simple? Don’t we need high efficiency/to handle more error
+conditions/to be more generic/et c.?<li>Why is it here and not somewhere else?<li>Why is it important to fix/refactor/change/not change?</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

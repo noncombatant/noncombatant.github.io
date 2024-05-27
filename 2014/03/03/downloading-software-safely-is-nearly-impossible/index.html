@@ -1,0 +1,69 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Downloading Software Safely Is Nearly Impossible</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Downloading Software Safely Is Nearly Impossible</h1><p><time>3 March 2014</time><aside><p>NOTE: I have written <a href=/2014/03/05/followup-to-downloading-software-safely/>a follow-up post to
+respond to some questions this post may raise</a>.</aside><p>Let’s say you have a brand-new Windows laptop and you’re just oh, so
+happy. You’re pretty sure the NSA did not <a href=http://www.forbes.com/sites/erikkain/2013/12/29/report-nsa-intercepting-laptops-ordered-online-installing-spyware/>interdict
+it during shipment</a>, and thus that it comes only with the flaky goatware
+Microsoft, Lenovo, and any number of Lenovo’s business partners intended for
+it to have. Now all you need is an SSH client so that you can connect to
+your Linux machines, and all will be peachy. Here is how to get an SSH
+client.<ol><li>Do a web search for <a href="https://www.google.com/search?q=windows+ssh+client&amp;oq=windows+ssh+client">[
+windows ssh client ]</a>.<li>Follow the first hit to <a href=http://www.putty.org/>http://www.putty.org/</a>. Now, since you want
+to get the good and true PuTTY that Simon Tatham wrote, and not some
+unauthenticated malware, you check for the lock icon and the “https://” URL
+scheme. It’s not there — worrying, considering that Tatham is supposedly an
+encryption software developer.<li>No need to worry, though; <a href=http://www.whois.com/whois/putty.org>putty.org is not even owned by
+Tatham</a>. It’s currently owned by someone named “denis bider”, who
+presumably just likes to domain-squat on other people’s product names and
+provide links. OK. Let’s follow the link to...<li><a href=http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html>http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html</a>.
+Ahh, this has Tatham’s name right in the path part of the URL, so... wait,
+is that good? Actually, no; only the hostname can indicate site
+ownership. <a href=http://www.whois.com/whois/greenend.org.uk>Richard
+Kettlewell currently owns greenend.org.uk</a>.<li>Look for, and fail to find, the lock icon and the “https://” URL scheme.
+Again, shouldn’t cryptography and security software — like all software — be
+delivered always and only via an authenticated service?<li>Manually add the “https://”. Note that the site does not respond to
+HTTPS. Begin to doubt that this is the right site.<br><figure><img alt="Screenshot showing that PuTTY is not available via HTTPS." src=no-https-putty.png width=733 height=461 loading=lazy><figcaption>PuTTY is not available via
+HTTPS.</figcaption></figure><li>Not to worry! Scroll down and note that Tatham offers links to RSA and
+DSA cryptographic signatures of the binaries, e.g. <a href=http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA>http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA</a>.
+Note that <a href=http://www.whois.com/whois/earth.li>earth.li is
+currently owned by Jonathan McDowell</a>. When you click the link to the
+signature, you do indeed get an RSA signature of something, but there is no
+way to know for sure who the signer was or what they signed — any attacker
+who could have compromised the site to poison the executable PuTTY programs
+(or performed a man-in-the-middle attack on your connection to the site)
+could also just as easily have compromised the signatures.<li>Attempt to download the signature via HTTPS instead, <a href=https://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA>https://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA</a>,
+and note that the server responds with a 404. Become increasingly
+suspicious.<br><figure><img alt="Screenshot showing that the RSA signature file is not found." src=https-signature-404.png width=666 height=403 loading=lazy><figcaption>Is this a bad sign? It feels
+bad.</figcaption></figure><li>Take a breather to read <a href=http://www.chiark.greenend.org.uk/~sgtatham/putty/keys.html>Tatham’s
+explanation of how overly-complex his signing infrastructure is</a>, but not
+why the delivery channel is anonymous.<li>Briefly wonder if Tatham’s PGP keys are noted in a central registry,
+such as MIT’s PGP key server. <a href="http://pgp.mit.edu/pks/lookup?search=tatham&amp;op=index">Nope</a>.<li>Briefly wonder if it matters that MIT’s PGP key server is
+unauthenticated.<br><figure><img alt="Screenshot showing that the MIT key server is
+unauthenticated." src=no-https-keyserver.png width=745 height=503 loading=lazy><figcaption>The MIT key server is
+unauthenticated.</figcaption></figure><li>Recall that even if you could get Tatham’s PGP key from an authenticated
+key server, you’d still need to download a PGP program. Rather than repeat
+the steps in this tutorial for GnuPG, give up and decide to download an
+unauthenticated copy of PuTTY.<li>Note that Tatham refers you to <a href=http://www.pc-tools.net/win32/freeware/md5sums/>http://www.pc-tools.net/win32/freeware/md5sums/</a>
+for an MD5 calculator for Windows, and briefly consider at least checking
+the anonymous (hence useless) MD5 digest for PuTTY. Noting that
+www.pc-tools.net also does not respond to HTTPS, forego that waste of
+time.<li>Having downloaded putty.exe, think long and hard before clicking on it.
+Note that when you execute it, it will run with the full privilege of your
+user account on this Windows machine. It will have the ability to read,
+delete, and modify all your documents and emails, and will be able to post
+your porn collection to Wikipedia.<li>Hope that it does not.<li>Click on putty.exe anyway. Connect to your account on your Linux server,
+which is now <em>also</em> under the control of an unauthenticated program
+from the internet. Consider that, if the download was not poisoned, this
+thing calling itself “PuTTY” was written by a developer who might know how
+to implement RSA in C, but who does not know how or why to use RSA. (Are you
+even connected to your real Linux server, at this point? Hard to know.)<li>Note that, suddenly, <a href=http://www.w3.org/TR/WebCryptoAPI/>Web
+Crypto</a> is starting to look damn good despite <a href=http://rdist.root.org/2010/11/29/final-post-on-javascript-crypto/>the
+objections of the native code chauvinists</a>. At least JavaScript runs
+under the <a href=http://en.wikipedia.org/wiki/Same-origin_policy>same
+origin policy</a> and is sandboxed by <a href=http://www.chromium.org/developers/design-documents/process-models>Chrome’s
+multi-process model</a>, so it wouldn’t have the full run of your Windows
+user account.<li>Despair.</ol><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

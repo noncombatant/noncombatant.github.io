@@ -1,0 +1,60 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>“The Emperor’s Old Clothes”</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>“The Emperor’s Old Clothes”</h1><p><time>15 January 2023</time><p>Tony Hoare provided my favorite definition of security in his Turing Award
+lecture “The Emperor’s Old Clothes”:<blockquote>The first principle was security: The principle that every
+syntactically incorrect program should be rejected by the compiler and that
+every syntactically correct program should give a result or an error message
+that was predictable and comprehensible in terms of the source language program
+itself</blockquote><p>He mentions spatial memory safety in particular, as it is the first and
+unavoidable kind of unsafety we encounter. (I’d say both as individuals, when we
+start learning C and assembly, and also in the history of software development —  programs in the era he is talking about often did not have object lifetimes
+other than static and stack, so temporal safety was less of an issue.)<p>But if we work through the implications of Hoare’s 1st principle, it becomes
+clear that safety must mean (at least) all of spatial and temporal memory
+safety, and also type safety. It’s worth noting that the need for lifetime
+safety was recognized <a href="https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)#:~:text=Garbage%20collection%20was%20invented%20by,manual%20memory%20management%20in%20Lisp.">and
+implemented</a> almost immediately after the first dynamic language was
+invented. And we know <a href=https://qconlondon.com/london-2009/qconlondon.com/london-2009/speaker/Tony+Hoare.html>he
+regrets inventing meaningless references</a>.<p>So Hoare wants for machines to never be <i>weird</i>, in <a href=http://www.dullien.net/thomas/weird-machines-exploitability.pdf>Thomas
+Dullien’s sense</a>. It must at least be possible to program a computer, even if
+difficult. This is especially important given the unavoidable complexity of
+programming:<blockquote>Programmers are always surrounded by complexity; we cannot avoid it.
+Our applications are complex because we are ambitious to use our computers in
+ever more sophisticated ways. Programming is complex because of the large number
+of conflicting objectives for each of our programming projects. If our basic
+tool, the language in which we design and code our programs, is also
+complicated, the language itself becomes part of the problem rather than part of
+its solution.</blockquote><p>Unwarranted complexity, such as weirdness and <a href=https://en.cppreference.com/w/cpp>underspecified and
+inconsistent
+APIs</a>, becomes hostile to safety, utility, efficiency, <a href=https://www.acm.org/code-of-ethics>our
+ethical duty</a>, and cost.</p><a id=law><p>11 years after Hoare, some people in New Jersey would also go on
+to implement another dialect of Algol. But they ignored this 1st principle of
+system design. For 51 years, we have accepted extremely — and increasingly! — weird and unnecessarily complex machines as normal. It’s hard to overstate how
+much software engineering regressed in the 1970s. 50 years later, we have not
+dug ourselves out of the pit. There are people who benefit from this state of
+affairs. Hoare had a spicy take on that:<blockquote>In any respectable branch of engineering, failure to observe such
+elementary precautions would have long been against the law.</blockquote></a><p>I’m actually not sure it’s true that it would <i>long</i> have been against
+the law; much product safety regulation was relatively new at the time he wrote
+this. In any case, the seemingly in-the-weeds topic of memory safety is now <a href=https://www.atlanticcouncil.org/content-series/buying-down-risk/memory-safety/>a
+topic of policy discussion</a>. (See also <a href=https://www.atlanticcouncil.org/content-series/buying-down-risk/home/>the
+whole Buying Down Risk series</a>.)<p>Hoare’s 2nd principle of language design is in the same vein. I’ll take the
+liberty of re-phrasing it a bit, for emphasis: Efficiency (particularly
+space-efficiency) is critical — both for its own sake, <i>but also so that you
+can use the headroom to further improve reliability</i>. He even goes as far as
+to say “rugged”, which is such a beautiful vision for software.<p>3rd and 4th are developer experience principles: Composition must be
+efficient, so that we can use it heavily; and, the write/test/debug loop must be
+low-latency.<p>As ‘obvious’ as these principles may seem, it’s fun to think: which
+programming environments do you use that reliably satisfy all 4? I think there
+are a few (woo hoo!) but that we don’t often enough demand that this be the
+baseline.<p>I love Hoare’s lecture/essay so much because it is such a pithy summary of
+hard-won and deep insights into many aspects of software development: safety,
+obviously, but also usability, reliability, business management, project and
+program management. <a href=https://dl.acm.org/doi/pdf/10.1145/358549.358561>The copy on ACM’s
+site</a> is a fairly janky PDF, so I’ve reformatted it as <a href=/hoare-emperors-old-clothes-turing-award/>plain HTML</a> for easier
+reading and correct copying and pasting. (The PDF’s text is OCR with errors,
+alas.)<p>See also <a href=https://blog.acolyer.org/2016/09/07/the-emperors-old-clothes/>Adrian
+Colyer’s similar paean</a>! And you might like Hoare’s <a href=https://people.dsv.su.se/~jpalme/s1/hoare.html>Software Design: A
+Parable</a>.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

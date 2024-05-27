@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Recoverability</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Recoverability</h1><p><time>24 August 2019</time><aside><p>Update 25 Aug: Removed 2 paragraphs that made more sense in an older
+draft than in the post as finally published.</aside><div id=toc></div><p><i>Recoverability</i> is my word for a desirable computer safety property:
+The ability to fully assert ownership and control over the machine and all its
+operations. (This includes the ability to fully <i>relinquish</i> control of the
+machine, too.)<p>Recoverability is crucial in many everyday situations:<ul><li>When the machine changes ownership (new and used purchases, gifts, loaner
+machines from the help desk, et c.).<li>When decommissioning the machine, you want to ensure that the machine is
+entirely clean of your data — including sensitive documents and files, but also
+access tokens and credentials.<li>When borrowing the computer (from a friend, at the copy shop, at the public
+library, et c.).<li>After an attacker has compromised the machine.<li>When people (e.g. family members, roommates) share a computer or phone.
+(This scenario can involve hostility, e.g. intimate partner surveillance and
+abuse. We have to adopt and work to solve for this threat model!)</ul><p>You can see that recoverability really is an everyday problem, for everyone,
+when you consider how many kinds of devices require recoverability. A
+sampling:<ul><li>traditional computers: servers, desktops, laptops<li>phones<li>kiosk and point-of-sale computers<li>printers, scanners, fax machines<li>cars (<a href=https://www.usatoday.com/story/money/cars/2018/01/30/car-renters-beware-bluetooth-use-can-reveal-your-private-data/1080225001/>ever
+found someone else’s contacts in your rental?</a>)<li>Alexas, Google Homes, Apple HomePods, et c.<li>most kinds of data storage devices (USB drives, SSDs, spinning disks, et
+c.)</ul><p>Recoverability is mostly about code integrity, but maintaining data
+confidentiality (usually by ensuring it’s destroyed) is also important.<h2>Our Goal</h2><p>Our goal should be to make recoverability and relinquishment first-class,
+well-supported, documented, discoverable <a href=https://eprint.iacr.org/2007/399.pdf>ceremonies</a> that people
+can
+easily and regularly use. For example, <a href=https://support.apple.com/en-us/HT208244>resetting a digital
+assistant</a> really should delete all user data storage, and should
+affirmatively reset all system software (including all peripheral firmware!) to
+a known-good state.<p>Of course, that’s harder than it sounds. If your SSD’s firmware is
+compromised, it’s probably lying to you about updating the operating system and
+the firmware itself.<h2>The Problem</h2><p>In most computing devices, there are tons of places where no-longer-wanted
+data and code can remain, thwarting our ability to recover the device. <a href=https://www.malwaretech.com/2015/06/hard-disk-firmware-rootkit-surviving.html>Malware
+might hide in the firmware</a>. (Many peripherals, including <a href=https://mobile.twitter.com/Foone/status/1161421430178766853>keyboards</a>,
+network interfaces, storage devices, cameras, <a href=https://www.theverge.com/2016/10/28/13454052/apple-macbook-pro-touch-bar-apple-watch-features>the
+Mac Touchbar</a>, and more have updatable firmware.) <a href=https://securitywatch.pcmag.com/privacy/320343-how-to-securely-dispose-of-a-printer>Many
+printers and scanners keep a copy of what they’ve printed and scanned</a> — how
+do you wipe your tax records off your printer before selling it on Craigslist?
+And so on.<h2>‘Easy’ Solutions</h2><p>It might seem that we could ease recoverability by designing the system such
+that it is essentially <a href=https://en.wikipedia.org/wiki/W%5EX>W^X</a> —  writable data can never become executable code. However, it is very close to
+impossible to achieve this for a variety of reasons. Among others:<ul><li>The system might <a href=https://en.wikipedia.org/wiki/Interpreted_language>interpret data as
+code</a> (this includes configuration files). This is so useful that system
+designers can’t help themselves, or even don’t realize they’re doing it.<li>It means giving up updatability. Is that even worse for safety than poor
+recoverability?</ul><p>Perhaps the only real way to achieve W^X is on a pure-ROM system: no writes.
+<a href=https://en.wikipedia.org/wiki/Nintendo_Entertainment_System>As great
+as the NES was</a>, a system designed on that principle has very limited
+utility. (But more than none! And maybe sufficient for some of the use-cases?)
+Although <a href=https://www.dkoldies.com/blog/-complete-list-of-nintendo-nes-games-with-save-batteries/>NES
+Game Paks eventually got writable RAM</a>, it was <a href=https://en.wikipedia.org/wiki/Volatile_memory>volatile</a> and hence
+recoverable.<p>That suggests another option: volatile installation. Even if the code is
+writable, as long as the memory is exclusively volatile, the device is
+recoverable. For example, <a href=https://panic.com/blog/the-lightning-digital-av-adapter-surprise/>Apple
+Lightning cables work this way</a>. (More fun from <a href=https://twitter.com/nyan_satan/status/1155148789977636864>Lisa
+Braun</a>.) <a href=https://wiki.archlinux.org/index.php/Microcode>CPU
+microcode updates can work the same way</a>.<p>We can also achieve a certain degree of recoverability if there are code
+updates, including in non-volatile memory, but all updates are authenticated
+(such as by cryptographic code and keys from ROM or a TPM). This gives us a good
+degree of recoverability until the non-updatable <a href=https://www.macrumors.com/2013/06/24/apples-ios-7-lightning-connector-authentication-check-permanently-cracked/>crypto
+is cracked</a>. (See also <a href=https://www.usb.org/sites/default/files/2019-01/USB-IF_USB%20Type-C%20Authentication%20Program%20Press%20Release_FINAL_20181227.pdf>USB-C
+authentication</a>.)<p>For data confidentiality —  mainly, rendering data unusable upon
+relinquishment —  the only real way is to always write only ciphertext into
+non-volatile memory, then to destroy the key when relinquishing. Modern storage
+technology does not give us a way to be sure that data is deleted. (See e.g. <a href=https://www.ontrack.com/blog/2016/10/25/wear-leveling/>wear-leveling</a>.)
+We can only hope to make it indecipherable.<figure><img src=ios-security-effaceable.png width=436 height=290 alt="Screenshot of Apple iOS Security Guide: “The Erase All Content and Settings
+option in Settings obliterates all of the keys in Effaceable Storage, rendering
+all user data on the device cryptographically inaccessible. Therefore, it’s an
+ideal way to be sure all personal information is removed from a device before
+giving it to somebody else or returning it for service.”" loading=lazy><figcaption>Effaceable memory for keys, described in the <a href=https://www.apple.com/business/docs/site/iOS_Security_Guide.pdf>iOS
+Security Guide</a> as a recoverability mechanism.</figcaption></figure><p>But all these ‘easy’ mechanisms leave us with a question: do we have to trade
+off updatability for recoverability? Even volatile installation depends on the
+integrity of the installation source (usually your primary operating
+system).<h2>The Hardest Case: Compromise</h2><p>What are you actually, really supposed to do to recover your computer after
+it has been compromised?<p>Recovering and re-verifying the integrity of all your data and network
+accounts could be the topic of several books. For this post, I just mean the
+computer itself. After a successful attack, is your computer merely <a href=https://en.wikipedia.org/wiki/Electronic_waste#Amount_of_electronic_waste_worldwide>e-waste</a>?</p><p>Unfortunately, <b>all</b> your software and forgotten firmware is potentially
+relevant attack surface but also a potential persistence mechanism —  breaking
+recoverability. We have to assume the worst in case of actual compromise. But
+depending on the hardware and firmware design, we may not have a way to recover
+all the firmwares. This includes those in the storage devices, which can break
+our ability even to recover the primary OS.<p>Thus recoverability is an unsolved privacy, usability, economic, and even
+environmental problem. It’s a fun and important problem for these reasons and
+(especially to me) because solving it requires a holistic, general view of
+computer systems. It’ll never be enough to ‘just’ design a good update protocol,
+or kernel, or UX, or memory subsystem. All those pieces (and more) must fit
+together in a coherent narrative and ceremony that people can observe, believe,
+and rely on every day.<hr><aside><p>Mara Tam reminded me in conversation that the shared device use case
+demonstrates a particularly acute need for recoverability and relinquishment.
+Any other errors or omissions are mine, of course.<p>Someday I’d like to write at greater length about this use case. My
+colleagues and I have spent significant time chewing on it, and although it’s
+not easy it’s crucial that all platform developers handle it. Not only is it
+possible to do more than nothing, there may be some relatively straightforward
+improvements to be made.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

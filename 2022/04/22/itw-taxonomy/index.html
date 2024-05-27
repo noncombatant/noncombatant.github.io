@@ -1,0 +1,180 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Taxonomy Of In-The-Wild Exploitation</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Taxonomy Of In-The-Wild Exploitation</h1><p><time>16 April 2022</time><p>As too few software engineers know, <a href=https://alexgaynor.net/2020/may/27/science-on-memory-unsafety-and-security/>about
+65% of known vulnerabilities in C/C++ codebases are due to memory unsafety</a>.
+The “65% finding”, as I’ll call it, is consistent across vendors and across
+decades. Obviously, that conclusion comes from data biased in a certain way:
+these are the vulnerabilities that attackers and defenders have been
+consistently able to find; these are the vulnerabilities that vendors are
+willing to disclose at all; these are the vulnerabilities that we choose to talk
+about.<p>We know there’s more going on out there. Even so, the finding is useful and
+actionable.<p>There are also several efforts to track known vulnerabilities that we know
+have actually been exploited in the wild (ITW):<ul><li><a href=https://www.cisa.gov/known-exploited-vulnerabilities-catalog>CISA’s
+Known Exploited Vulnerabilities Catalog</a><li><a href="https://docs.google.com/spreadsheets/d/1lkNJ0uQwbeC1ZTRrxdtuPLCIl7mlUreoKfSIgajnSyY/view#gid=2129022708">Project
+Zero’s 0day In The Wild spreadsheet</a><li><a href="https://docs.google.com/spreadsheets/d/1FslzTx4b7sKZK4BR-DpO45JZNB1QZF9wuijK3OxBwr0/edit#gid=0">Tom
+Ritter’s Browser Exploit History</a></ul><p>(See also <a href=https://github.com/divergentdave/icscert-advisories-scraper>David Cook’s
+ICS-CERT Advisories Scraper</a>, which is specific to ICS and covers more than
+just ITW bugs.)<p>These datasets are also necessarily biased: these are (some of) the
+vulnerabilities attackers can find, and (some of) what they can actually field.
+But we also know that phishing and other social-engineering techniques account
+for a huge portion of real-world attacks.<p>These different biases are useful: the more information we have about what’s
+possible and what attackers are really doing, the better we can respond —  as
+long as we seek out a variety of datasets and remain aware of their biases. I’d
+love to see additional datasets with entirely different foci, e.g. credential
+and permission phishing, fake invoice fraud, USB drives with malware left
+sitting around... We might not be able to get data about side-channel attacks
+fielded ITW, but I can dream.<p>I was curious to see if the 65% finding aligned with what we see in CISA’s
+data. <a href="https://docs.google.com/spreadsheets/d/1JeN3F8EG6A_ckb7PDCHIuAocR8W-6UEu9kKoctJaF08/edit#gid=0">I
+imported their CSV into a Google sheet, and started categorizing the CVEs</a>
+according to a sketch of a taxonomy I came up with for this purpose, and by the
+implementation language of the target. (See the <b>type</b> and <b>language</b>
+columns.) To substantiate the classifications where the description was not
+obvious, I also added a column with details on the bug and/or its exploitation.
+This column usually contains a link to a proof of concept (PoC), an analysis, or
+other details.<p>Additionally, Jack Cable mapped the CVEs to their CWEs (see new columns
+<b>cwe</b> and <b>cwe2</b>), and mapped those to the taxonomy described here.
+That analysis shows substantially different results, which is interesting. This
+suggests that CWEs (or any data in the CVE entry) don’t contain enough
+information to tell whether a vulnerability is memory related. For instance <a href=https://cwe.mitre.org/data/definitions/20.html>CWE-20, improper input
+validation</a>, may or may not result in a memory-unsafety vulnerability.<h3>Limitations Of This Analysis</h3><p>It’s not complete: we haven’t finished categorizing all the bugs for
+<b>type</b> (currently 60% done) nor for <b>language</b> (currently 58%
+done).<p>The way in which it’s incomplete is not random: I did a bunch of easy ones
+first, I did some searches for particular keywords and categorized those first,
+and so on. Therefore the percentages calculated at the top are not necessarily
+what we’ll see once the categorization is complete.<p>My classifications might be wrong! It’d be nice to have more people go
+through and see if they agree with how I’ve categorized things —  some bugs might
+have the wrong <b>type</b> or <b>language</b>. If you can correct an error, fill
+in an unknown, or add more detail, please add a comment on a cell. Thanks! (See
+also the “Unknown” filter view.)<p>There’s more to be done. For example, with some somewhat hairy spreadsheet
+code, you can find out some fun facts about the distribution of the bugs. For
+example, in cell F2, I’ve calculated the percentage of C/C++ bugs that are
+memory unsafety (currently 55.18%):<pre>
+=round(
+  multiply(
+    100,
+    divide(
+      countifs(
+        B10:B1000, "=memory",
+        A10:A1000, "=C/C++"),
+      countif(A10:A1000, "=C/C++")
+    )
+  ),
+2)
+</pre><p>Since the time I started this lil project, CISA has added many more rows to
+their spreadsheet. And I have not done the same analysis with other datasets
+like P0’s and Ritter’s.<h2>Taxonomy</h2><p>Here is how I categorize the vulnerabilities in CISA’s dataset:<table><tr><th class="bottom right">Type<th class=bottom>Sarcastic Name<th class=bottom>Description<th class=bottom>Examples (non-exhaustive)<tr><th class=right>memory<td>“C problems”<td>Spatial or temporal memory unsafety<td>Buffer overflow, use-after-free, write-what-where, double-free,
+leak or use of uninitialized memory<tr><th class=right>eval<td>“Lisp problems”<td>Treating attacker data as interpreted code<td>SQL injection, XSS, shell injection, deserializing evil objects and loading
+their evil classes<tr><th class=right>logic<td>“Brain problems”<td>Errors in application-layer logic<td>Incorrect branch condition, incomplete information in branch condition, type
+confusion, integer semantic sadness that does not result in memory unsafety<tr><th class=right>configuration<td>“Face-palm problems”<td>Errors in default or likely deployment configuration, misfeatures<td>Leaving the debug interface on in production, web shell as a ‘feature’,
+default passwords<tr><th class=right>cryptography<td>“Math problems”<td>Errors in the use of cryptography, including not using it<td>N-once reuse, low-entropy keys, confidentiality where integrity is needed
+(or vice-versa, or both), plaintext<tr><th class=right>ux<td>“Human problems”<td>Problems that arise when the UI, UX, or social context does not match human
+needs, limitations, or expectations<td>Phishable credentials, affordances favoring errors, confusing UI or
+documentation, high effort/concentration required, UI redressing</table><a id=fn1_back></a><p>It’s difficult to create a universally-applicable taxonomy. (Ask any
+biologist.) You can see everything as a logic bug, or you can see C’s problems
+as being user experience bugs for developers (DX): affordances that favor
+errors, too hard to use consistently safely, and counter-intuitive
+semantics<a href=#fn1>①</a>.<p>My categories are intentionally broad, for 2 reasons.<ol><li>The taxa in any taxonomy typically overlap, and with software bugs, they
+seem to overlap a lot. I’m trying to account for that while also making some
+rough decision.<li>I just wanted to chew through CISA’s list of 616 bugs quickly enough to get
+a first-order approximation to the central question: “Are ⅔ of the bugs
+attackers use against C/C++ programs memory unsafety bugs, or less, or more, or
+what? And what else might be going on out there?”</ol><p>As a defender, I typically classify bugs by asking <b>what went wrong in the
+design or implementation, and how are we going to fix it</b>. What would the fix
+look like, and can it be systematic or (semi-)automated? Checking bounds,
+correcting object lifetimes, fixing an <code>if</code>/<code>else</code>
+condition, fixing the deployment configuration? Un-shipping a misfeature? UX
+research?<p>Now, sometimes we might exploit e.g. memory unsafety to achieve type
+confusion, or vice versa, or use e.g. buffer overflow to achieve command
+injection. I categorized these bugs by what I see as the earliest error (that we
+know of) in a possible chain of errors. (Although I won’t say “<a href=https://twitter.com/amyngyn/status/1072576388518043656>root cause</a>”,
+of course.)<p>In some cases, memory safety would have stopped exploitation, even if
+memory unsafety is not the first error in the chain. I typically classified
+those as logic bugs.<p>Notably, I am not classifying bugs by their outcomes during exploitation,
+e.g. information disclosure, remote code execution (RCE), local privilege
+escalation (LPE), denial of service (DoS), et c.: the same bug may have many
+possible outcomes. Nor do I classify by severity: everyone has a different
+threat model, so a standardized severity system is typically hard to apply
+meaningfully.<h2>Patterns I Noticed</h2><p>To see these patterns for yourself, it helps to make heavy use of the Filter
+View feature of Sheets. You can also make a copy and add in your own
+<code>=COUNTIF</code>s and so on. I bet there are patterns I missed! Please add
+comments to the sheet or email me if you see something interesting.<h3>Recurring Bug Types</h3><p>Path traversal accounts for a large chunk of vulnerabilities (which I
+categorize as logic). <a href=/2017/11/07/problems-of-urls/>As with URLs</a>,
+text strings are an alluring but not consistently workable interface for
+describing paths from root to branch in a tree. People just can’t decode,
+resolve, or compare them consistently, and those are security-critical
+operations.<p>There’s lots of ‘remote shell as a feature’ going on (which I classify as
+configuration). Debug interface? Quick-and-easy way to implement some
+functionality? Lack of proper library APIs for some functionality? All of the
+above, I’d imagine.<p>CISA’s data does not count UX bugs that make phishing (of various types) and
+misuse/misconfiguration more likely or easier to attack —  but we know they are a
+big part of exploitation in real life. I suspect the ux category is vastly
+underrepresented. If we counted them, ux might be greater than all the other
+categories combined.<p>The goat in the room is credential phishing. <b>This fatal problem will
+remain rampant until we build support for WebAuthn into all important
+services.</b><h3>Big Head, Long Tail</h3><p>Unsurprisingly, the memory category is the biggest single category (so far),
+although it’s not fully 65% of the bugs used against C/C++ targets.<p>Keep in mind that the 65% finding is for codebases that are in C/C++, but
+this dataset describes systems implemented in a variety of languages —  and most
+languages are memory-safe. Memory unsafety exploitation may be over-represented
+as an attack type in the dataset; i.e. perhaps attackers in the wild are
+favoring it because of the control such bugs provide, their skill sets, stealth,
+or similar kinds of reasons.<p>I’d point to eval as the true second most immediately actionable category for
+fixing/exploiting (depending on your proclivities). There’s so much easy-to-find
+stuff in that category, with a variety of techniques for discovery.<p>The logic category is hugely broad —  almost a default —  so its prominence as
+second-biggest category might not be as meaningful or actionable. (Although you
+will see patterns in that category.) It represents a long tail of scattered bug
+classes and (hopefully) one-offs.<h3>The Poor State Of Information</h3><p>We need to have a <a href=https://sre.google/sre-book/postmortem-culture/>blameless postmortem</a>
+for a way of documenting vulnerabilities that is already dead.<p>These are vulnerabilities that affect people’s lives, government policy, the
+economy, civil society —  all the bugs in question have been exploited ITW —  yet
+there’s so much noise, obscurantism, and bravado that it’s often more difficult,
+not less, for people to decide what to do.<p>We need to stop writing, and accepting, vague write-ups like “execute code
+via unspecified vectors”, “allows remote attackers to cause a denial of service
+or possibly execute arbitrary code”, “the vulnerability is due to insufficient
+handling of [data]”, and so on. (These are real examples!)<p>A big part of the purpose — or, potential —  for public vulnerability
+announcements and reports is to teach and learn, mature the engineering culture,
+and above all to avoid repeating these problems. And for that, we need specifics
+and we need sufficient certainty. Being vague is not the most effective way to
+compensate for risk.<p>The people building the infrastructure of our world, and bodies like the <a href=https://www.cisa.gov/cyber-safety-review-board>Cyber Safety Review
+Board</a>, are most effective when they have all the facts at hand. Aviation
+safety has made huge game-changing improvements over the decades, but not
+without full access to the (sometimes embarrassing) details. We need <a href=http://www.feynman.com/science/the-challenger-disaster/>Feynman
+explaining the Challenger explosion</a>, not handwaving. The links I’ve added in
+the <b>additionalDetail</b> column are, overall, much more like the
+Feynman-grade stuff we need to get a real grip on what’s going on.<h4>The Desperate Cry For True Facts</h4><p>Working on this classification project required us to hunt for additional
+details when the official descriptions were lacking. In about 9 hours of work, I
+was able to get through about 45% of the 616 bugs. If the official descriptions
+had had enough content, I could likely have finished 100% in much less time.<p>Hunting for bug detail led me to the unfortunate conclusion that a CVE number
+is little more than a search keyword. You always have to go to hacker blogs, bug
+trackers, and find and read PoCs. Very occasionally, the vendor’s announcement
+would have more detail than the CVE entry.<p>Pro Tip: Don’t start by just searching for the CVE number. The top 10 hits
+are going to be just sites that copy the CVE entry. (I will file this as a
+Search quality bug when I get to work on Monday.) Instead, you have to be more
+precise (the quotes help):<ul><li><code>"cve-abcd-efgh" "github"</code><li><code>"cve-abcd-efgh" "blog"</code><li><code>"cve-abcd-efgh" "project zero"</code></ul><p>Sometimes you can get some detail by searching Twitter, too.<h2>The Future</h2><p>Ultimately, all software bugs are logic errors —  software is logic. But what
+I’m looking for are systematic ways to correct errors, and the bug
+classifications reflect that. As defenders, we shouldn’t fix individual buffer
+overflows; we must stop using C. We shouldn’t fix SQL injections; we must use
+parameterized queries. We shouldn’t fix shell injections; we must stop using
+<code>system</code> and <code>popen</code>, and instead build and use real APIs.
+We shouldn’t fix instances of XSS; we must use a structured templating system.
+And so on.<p>Almost all of the exploited vulnerabilities are quite mundane, and solvable
+by mundane means. They’re not sexy or weird or surprising —  and that’s good
+news. So much pain and trouble can be solved with simple tools that we already
+have.<p>We need to get increasingly clear about implementation quality requirements.
+This includes stopping new uses from getting into our codebases (with presubmit
+scripts or Git hooks) and systematically auditing for them and treating them as
+bugs and technical debt to prioritize paying off. Often, you can simply grep or
+<a href=https://github.com/googleprojectzero/weggli>weggli</a> for these, and
+get a list. There’s also <a href=https://codeql.github.com/>CodeQL</a>.<p>Our goal as software engineers should be to eventually get down to only bugs
+that are one-offs, specific to the application.<h2>Acknowledgements</h2><p>Thanks to Dev Akhawe for helping me categorize the bugs, and thanks to
+Jonathan Rudenberg and Eric Rescorla for reading early drafts and proposing
+improvements. Jack Cable mapped the CWEs to the taxonomy I use here. Any errors,
+and there are surely many, obviously remain my own.<hr><a id=fn1></a><p><b><a href=#fn1_back>1.</a></b> You might even call memory unsafety a form
+of eval, if you’re feeling silly (and I always am). I propose the following
+addendum to <a href=https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule>Greenspun’s 10th
+rule</a>:<blockquote><p>Any sufficiently complicated C or Fortran program contains an ad hoc,
+informally-specified, bug-ridden, slow implementation of half of Common Lisp.
+This includes <code>eval</code>.</blockquote><p>After all, <a href=http://forum.ouah.org/FormatString.PDF>what is
+<code>%n</code> but a hard-to-use form of <code>eval</code></a>? 🤔 🤨<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

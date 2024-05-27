@@ -1,0 +1,115 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>On Validating Inputs</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>On Validating Inputs</h1><p><time>15 January 2018</time><div id=toc></div><h2>Introduction</h2><p>A principle of secure software development is that only the callee (sometimes
+called the <em>relying party</em>, RP) should trust itself to validate an input.
+Typically, the callee has a higher degree of privilege than the caller, and will
+use its privilege to perform some task for the caller if and only if the input
+is valid.<p>Allowing the caller to assert that an input is valid is unsafe: <em>of
+course</em> a malicious caller will claim the input is valid. A classic example
+of this mistake is when a web server trusts client-side validation in
+JavaScript.<h2>The Problem</h2><p>However, input validation functions are attack surface. Validating inputs is
+dangerous, and difficult to do correctly. This is especially true when the input
+language is complex or when the validator is implemented in an unsafe language.
+Validators can suffer from a variety of bug classes:<dl><dt><a href=https://en.wikipedia.org/wiki/Memory_safety>Memory
+unsafety</a>.<dd><p>In a memory-unsafe language, it’s too easy to write a validation function
+that suffers from memory corruption bugs, such as out-of-bounds reads and
+writes, and use-after-free. This is especially likely if the input language is
+complex, but even simple input languages can be hard to process correctly in
+primitive languages.<dt><a href=https://en.wikipedia.org/wiki/Type_safety>Type unsafety</a>.<dd><p>In a type-unsafe language, it can be easy to write a validation function
+that confuses either the types of input objects or of intermediate types
+particular to the function’s implementation. Attackers can often exploit such
+type confusion (often, but not only, by turning it into memory
+corruption).<dt>Semantic unsafety and application logic bugs.<dd><p>Some input languages are not necessarily a good match for their problem
+domain. They may be overpowered, underpowered, or have a poor mapping to
+concepts in the application domain.<p>Other input languages have semantics that don’t quite match those of the
+validating function’s environment, or are underspecified. For example, <a href=http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf>the
+JSON ‘grammar’</a> allows for arbitrarily-long sequences of digits in numeric
+value literals, but the JavaScript language uses fixed-size, 64-bit IEEE
+floating point values to represent numbers. JavaScript can correctly represent
+<a href=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger>only
+53-bit integers</a>.</dl><h3>The Paradox Of Validation</h3><p>If the input language is sufficiently complex —  <a href=https://en.wikipedia.org/wiki/XML>which is all too likely in the real
+world</a> —  it might be impossible to write a safe validator. In this case, we
+have a paradox: the RP can only trust itself to validate its inputs, but cannot
+safely do so. For example, consider a web server that needs to validate XML
+inputs, or <a href=http://www.c7zero.info/stuff/ASN1_parsing_issues_in_crypto_Latincrypt2015.pdf>applications
+that handle ASN.1</a>.<h2>What Could Go Wrong?</h2><p>There are (at least) 2 different kinds of complexity that create (at least) 2
+different kinds of potential problems during input validation.<dl><dt>Grammatical complexity, and subsequent semantic complexity.<dd><p>Part of the language-theoretic security goal is to have inputs come from
+languages low on the <a href=https://en.wikipedia.org/wiki/Chomsky_hierarchy>Chomsky hierarchy</a>.
+This reduces the complexity of validators for such inputs, which increases the
+likelihood that they will be correct.<p>Even if the validator is not compromised or exploited during validation,
+there is still the problem of correct semantic interpretation. Complex languages
+are harder to interpret correctly, giving rise to the problem that the RP might
+misinterpret a correct and correctly-validated input.<dt>Side-effect complexity.<dd><p>There is also a question as to the complexity of side-effects that an
+input language is designed to cause on the operating environment when
+interpreted. Side-effect complexity is orthogonal to grammatical complexity;
+even a trivial input language can be used to cause unsafe or undesired
+side-effects. For example, consider a shell command validator (perhaps as part
+of a system status monitoring web application):<pre>
+def is_valid_command(command):
+  return re.match(r"^\w+$", command)
+
+def run_command(command):
+  if not is_valid_command(command):
+    raise ValueError("Nice try, goofball")
+  os.system(command)
+</pre><p>Although the validator is trivially correct (assuming a design calling for
+single-word commands with no parameters or shell syntactic metacharacters), and
+is invoked correctly, the above code is unsafe. The triviality of the grammar
+does lend itself to further validation though, which is another reason to prefer
+simpler grammars.<p>A tighter validator can help us sleep a little easier:<pre>
+AllowedCommands = set(("uptime", "dmesg", "netstat"))
+
+def is_valid_command(command):
+  return command in AllowedCommands
+</pre><p>(Presumably, the designers of the application have accepted the risks of
+exposing the outputs of those commands to callers, presumably authenticated and
+authorized somehow.)</dl><h3>What About Sandboxing?</h3><p>What do we gain if the RP delegates validation to a privilege-reduced
+validator (PRV; e.g. a sandboxed parser), and then trusts the PRV’s result? If
+the PRV was compromised during validation, its result is no more trustworthy
+than without sandboxing. But at least the RP would not itself have been
+compromised.<p>Sandboxing can reduce the range of potential side-effects that the validator
+can perform, ensuring that only intended side-effects take place (if any), even
+if the validator is compromised.<p>Sandboxing does nothing for grammatical or semantic complexity, however, and
+does not reduce the risks of later misinterpretation.<h3>What About Pre-processing?</h3><p>You might also imagine that we can transform an input into a less complex or
+dangerous form: either a normalized or minimized form of the original input
+language, or a different, simpler language. I’ll call this <em>downward
+transformation</em>, but it might have a more official name (please email me if
+you know it!).<p>Downward transformation can be lossless or lossy. (It might seem that
+downward transformation would be inherently lossy, but recall that input
+languages are sometimes overly powerful. It may be possible to downwardly
+transform such a language without semantic loss.)<p>Lossy transformation can carry its own application-semantic risks. For
+example, consider transforming XML into JSON: XML has the concept of a document
+type definition (DTD), enabling XML parsers to enforce structural invariants of
+an XML input. After a pre-processor has transformed the document to JSON, the
+recipient of the JSON input would have to re-encode the assertions encoded in
+the DTD, with attendant risks of semantic skew and divergence over time.<p>Although potentially useful, downward transformation is not a reduction in
+overall system complexity. In fact, it’s an increase: the system must now be
+able to handle 2 languages, not just 1. But it can be possible to separate the
+processing of the 2 languages, including sandboxing 1 or both.<h2>Approaching Solutions</h2><dl><dt>Implement validators in memory-safe languages.<dd><p>At a minimum, we can and must eliminate the most rinky-dink vulnerability
+class: memory corruption.<dt>Implement validators in type-safe languages.<dd><p>When it’s trustworthy, we can use the language’s type system to enforce
+grammatical and semantic correctness, for example by encoding each syntactic
+structure as a distinct type, with assertions about child structures and their
+types. <a href=http://publications.lib.chalmers.se/records/fulltext/local_135303.pdf>Proofs
+for free!</a><dt>Accept only well-specified languages.<dd><p>Unfortunately, this is easier said than done, both because it’s hard to
+specify a language, and because a few people are still using JSON. Still, we can
+sometimes tighten the effective definitions of poor languages that we are forced
+to accept, by defining subsets and dialects and by writing them into the API
+definition. (E.g., for a JSON validator: “This function will throw
+<code>RangeException</code> for integers not in the range – (2<sup>53</sup> – 1)
+.. 2<sup>53</sup> –  1, inclusive.”)<dt>Sandbox to constrain side-effects.<dd><p>This is ‘obvious’, but it’s <a href=https://scarybeastsecurity.blogspot.com/2017/05/bleed-continues-18-byte-file-14k-bounty.html>not
+done nearly as often as it should be</a>. <a href=https://android.googlesource.com/platform/external/minijail/>Minijail is
+a good sandboxing option for Linux</a>. There is also <a href=https://github.com/google/nsjail>NsJail</a>.<dt>Cross-implementation unit and integration tests.<dd><p>My favorite example is <a href=http://seriot.ch/parsing_json.php>Nicolas Seriot’s JSON torture
+test/freak show</a>.</dl><h3>Benefits Of Safety And Simplicity</h3><p>A memory-safe implementation of a validator for a language with no
+side-effects on the environment (e.g. no shell command intepreter) would allow
+us to, potentially, skip sandboxing. This is valuable because, outside of <a href=https://en.wikipedia.org/wiki/Singularity_(operating_system)>a type-safe
+virtual machine</a>, the fundamental sandboxing primitive is the OS’ process
+boundary. It can be surprisingly expensive, in both time and space, to create
+new processes. The problem gets worse at a high degree of granularity (e.g. a
+fresh sandbox per input, or even potentially 2 for downward transformation) and
+especially with requirements for high throughput (many inputs) and/or low
+latency.<p>From a systems perspective, it’s reasonable to question if
+unsafe-but-efficient languages are in fact efficient.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

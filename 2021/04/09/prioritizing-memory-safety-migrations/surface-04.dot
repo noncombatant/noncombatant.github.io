@@ -1,0 +1,27 @@
+digraph {
+  splines = polyline;
+  rankdir = LR
+  node [
+    shape = box
+    style = rounded
+    fontname = "Roboto"
+    fontsize = 9
+    margin = 0.1
+  ];
+  edge [
+    fontname = "Roboto"
+    fontsize = 9
+    margin = 0.1
+  ];
+
+  attacker [ label = "attacker" ];
+  stuff [ label = "..." ];
+  HTTP [ label = "HTTP" ];
+  parse_CSP [ label = "parse CSP" ];
+  eval_CSP [ label = "eval CSP" ];
+
+  attacker -> stuff [ ];
+  stuff -> HTTP [ ];
+  HTTP -> parse_CSP [ ];
+  parse_CSP -> eval_CSP [ ];
+}

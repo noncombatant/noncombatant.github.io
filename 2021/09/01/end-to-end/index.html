@@ -1,0 +1,72 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>A Thought On ‘End-to-End’ Security</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>A Thought On ‘End-to-End’ Security</h1><p><time>1 September 2021</time><p>There’s a good deal of hullabaloo about Apple’s CSAM detection system(s) for
+the iPhone, iMessage, and iCloud. There are a lot of complex trade-offs in play,
+and I am not qualified to say if it’s net-good or net-bad.<p>Everyone is getting their yell in, pro- or con-, and that is good. To me, the
+clearest discussion of why Apple’s plan is so hard to love comes from Deirdre
+Connolly and Matthew Green on the <a href=https://securitycryptographywhatever.buzzsprout.com/1822302/9099774-apple-s-csam-detection-feat-matthew-green>Security.
+Cryptography. Whatever. podcast</a>.<p>In <a href=https://www.lawfareblog.com/normalizing-surveillance>“Normalizing
+Surveillance”</a> (in Lawfare, of all places) Susan Landau raises a key
+question: What does ‘end-to-end’ security actually mean? Is Apple violating the
+spirit of the principle? (Has there ever been a clear letter of the
+principle?)<blockquote>Apple’s solution for its messaging app works through a redefinition
+of end-to-end encryption (E2E) with a new meaning that a communication is
+end-to-end encrypted until it reaches the recipient’s phone. Previously an
+iPhone (or iPad) user could use the Messages app to send a message to another
+iPhone or iPad user and it would be E2E encrypted via iMessage, Apple’s E2E
+encrypted messaging app. But Apple’s new definition of E2E encrypted means that
+Apple tools could have access to any decrypted contents.</blockquote><p>The original ‘letter’ of the principle comes from <a href=https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf>Saltzer,
+Reed, and Clark’s paper “End-To-End Arguments In System Design”</a> (<a href=saltzer-end-to-end.pdf>local
+copy</a>). They argue that reliability must
+come primarily from the application layer, and they use a file transfer
+application protocol as their example. They don’t find it sufficient to rely on
+the lower-layer protocols, or their providers, to provide application-semantic
+reliability (in this case, file integrity). They note the possibility that lower
+layers might help, or improve efficiency, but lower layers and providers cannot
+be solely relied upon to provide such reliability.<p>Saltzer et al. mention encryption only in passing, and don’t really dig into
+the idea of the lower layer providers as intentional threat actors. The
+end-to-end argument does readily lend itself to that approach to security, but
+the original paper does not give us a clear definition of E2E security. It’s
+about reliability in a world of accidents, mishaps, and misunderstandings.<p>The spirit of the E2E argument as a security model, though, is surely clear:
+the application layer must not trust other software, protocols, or
+communications providers; instead, it must treat them as not only unreliable but
+as potential threat actors.<p>But does it make sense to treat the author(s) of the trusted computing base
+(TCB) —  your hardware, firmware, operating system, and core application
+frameworks —  as untrusted? As threat actors?<p>Landau considers it a “redefinition” of the principle of E2E security to
+trust the TCB. Essentially, she wishes —  we all would wish! —  for the “ends” to
+be the application software instances alone, defending themselves against an
+<b>un</b>trusted and potentially hostile computing base:<figure><img src=we-wish.svg alt="A graphic showing Alice, Bob, Alice’s
+device, and Bob’s device, with messaging apps talking to each other and treating
+the device OSs as potentially hostile." title="We wish the device OS were
+untrusted, because it might be hostile." loading=lazy width=500 height=289><figcaption>We wish the device OS were untrusted, because it might be
+hostile.</figcaption></figure><p>Unfortunately, the reality has always been, and must necessarily be, more
+like this:<figure><img src=reality.svg alt="A graphic showing Alice, Bob, Alice’s
+device, and Bob’s device, with messaging apps talking to each other and treating
+the device OSs as potenitally hostile but necessarily trusted." title="In fact,
+the device OS is trusted, even though it might be hostile. Bummer, but that’s
+life." loading=lazy width=500 height=289><figcaption>In fact, the device OS
+is trusted, even though it might be hostile. Bummer, but that’s
+life.</figcaption></figure><p>Every TCB, from every vendor, has at least the power —  hopefully unused, or
+at least ‘benignly’ —  to inspect, modify, tootle with, and otherwise perturb any
+application it hosts. None of Apple, iOS, iMessage are unique in this way. You
+have to trust Ubuntu not to frobulate your Signal Desktop. You have to trust
+Android not to discrombulize your WhatsApp.<p>Whether the trust<b>ed</b> computing base is trust<b>worthy</b> is an
+entirely separate question.<p>Another separate question: Does it make sense to treat the application itself
+as a threat actor, other than by simply rejecting it? Part of Apple’s system(s)
+for CSAM involves, presumably, integration between iOS, iMessage, and iCloud —  presumably, the system(s) are implemented partially inside iMessage and
+partially with API hooks between the OS, app, and iCloud. Apple is the author of
+all that software, and runs the services.<p>In theory, at least, any TCB could reach into any application it hosts to do
+the same thing. I’m not saying I think Apple or any other OS vendor will go so
+far as to do their CSAM scanning in apps they didn’t author.<p>(That said, substantial content inspection, code injection into applications
+and into the kernel, and reporting to the mothership has long been common in the
+anti-virus (AV) industry. If you install such software, be aware that you are
+usually placing total trust in it. If you don’t like Apple’s private set
+intersection stuff, you’re really not going to like what you find out about
+AV.)<p>So, I don’t think it’s a redefinition of the letter (such as it is) or spirit
+of the E2E principle to treat the TCB as trusted. (It’s right there in the
+name.) A given TCB, or app, might be untrustworthy for your needs, and that can
+be a problem. But it’s not a problem Apple introduced.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

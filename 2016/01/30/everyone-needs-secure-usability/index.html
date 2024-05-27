@@ -1,0 +1,122 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Everyone Needs Secure Usability</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Everyone Needs Secure Usability</h1><p><time>30 January 2016</time><p>There’s an interesting <a href=https://lwn.net/Articles/586838/>article in
+LWN about C11 atomic variables and the kernel</a> that struck me for a few
+reasons:<ul><li>Atomics and concurrency are always weird and fun and surprising<li>I keep hoping for C11 to be kind of awesome, or at least interesting, and it
+is!<li>Although they might not frame it this way, secure usability — <a href="https://docs.google.com/presentation/d/1Qmpl-5epx0B5C2t4XsUTyjgbwab_rXfK_4iHqX3IC30/pub?start=false&loop=false&delayms=3000&slide=id.gf44795496_0_1">in
+the same sense that we worry about it in Chrome</a> (<a href="https://www.youtube.com/watch?v=XfFjde0UPbY">see also</a>) —  is a
+make-or-break concern for these Linux kernel developers and C standardizers</ul><p>In Chrome Land, we’re always trying to improve people’s ability to understand
+and effectively use Chrome’s security indicators and controls, such as the
+Location Icon (the green padlock, the red padlock, et c.), the Origin Info
+Bubble (the bubble you get when you click on the Location Icon), the <a href="https://developers.google.com/web/updates/2015/12/security-panel?hl=en">Security
+Panel in the Dev Tools</a>, the permissions and Content Settings, the security
+exceptions in the JavaScript Console, and so on. (By “people”, you can see that
+I mean everyone: ‘end-users’, web developers, system and network administrators,
+et al. Those categories are fluid.)<p>Similarly, the LWN article describes how the Linux kernel developers and C11
+standardizers are trying to improve C developers’ ability to understand and
+effectively use atomic variables so that we can all enjoy efficient yet safe
+concurrent programs. If the mechanisms that enable concurrency (like locks and
+atomics) are confusing, we’re going to get buggy (and vulnerable) programs. But
+if they’re too slow or heavyweight, people won’t use them —  and we’ll get buggy
+(and vulnerable) programs.<p>So the first thing to do is to find out what it is that the community using
+the product needs and can effectively use. So the C11 standards people, academic
+programming language researchers, and kernel developers are all working together
+to figure out the shape of the thing.<p>Here is a representative example of the kinds of problems that crop up:<blockquote><p>Another area of concern is control dependencies: situations where atomic
+variables and control flow interact. Consider a simple bit of code:<pre>
+x = atomic_load(&a, memory_order_relaxed);
+if (x)
+    atomic_store(&y, 42, memory_order_relaxed);
+</pre><p>The setting of <code>y</code> has a control dependency on the value of
+<code>x</code>. But the C11 standard does not currently address control
+dependencies at all, meaning that the compiler or processor could play with the
+order of the two atomic operations, or even try to optimize the branch out
+altogether; see <a href=https://lwn.net/Articles/586854/>this explanation from
+GCC developer Torvald Riegel</a> for details. Again, the results of this kind of
+optimization in the kernel context could be disastrous.<p>For cases like this, Paul suggested that some additional source-code markup
+and a new <code>memory_order_control</code> memory model could be used in the
+kernel to make the control dependency explicit:<pre>
+x = atomic_load(&a, memory_order_control);
+if (control_dependency(x))
+    atomic_store(&b, 42, memory_order_relaxed);
+</pre><p>But this approach is unlikely to be taken, given just how unhappy Linus was
+with the idea. From his point of view, the control dependency should be obvious — the code is testing the value of <code>x</code>, after all. Any compiler that
+would move the <code>atomic_store()</code> operation in an externally visible
+way, he said, is simply broken.</blockquote><p>Just as with ‘end-user’ interfaces, these low-level APIs must adapt to the
+needs and expectations of the people who use them. Despite the tendency to
+consider ‘end-users’ as ‘ignorant’ or ‘not computer-literate’, and the tendency
+to consider kernel hackers as ‘elite’, these different groups have concerns
+about and problems with the usability of their every-day tools that are more
+similar than people sometimes imagine.<p>Another thing that struck me is that magic simply may not be possible, and
+our best recourse might just be to live with the limitations of simplicity.
+Linus’ way of saying this is arresting:<blockquote><p>Yet another concern is global optimization. Compiler developers are
+increasingly trying to optimize programs at the level of entire source files, or
+even larger groups of files. This kind of optimization can work well as long as
+the compiler truly understands how variables are used. But the compiler is not
+required to understand the real hardware that the program is running on; it is,
+instead, required to prove its decisions against a virtual machine defined by
+the standard. If the real computer behaves in ways that differ from the virtual
+machine, things can go wrong.<p>Consider this example raised by Linus: the compiler might look at how the
+kernel accesses page table entries and notice that no code ever sets the “page
+dirty” bit. It might then conclude that any tests against that bit could simply
+be optimized out. But that bit can change; it’s just that the hardware makes the
+change, not the kernel code. So any optimizations made based on the notion that
+the compiler can “prove” that bit will never be set will lead to bad things.
+Linus concluded: “Any optimization that tries to prove anything from more than
+local state is by definition broken, because it assumes that everything is
+described by the program.”</blockquote><p>The article describes the existing concurrency tools that the Linux kernel
+developers built for themselves, that the C11 mechanisms would attempt to
+replace. The kernel developers understand the tools they made, and they seem to
+work, and maybe that’s sufficient.<p>I can’t help but be reminded of how a web browser cannot always ‘decide’ for
+the person that a certificate validation error is or is not important: it
+depends on context that is simply not available to the program interpreting its
+impoverished input. Whether it’s the compiler trying to interpret kernel source
+code or the browser trying to interpret an X.509 certificate chain, there’s
+often simply not enough information to produce an output that is both correct
+and optimal.<p>There is also a problem of unaligned incentives that contribute to the secure
+usability problem, just as we often see happen in the Web PKI and in the design,
+implementation, and use of the Open Web Platform: different groups of people
+have different interests and are under different pressures, and sometimes their
+goals come into conflict.<blockquote>The problem is that compilers tend to be judged on the speed of the
+code they generate, so compiler developers have a strong incentive to optimize
+code to the greatest extent possible. Sometimes those optimizations can break
+code that is not written with an attentive eye toward the standard; the kernel
+developers’ perspective is that compiler developers will often rely on a
+legalistic reading of standards to justify “optimizations” that (from the kernel
+developer’s viewpoint) make no sense and break code needlessly. Highly
+concurrent code, as is found in the kernel, tends to be more susceptible to
+optimization-caused problems than just about anything else. So kernel developers
+have learned to be careful.</blockquote><p>This pressure — speed, speed, speed! —  leads compiler developers to make the
+language opaque, and to break the conceptual integrity of the language in a way
+that can actually make it unsafe and unusable:<blockquote><blockquote>There are too many compiler optimisations for people to reason
+directly in terms of the set of all transformations that they do, so we need
+some more concise and comprehensible envelope identifying what is allowed, as an
+interface between compiler writers and users.</blockquote><p>The C11 standard is meant to be that “envelope,” though, as Peter admitted,
+it is “not yet fully up to that task.” But if the remaining uncertainties and
+problems can be addressed, C11 atomics could become a common language with which
+developers can reason about concurrency and allowable optimizations. Developers
+might come to understand the issues better, and kernel code might become a bit
+more widely accessible to developers who understand the standard.</blockquote><p>Cryptographer Dan Bernstein <a href=https://cr.yp.to/talks/2015.04.16/slides-djb-20150416-a4.pdf>has been
+saying a similar thing</a>: Do compilers actually <em>need</em> to produce
+high-performance code, in the general case? Where needed, <em>can</em> they? And
+if not, is the damage to the language’s conceptual integrity worth it? He
+contends (as I read him, at least) that the answer to these questions is No:
+Most code is not hot (run often and hence in need of optimization); and, true
+hot spots require optimizations that compilers cannot yet perform — only humans,
+locally optimizing, understand their application domain and their machine well
+enough to get a good result. (Bernstein is generally working on cryptographic
+algorithms that he optimizes to work absolutely as well as possible on each
+distinct chip —  local optimizables that the general-purpose (‘global’, if you
+will) compiler optimizations don’t really help with.) From Bernstein’s
+presentation:<blockquote>Mike Pall, LuaJIT author, 2011: “If you write an interpreter loop in
+assembler, you can do much better... There’s just no way you can reasonably
+expect even the most advanced C compilers to do this on your
+behalf.”</blockquote><p>Thus it might not be that people need optimizing compilers; instead, they may
+benefit more from dumb-but-conceptually-integral compilers, and more usable
+tools for writing, profiling, and testing hand-written assembly code.<p>I think we can learn a few widely-applicable UX design lessons from all this
+compiler talk:<ul><li>Augment the human, rather than try (and fail) to replace them.<li>Optimize locally only —  we know that we don’t know everything we need to
+know to best serve people.<li>Check that the local optimizations are actually optimizations.<li>Never violate the conceptual integrity of the system.<li>Sometimes it’s better to give people tools to build their own tools, rather
+than try to build The Ultimate Thing.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

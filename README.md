@@ -1,1 +1,0 @@
-# noncombatant.github.io

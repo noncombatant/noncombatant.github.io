@@ -1,0 +1,88 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Privacy And Security Settings in Chrome</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Privacy And Security Settings in Chrome</h1><p><time>11 March 2014</time><aside><p>Update 29 October 2015: My colleague Mike West packaged up these settings as
+a <a href=https://chrome.google.com/webstore/detail/palmerized-chrome/ecmhflkoahhjjpddfopclbhiogelneoc>Chrome
+extension</a>. So, now you can just install that rather than noodling through
+all these settings.<p>Also, be aware that Chrome’s Settings UX has changed a bit since I wrote
+this.</aside><p><a href=https://www.google.com/intl/en/chrome/browser/>Chrome</a> has a lot
+of handy privacy and security options, but it isn’t always obvious how to use
+them. In this post I’ll demonstrate my favorites, and try to explain a bit about
+what they do.<p>My goal with these configuration changes is to get Chrome to expose less
+attack surface to potentially malicious web pages, and to be less chatty on the
+network. I definitely can’t and don’t guarantee that they will work for you or
+solve any particular problem you have. But maybe you’ll find this to be a fun
+learning experience. (Also, although I work for Google on the Chrome Security
+team, I am not blogging in any official capacity, and I don’t have an omniscient
+view of Chrome security.)<p>Chrome has a feature that allows you to create multiple “profiles”, each with
+their own distinct settings. Because we want to change the settings in a way
+that will make some web sites work less well (or even not at all), we won’t want
+to be locked in that mode. Therefore, we need to create a new, distinct profile
+to use as the private/secure mode. That way, you can always go back to a regular
+profile easily, to get normal web functionality.<p>First, create a new profile:<figure><img loading=lazy alt="Create a new profile." src=01-create-new-profile.png width=746 height=610><figcaption>Create a
+new profile.</figcaption></figure><p>After creating the new profile, you get a new window running that profile
+(note the cat icon in the upper right corner):<figure><img loading=lazy alt="After creating a new profile." width=747 height=612 src=02-after-profile-creation.png><figcaption>After creating a
+new profile.</figcaption></figure><p>In this privacy- and security-sensitive special profile, do not sign in to
+Chrome. Signing in to Chrome, also known as Chrome Sync, is a convenient feature
+that syncs all your settings across all your signed-in Chrome profiles on all
+your devices, and makes it easier to log in to Google services. You might like
+it in your regular mode profile, but we want this profile be more loosely
+coupled to the cloud.<p>Go to the <strong>Settings</strong> page <em>in the new profile’s
+window</em>, and click on “Show advanced settings...” (shown here at the
+bottom):<figure><img loading=lazy alt="Show Advanced Settings." src=03-advanced-settings.png width=786 height=612><figcaption>Show
+Advanced Settings.</figcaption></figure><p>Scroll down to the <strong>Privacy</strong> section of the
+<strong>Settings</strong> page, and check or un-check the various options as you
+see fit. Here’s how I set them for this profile:<figure><img loading=lazy alt="My preferred Privacy settings." src=04-privacy-settings.png width=786 height=611><figcaption>My preferred
+Privacy settings.</figcaption></figure><p>These options (except for Do Not Track) cause Chrome to send extra traffic on
+the network (some of that traffic is encrypted), and is a prime candidate for
+un-checking — especially if you intend to use Chrome with <a href=https://www.torproject.org/>Tor</a>. For more information, see the <a href=https://www.google.com/intl/en/chrome/browser/privacy/whitepaper.html>Chrome
+Privacy Whitepaper</a>. (In particular, think carefully about disabling phishing
+and malware protection; see <a href=//www.google.com/intl/en/chrome/browser/privacy/whitepaper.html#malware>its
+section in the privacy whitepaper</a>.)<p>Click on that <strong>Content settings...</strong> button here in
+the <strong>Privacy</strong> section, as well:<figure><img loading=lazy alt="Block 3rd party data and clear all upon exit." src=04a-cookies-local-data.png width=721 height=366><figcaption>Block 3rd
+party data and clear all upon exit.</figcaption></figure><p>I’ve changed the <strong>Cookies</strong> and site data settings, as you can
+see: “Block third-party cookies and site data” means that when you are reading
+e.g. http://blog.example.com, an ad included  in the page from
+http://ad-company.com cannot set new cookies or site data. “Keep local data only
+until I quit my browser” means that Chrome will clear the locally-stored data
+(like cookies and <a href=http://diveintohtml5.info/storage.html>HTML5
+LocalStorage</a>) when you quit. (This is similar to, but not exactly the same
+as, <a href="https://support.google.com/chrome/answer/95464?hl=en">what Chrome’s
+Incognito mode provides</a>.)<p>Scroll down and you will see many more options for <strong>Content
+settings</strong>. I’ll highlight some that are particularly important. First,
+block JavaScript by default:<figure><img loading=lazy alt="Block JavaScript by default." src=05-no-javascript.png width=343 height=132><figcaption>Block
+JavaScript by default.</figcaption></figure><p>However, you can optionally re-enable JavaScript in HTTPS pages:<figure><img loading=lazy alt="Enable JavaScript on HTTPS page loads." src=06-javascript-exceptions.png width=549 height=409><figcaption>Enable
+JavaScript on HTTPS page loads.</figcaption></figure><p>I like to do this so that I can get rich JavaScript functionality in web
+sites like Twitter and Gmail that go to the trouble of authenticating themselves
+(and their code) using HTTPS — but sites serving unauthenticated junk cannot run
+JavaScript. It’s interesting how many sites still work without JavaScript.
+(Sometimes they even work slightly better.)<p>Next, we disallow external protocol handlers, and we block all plug-ins:<figure><img loading=lazy alt="Disallow external protocol handlers and block
+all plugins." src=07-no-handlers-block-plugins.png width=549 height=340><figcaption>Disallow external protocol handlers and block all
+plugins.</figcaption></figure><p>Important note about blocking plug-ins: The “Click to play” option means that
+plug-ins are disabled by default, but that you can (left-)click on their area on
+the screen to run them. However, that left-click is <a href=http://en.wikipedia.org/wiki/Clickjacking>clickjackable</a>. It’s better
+to select “Block all”, which is really “right-click to play” — yes, you can
+still run plug-ins when you want to. To run plug-ins, right-click on their
+screen area, which brings up a native-type (operating system) context menu, and
+select <strong>Run This Plug-in</strong>:<figure><img loading=lazy alt="Run This Plug-in" src=screen-shot-2014-01-19-at-9-52-26-pm.png width=644 height=571><figcaption>You can run or not run plug-ins at
+run-time.</figcaption></figure><p>Thus, you can be ensured that plug-ins run only when you want them to.<p>Next, we disable location services and notifications:<figure><img loading=lazy alt="Disable location services and notifications." src=08-no-location-no-notifications.png width=517 height=341><figcaption>Disable location services and
+notifications.</figcaption></figure><p>Disallow sites from taking over the mouse or capturing data from media
+sensors:<figure><img loading=lazy alt="Disallow sites from taking over the mouse or
+capturing data from media sensors." src=09-no-mouse-control-no-media.png width=587 height=405><figcaption>Disallow sites from taking over the mouse
+or capturing data from media sensors.</figcaption></figure><p>Turn off un-sandboxed plugins and don’t allow automatic downloads:<figure><img loading=lazy alt="No un-sandboxed (NPAPI) plugins and no
+automatic downloads." src=10-no-unsandboxed-no-auto-download.png width=591 height=347><figcaption>No un-sandboxed (NPAPI) plugins and no automatic
+downloads.</figcaption></figure><p>Do not remember passwords or form field entries:<figure><img loading=lazy alt="Do not remember passwords or form field
+entries." src=11-no-passwords-no-forms.png width=600 height=139><figcaption>Do not remember passwords or form field
+entries.</figcaption></figure><p>Tell Chrome not to auto-detect what language the page is in, to ask where to
+place each download, and not to fetch certificate revocation data:<figure><img loading=lazy alt="Don’t auto-translate, ask where to place each
+download, and don’t fetch certificate revocation data." src=12-languages-downloads-revocation.png width=536 height=347><figcaption>Don’t auto-translate, ask where to place each
+download, and don’t fetch certificate revocation data.</figcaption></figure><p>Note that you can still use Google Translate by right-clicking on a page and
+selecting <strong>Translate to English</strong> (or whatever your native
+language is). Un-checking “Offer to translate...” disables the automatic
+language detection functionality.<p>We leave certificate revocation disabled by default because <a href=http://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol>the
+protocol that does it</a> can leak information about your browsing to a
+server.<p>Finally, visit chrome://plugins and affirmatively disable the ones you don’t
+need, for good measure:<figure><img loading=lazy alt="Disable plug-ins." src=screen-shot-2014-01-19-at-10-09-03-pm.png width=774 height=678><figcaption>Disable plug-ins.</figcaption></figure><p>Have fun!<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>

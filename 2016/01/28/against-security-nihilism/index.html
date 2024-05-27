@@ -1,0 +1,67 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=view-transition content=same-origin><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Against Security Nihilism</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;color:#333;background-color:#fff}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid #333;border-radius:3px;max-width:100%;height:auto}input{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}table tr:nth-child(even){background-color:#eee}.right{text-align:right}.bottom{vertical-align:bottom}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Against Security Nihilism</h1><p><time>28 January 2016</time><p>There’s a lot of security nihilism in the technology community, and in the
+culture generally. Many people believe that “defense is impossible”, that
+“security is a losing battle”, that nothing can be done, that we should stop
+trying and divert resources spent on security to other worthy things like
+features and performance. There is even nihilism in the security community
+itself — although, I suspect, moreso from the offensive side.<p>I disagree that defensive security is impossible. Yes, the software
+equivalent of this:</p><iframe width=420 height=315 src=https://www.youtube.com/embed/j-zczJXSxnw frameborder=0 allowfullscreen loading=lazy></iframe><p>does happen often. However, software engineering, and software security
+engineering in particular, are very young engineering disciplines. Imagine how
+bad bridge building was in year 70; then imagine how bad it was given that
+randos and governments kept trying to destroy them all the time.<p>But in the short time we’ve had to learn how to engineer software, we have
+learned techniques that definitely do work, and some that definitely don’t. I’d
+say we’ve learned a lot, fast. And we know we have, all too often, ignored
+things we already knew.<p>For example, the early programming language designer C. A. R. Hoare
+recognized that security is really just an ‘extreme’ form of correctness, and
+that a language’s first duty is to enable programmers to write correct programs.
+In <a href=http://zoo.cs.yale.edu/classes/cs422/2011/bib/hoare81emperor.pdf>“The
+Emperor’s Old Clothes”</a> he says:<blockquote>The first principle was <em>security</em>: The principle that
+every syntactically incorrect program should be rejected by the compiler and
+that every syntactically correct program should give a result or an error
+message that was predictable and comprehensible in terms of the source
+language program itself. Thus no core dumps should ever be necessary. It was
+logically impossible for any source language program to cause the computer
+to run wild, either at compile time or at run time. A consequence of this
+principle is that every occurrence of every subscript of every subscripted
+variable was on every occasion checked at run time against both the upper
+and the lower declared bounds of the array. Many years later we asked our
+customers whether they wished us to provide an option to switch off these
+checks in the interests of efficiency on production runs. Unanimously, they
+urged us not to — they already knew how frequently subscript errors occur on
+production runs where failure to detect them could be disastrous. I note
+with fear and horror that even in 1980, language designers and users have
+not learned this lesson. In any respectable branch of engineering, failure
+to observe such elementary precautions would have long been against the
+law.</blockquote><p>...and yet here we are, in 2016, shipping new software in languages we know
+are unsafe.<p>The Big Problem in security engineering is not that it’s impossible. I’d even
+argue that some sound techniques are not even (technically) difficult. Often,
+the problems are economic, political, and even inter-personal.<p>I also often find that software engineers are simply unaware of sound
+security techniques. Even simple things like <a href=https://golang.org/pkg/html/template/>HTML templating libraries that
+automatically defang HTML metacharacters</a> — which are now common and
+widely-available, and which enable developers to get a solid handle on the XSS
+problem — are unknown to many working programmers (!).<h2>Things We Know Work</h2><ul><li><a href=http://www.lucacardelli.name/Papers/TypefulProg.pdf>Typeful
+programming</a>, and <a href=http://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf>propositions
+as types</a><li><a href=https://en.wikipedia.org/wiki/Unit_testing>Unit testing</a> for
+propositions we can’t easily represent as types<li><a href=https://en.wikipedia.org/wiki/Privilege_separation>Privilege
+separation</a><li><a href=https://en.wikipedia.org/wiki/Principle_of_least_privilege>Privilege
+reduction</a><li><a href=https://en.wikipedia.org/wiki/Memory_safety>Memory-safe
+languages</a><li><a href=https://en.wikipedia.org/wiki/Type_safety>Type-safe
+languages</a><li><a href=http://langsec.org/>Language-theoretic security</a><li>Choosers to grant resources, rather than broad ambient authority to access
+resources<li>APIs resilient against misuse and developer confusion (for example, <a href=https://en.wikipedia.org/wiki/Authenticated_encryption>AEAD ciphers</a>;
+consider also high-level languages with real string types instead of the
+standard C library’s impoverished string handling)<li>Frequent, <a href=https://www.chromium.org/chromium-os/chromiumos-design-docs/filesystem-autoupdate>safe
+(A/B)</a>, signed, and automatic updates<li><a href=https://www.chromium.org/chromium-os/chromiumos-design-docs/firmware-boot-and-recovery>Authenticating
+the bootstrapping process</a><li>Not overpromising in the UX<li><a href=http://lcamtuf.coredump.cx/afl/>Fuzzing</a> and <a href=http://clang.llvm.org/docs/AddressSanitizer.html>dynamic
+analysis</a><li>Minimizing dependencies<li>Defense in depth: 2 mechanisms, each of which could work in principle;
+well-defined and -defended fallback guarantees in case the primary guarantee is
+broken<li>Integrating development, operations/deployment, business requirements, and
+QA (see for example <a href=https://en.wikipedia.org/wiki/DevOps>DevOps</a>)</ul><h2>Things We Know Don’t Work</h2><ul><li><a href=http://www.ranum.com/security/computer_security/editorials/dumb/>Enumerating
+badness</a><li><a href=https://en.wikipedia.org/wiki/Antivirus_software>Evaluating
+Turing-complete languages to infer</a> an <a href=https://www.ietf.org/rfc/rfc3514.txt>evil bit</a><li>Layers of cruft, or what I call “false defense in depth” (many speedbumps
+don’t make a wall)<li>Dis-integrating development, operations/deployment, business requirements,
+and QA</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>
