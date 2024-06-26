@@ -1,0 +1,13 @@
+digraph {
+  splines = polyline;
+  rankdir = LR
+  node [
+    shape = box
+    style = rounded
+    fontname = "Roboto"
+    fontsize = 9
+    margin = 0.1
+  ];
+
+  internet -> { PNG, JPEG, GIF, TIFF, "..." } -> SkBitmap
+}
