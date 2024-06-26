@@ -2,7 +2,8 @@
 🙂&nbsp;<a href=/about/>About</a>
 ✍️&nbsp;<a href=/publications/>Other Writing</a>
 🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
-💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Ergonomics, Resource Lifetimes, And Object Graphs</h1><p><time>29 May 2023</time><p>This is a smol thought on how resource acquisition and release strategies
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a>
+🐘&nbsp;<a rel=me href=https://wandering.shop/@fugueish>Mastodon</a></nav><h1>Ergonomics, Resource Lifetimes, And Object Graphs</h1><p><time>29 May 2023</time><p>This is a smol thought on how resource acquisition and release strategies
 affect the ergonomics of object lifetimes and the complexity of object graphs.
 <i>Resource</i> generally means any or all of: memory, objects, files, locks,
 sockets, et c.<p>Whenever a program requires complex object graphs, complex lifetimes, or
@@ -50,6 +51,7 @@ different lifetimes become entangled in a graph. The costs are that resource
 release within an arena might not be deterministic, and that some resources may
 have longer lifetimes than strictly necessary.</small><aside><p>Thanks to David Adrian and Jon Callas for reading earlier drafts of this post
 and nudging me to make it less unclear. If it’s still too gnomic, drop me a
-line. ☺️</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the
+line. ☺️</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is
+in the
 Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>
