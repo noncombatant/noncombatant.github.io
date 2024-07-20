@@ -22,6 +22,7 @@ const qualifiers = [
   "Register",
   "Implicit",
   "Agonistic",
+  "Antagonistic",
   "Strongly Monadic",
   "Weakly Monadic",
   "Untyped",
@@ -54,10 +55,21 @@ const qualifiers = [
   "Concrete",
   "Undefined",
   "User-friendly",
+  "User-defined",
+  "Well-defined",
   "Recursive",
   "Modern",
   "Temporal",
   "Signednessless",
+  "Genericized",
+  "Constexpr",
+  "Type=safe",
+  "Memory-safe",
+  "Ranged",
+  "Deranged",
+  "Overloadable",
+  "Multi-paradigmatic",
+  "Intrinsic",
 ]
 
 const adjectiveyNouns = [
@@ -82,6 +94,8 @@ const adjectiveyNouns = [
   "Lambda",
   "Iterator",
   "Behavior",
+  "Functor",
+  "Qualified",
 ]
 
 const nouns = [
@@ -117,6 +131,9 @@ const nouns = [
   "Parsers",
   "References",
   "L-values",
+  "GL-values",
+  "PR-values",
+  "X-values",
   "Temploids",
   "Closures",
   "Functors",
@@ -128,17 +145,20 @@ const nouns = [
   "Lambdas",
   "Ranges",
   "Iterators",
+  "Overloads",
+  "Constexprs",
+  "Type Qualifiers",
 ]
 
-const randomElement = function(a) {
+const randomElement = function (a) {
   return a[Math.floor(Math.random() * a.length)]
 }
 
-const setSingleTextChild = function(element, text) {
+const setSingleTextChild = function (element, text) {
   (element.childNodes[0] || element.appendChild(document.createTextNode(""))).data = text
 }
 
-const regenerate = function() {
+const regenerate = function () {
   setSingleTextChild(version, "C++" + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10))
   setSingleTextChild(horror, randomElement(qualifiers) + " " + randomElement(adjectiveyNouns) + " " + randomElement(nouns))
 }
