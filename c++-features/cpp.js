@@ -79,6 +79,8 @@ const qualifiers = [
   "Reified",
   "Category-theoretic",
   "Throwable",
+  "Unwanted",
+  "Uninitialized",
 ]
 
 const adjectiveyNouns = [
