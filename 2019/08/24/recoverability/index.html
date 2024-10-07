@@ -9,7 +9,7 @@ The ability to fully assert ownership and control over the machine and all its
 operations. (This includes the ability to fully <i>relinquish</i> control of the
 machine, too.)<p>Recoverability is crucial in many everyday situations:<ul><li>When the machine changes ownership (new and used purchases, gifts, loaner
 machines from the help desk, et c.).<li>When decommissioning the machine, you want to ensure that the machine is
-entirely clean of your data — including sensitive documents and files, but also
+entirely clean of your data — including sensitive documents and files, but also
 access tokens and credentials.<li>When borrowing the computer (from a friend, at the copy shop, at the public
 library, et c.).<li>After an attacker has compromised the machine.<li>When people (e.g. family members, roommates) share a computer or phone.
 (This scenario can involve hostility, e.g. intimate partner surveillance and
@@ -31,10 +31,11 @@ data and code can remain, thwarting our ability to recover the device. <a href=h
 might hide in the firmware</a>. (Many peripherals, including <a href=https://mobile.twitter.com/Foone/status/1161421430178766853>keyboards</a>,
 network interfaces, storage devices, cameras, <a href=https://www.theverge.com/2016/10/28/13454052/apple-macbook-pro-touch-bar-apple-watch-features>the
 Mac Touchbar</a>, and more have updatable firmware.) <a href=https://securitywatch.pcmag.com/privacy/320343-how-to-securely-dispose-of-a-printer>Many
-printers and scanners keep a copy of what they’ve printed and scanned</a> — how
+printers and scanners keep a copy of what they’ve printed and scanned</a> — how
 do you wipe your tax records off your printer before selling it on Craigslist?
 And so on.<h2>‘Easy’ Solutions</h2><p>It might seem that we could ease recoverability by designing the system such
-that it is essentially <a href=https://en.wikipedia.org/wiki/W%5EX>W^X</a> —  writable data can never become executable code. However, it is very close to
+that it is essentially <a href=https://en.wikipedia.org/wiki/W%5EX>W^X</a>
+— writable data can never become executable code. However, it is very close to
 impossible to achieve this for a variety of reasons. Among others:<ul><li>The system might <a href=https://en.wikipedia.org/wiki/Interpreted_language>interpret data as
 code</a> (this includes configuration files). This is so useful that system
 designers can’t help themselves, or even don’t realize they’re doing it.<li>It means giving up updatability. Is that even worse for safety than poor
@@ -54,8 +55,8 @@ updates, including in non-volatile memory, but all updates are authenticated
 (such as by cryptographic code and keys from ROM or a TPM). This gives us a good
 degree of recoverability until the non-updatable <a href=https://www.macrumors.com/2013/06/24/apples-ios-7-lightning-connector-authentication-check-permanently-cracked/>crypto
 is cracked</a>. (See also <a href=https://www.usb.org/sites/default/files/2019-01/USB-IF_USB%20Type-C%20Authentication%20Program%20Press%20Release_FINAL_20181227.pdf>USB-C
-authentication</a>.)<p>For data confidentiality —  mainly, rendering data unusable upon
-relinquishment —  the only real way is to always write only ciphertext into
+authentication</a>.)<p>For data confidentiality — mainly, rendering data unusable upon
+relinquishment — the only real way is to always write only ciphertext into
 non-volatile memory, then to destroy the key when relinquishing. Modern storage
 technology does not give us a way to be sure that data is deleted. (See e.g. <a href=https://www.ontrack.com/blog/2016/10/25/wear-leveling/>wear-leveling</a>.)
 We can only hope to make it indecipherable.<figure><img src=ios-security-effaceable.png width=436 height=290 alt="Screenshot of Apple iOS Security Guide: “The Erase All Content and Settings
@@ -70,7 +71,7 @@ system).<h2>The Hardest Case: Compromise</h2><p>What are you actually, really su
 it has been compromised?<p>Recovering and re-verifying the integrity of all your data and network
 accounts could be the topic of several books. For this post, I just mean the
 computer itself. After a successful attack, is your computer merely <a href=https://en.wikipedia.org/wiki/Electronic_waste#Amount_of_electronic_waste_worldwide>e-waste</a>?</p><p>Unfortunately, <b>all</b> your software and forgotten firmware is potentially
-relevant attack surface but also a potential persistence mechanism —  breaking
+relevant attack surface but also a potential persistence mechanism — breaking
 recoverability. We have to assume the worst in case of actual compromise. But
 depending on the hardware and firmware design, we may not have a way to recover
 all the firmwares. This includes those in the storage devices, which can break
