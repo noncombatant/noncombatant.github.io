@@ -81,6 +81,11 @@ const qualifiers = [
   "Throwable",
   "Unwanted",
   "Uninitialized",
+  "De-virtualized",
+  "Re-virtualized",
+  "Type-erased",
+  "Committee-neutralized",
+  "Modular",
 ]
 
 const adjectiveyNouns = [
@@ -110,6 +115,8 @@ const adjectiveyNouns = [
   "Vector",
   "Map",
   "Nothrow",
+  "Concept",
+  "Module",
 ]
 
 const nouns = [
@@ -169,6 +176,8 @@ const nouns = [
   "Errors",
   "Exceptions",
   "Bugs",
+  "Concepts",
+  "Modules",
 ]
 
 const randomElement = function (a) {
