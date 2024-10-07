@@ -36,7 +36,7 @@ method in Python, or the <code>hashCode</code> method in Java).<li>A <a href=htt
 search tree</a>. Fast (O(lg n)). Unlike in a hash table, the keys will be
 ordered.  This could be a useful property.<li>A <a href=http://en.wikipedia.org/wiki/Skip_list>skip list</a>.</ul><p>Note that although a general-purpose map is useful for many problems, it is
 not always ideal for a particular problem. For example, although you can use a
-map as a set, it’s a bit of a waste of space — it’s a set of key-value pairs,
+map as a set, it’s a bit of a waste of space — it’s a set of key-value pairs,
 but you only need the key. Similarly, maybe you need not only to take the unique
 elements from a group of elements, but also to print them out in sorted order.
 If your dictionary type is implemented as a hash table, you’ll have to sort the
@@ -49,7 +49,7 @@ map and set implementations. For example, C++ has <a href=http://www.cplusplus.c
 and <a href=http://www.cplusplus.com/reference/unordered_set/>unordered_set</a>.
 The <a href=http://docs.oracle.com/javase/7/docs/api/java/util/Map.html>Java Map
 interface</a> has many implementations. Other languages, like Python, Perl,
-Ruby, and JavaScript, provide just one map implementation — usually a hash
+Ruby, and JavaScript, provide just one map implementation — usually a hash
 table of some kind. Some, like Python, also provide a distinct <a href=http://docs.python.org/2/library/stdtypes.html#set>set</a> type or
 API, and you should use it when it fits your needs.<p>It’s a good exercise to implement a map yourself, in at least one way, in
 at least one language. I recommend starting with a simple hash table, and

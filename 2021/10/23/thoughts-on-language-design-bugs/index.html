@@ -11,7 +11,7 @@ implies and what to do about it is not necessarily obvious. So here are some
 lightly paraphrased questions, and my general thoughts.<p>(The 1st-biggest problem is all about human factors: abuse, phishing, and
 accessibility.)<div id=toc></div><h2>Is JavaScript Memory-Unsafe?</h2><blockquote>Why do you call JS and Python ‘safer’? Since (e.g.) JavaScript is
 implemented in C++, doesn’t that make it just as memory-unsafe as
-C/C++?</blockquote><p>Yes — and no. The kernels of the implementations of languages like Python,
+C/C++?</blockquote><p>Yes — and no. The kernels of the implementations of languages like Python,
 JavaScript (JS), and Java are typically in C/C++ and they certainly do exhibit
 memory unsafety and other C/C++ undefined behavior (UB) bugs. (Memory unsafety
 is a subclass of UB.) However, these languages intend to limit UB as part of
@@ -22,7 +22,7 @@ implementation getting closer to the interface semantics. The implementation can
 inch closer to the ideal of the interface, and the community can adopt the
 improvement at scale.<p>In C/C++, by contrast, UB is considered <b>a design ‘feature’, not a bug</b>.
 The language design committees and compiler developers won’t fix such bugs. Even
-brand new features in C++ introduce new UB — it’s not considered a historical
+brand new features in C++ introduce new UB —  it’s not considered a historical
 mistake to be corrected.<p>It might seem like Python, JS, et c. are safe wrappers around unsafe code.
 And they can be, and (depending on the specific implementation) more or less
 are. For example, if an application implemented in Python is successfully
@@ -37,8 +37,8 @@ exists, and is apparent.<p>JS implementations are quite complex and large. Any l
 is going to have a lot of problems. By contrast, the implementations of (say)
 Lua and Self are notably concise, and Python is large but not huge. (And a good
 chunk of Python’s size is auto-generated code.) If we assume roughly equivalent
-bug-density per line across developers — in general we have no reason to assume
-otherwise — less code means fewer bugs.<p>Additionally, defensive and offensive security research teams are hunting
+bug-density per line across developers —  in general we have no reason to assume
+otherwise —  less code means fewer bugs.<p>Additionally, defensive and offensive security research teams are hunting
 night and day, en masse and at scale, for bugs in JS implementations
 specifically. If another language suddenly grew to equivalent prominence, it
 might face similar scrutiny and perhaps the known bug count would go up.<p>But there is a 3rd critical issue: Many of the bugs affecting JS
@@ -50,16 +50,15 @@ sense in some circumstances, but in the vast majority of cases it’s the wrong
 trade-off.)<p>As part of achieving high performance, JS engines typically include several
 different run-time compilers (just-in-time or JIT compilers) to transform the
 code at run-time into a faster form. To build not 1 but several such systems
-into your language implementation is a significant and complex undertaking
-— especially when the pressure is on to go fast and save battery life on
+into your language implementation is a significant and complex undertaking —  especially when the pressure is on to go fast and save battery life on
 people’s phones.<p>For example, JS implementations often have JIT optimization bugs that go
 something like this: “We thought we could optimize by removing this dynamic type
 check, because we thought we had a solid argument that the object is guaranteed
 to be of type <code>T</code>. But, we were wrong.” (This kind of thing is quite
 hard to get right.) And then the JIT emits memory-unsafe object code due to
 erroneous assumptions during compilation. This class of bug is not due directly
-or uniquely to C/C++.<h2>Why Don’t We Rewrite Everything In Safer Languages?</h2><blockquote>Given that C/C++ UB creates so many problems — causing the
-implementations of languages to not live up to their designs — why aren’t the
+or uniquely to C/C++.<h2>Why Don’t We Rewrite Everything In Safer Languages?</h2><blockquote>Given that C/C++ UB creates so many problems —  causing the
+implementations of languages to not live up to their designs — why aren’t the
 likes of Python and other languages being rewritten in memory-safe
 languages?</blockquote><p>First, because it’s expensive to do that. There are whole teams working hard
 to make it less expensive to transition large codebases from C/C++ to modern
@@ -78,7 +77,7 @@ to move from state 1 to state 2 with an object of type <code>T1</code>, only
 with a <code>T2</code>. This is known as <a href=https://cliffle.com/blog/rust-typestate/>the typestate pattern</a>, and
 it might help with certain of the problems that dynamic language run-times
 face.)<h3>Micro-Performance vs Correctness: An Ecosystem Problem</h3><p>To a significant extent, though, the semantics of JS, Lua, and Python are
-highly dynamic — and that means there’s an inherent tension between the run-time
+highly dynamic —  and that means there’s an inherent tension between the run-time
 cost of dynamic correctness checks vs. raw micro-performance. Dynamism is an
 awesome feature, but it comes at the cost of some machine-level performance.<p>I believe the right approach to this trade-off is to focus on
 macro-performance, and to stop worrying about micro-performance for a while.<p>(At an absolute level, the micro-performance of modern JS engines is
@@ -87,10 +86,10 @@ is that the developers of these engines have already done the impossible 10
 times over, and now they’re looking for some 11th win. And, who knows... they’re
 so good at what they do, they might very well find it. JS engine developers have
 effectively solved the micro-performance problem of dynamic languages. It’s
-impossible to understate the excellence of that — in part because it makes safer
+impossible to understate the excellence of that —  in part because it makes safer
 languages that much more applicable and deployable! So we should all thank
-performance-oriented engineers for this safety.)<p>What’s wrong with JS performance — why some pages or apps make your phone
-warm — no longer has much to do with whether we do or don’t elide a dynamic
+performance-oriented engineers for this safety.)<p>What’s wrong with JS performance —  why some pages or apps make your phone
+warm —  no longer has much to do with whether we do or don’t elide a dynamic
 correctness check. It’s all about JS ecosystem problems.<ul><li><p>Your favorite news site pulls in garbage from Outbrain or whomever. <a href=https://en.wikipedia.org/wiki/Transclusion>Transclusion</a> is a key
 (beautiful) feature of the web, but page authors often transclude content
 developed by maniacs who have no concern for the performance and reputation of
@@ -161,7 +160,7 @@ and avoid the problems of these languages.<ul><li><p>Ignore and replace the stan
 and recent design bugs. Fortunately, alternatives exist: for example, you can <a href=https://github.com/abseil/abseil-cpp/blob/master/absl/base/options.h#L211>harden
 Abseil</a>, and/or write your own replacements that prioritize your
 requirements. It’s sad that we have to do this, but we do.<p>On the bright side, we stand to gain a lot of efficiency <b>and</b>
-correctness <b>and</b> ergonomics — the standard libraries leave us in the rare
+correctness <b>and</b> ergonomics —  the standard libraries leave us in the rare
 position of not necessarily having to trade these things off. Take this
 opportunity! Abseil did, and it’s great.<p>From an ecosystem perspective, it would be much better if the correctness-
 and safety-interested C++ communities rallied around a few new API designs and
@@ -169,7 +168,7 @@ new implementations: a new standard built to modern expectations.<li><p>Paper ov
 can do this with non-standard compiler flags: turn on bounds-checking for
 arrays, turn on Undefined Behavior Sanitizer in trapping mode in production, and
 turn on all compiler warnings and actually think about them. (Even the annoying
-ones can point to real bugs — yes, even <code>-Wpadded</code>.)<p>Create new types to replace the built-in types. (Many people have made their
+ones can point to real bugs —  yes, even <code>-Wpadded</code>.)<p>Create new types to replace the built-in types. (Many people have made their
 own integers, for example; here’s <a href=https://github.com/Google/integers>my start at a run at the integer
 semantics problem</a>. I include pointers to several other designs on the idea.
 I don’t claim mine is perfect, but I do think some form of integer improvement

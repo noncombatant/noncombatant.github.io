@@ -11,7 +11,7 @@ extremely reasonable concern about the high cost of “rewriting it all in Rust�
 browsers, complex online services, and so on can be implemented with tens of
 millions of lines of C/C++ code. (<a href=https://www.technologyreview.com/2012/12/03/181350/many-cars-have-a-hundred-million-lines-of-code/>Sometimes
 more</a>.) Rewriting all that seems prohibitively expensive, and exacerbates <a href=https://www.usenix.org/conference/enigma2021/presentation/gaynor>what
-Alex Gaynor aptly calls grief</a> — people stay in the denial stage longer when
+Alex Gaynor aptly calls grief</a> —  people stay in the denial stage longer when
 struck by the enormity of the memory unsafety problem.<p>Thankfully, <a href=https://wiki.mozilla.org/Oxidation>replacing C/C++ with
 code in a safer language</a> is not an all-or-nothing task. We can do it
 gradually; some parts we might never need to replace. Most safer languages can
@@ -24,8 +24,8 @@ arbitrary image (e.g.) formats from the internet, use a safer language to
 normalize them into Skia’s simple <code>SkBitmap</code> format, and then handle
 the bitmaps in Skia in C++. This simplifies the C++ code (reducing its attack
 surface), and provides a simple cross-language interface.</figcaption></figure><p>But how do you tell where to start replacing C/C++ with safer code, and where
-to stop?<p>Although security is certainly not the only benefit of a safe language — the
-Android team’s post starts out stressing correctness — my perspective is
+to stop?<p>Although security is certainly not the only benefit of a safe language —  the
+Android team’s post starts out stressing correctness — my perspective is
 security. And from that starting point, we can use what I think is a pretty
 clear method to prioritize our efforts.<p>Even if you have, say, 20 million lines of C++ code, not all of it is
 directly or indirectly exposed to attackers. You can start hardening the most
@@ -36,7 +36,7 @@ them mean-spirited packets by radio. We can model the attack surface exposure
 something like this:<figure><img src=surface-01.png width=356 height=59 alt="attacker → radio
 chip → kernel" loading=lazy><figcaption>An attack pathway from the internet
 to the kernel.</figcaption></figure><p>That’s a bit of an oversimplification, but it lets us see that the attacker’s
-call graph is not very deep — that is, that driver is pretty exposed.<p>Additionally, as the title of Ian’s post points out, the attacker’s cost to
+call graph is not very deep —  that is, that driver is pretty exposed.<p>Additionally, as the title of Ian’s post points out, the attacker’s cost to
 traverse the first few edges is 0. We can model that by assigning ‘weight’ or
 ‘cost’ to the edges in the graph. The higher the cost, the less likely it is
 that the attacker will succeed. Assuming the radio is fairly simple and does
@@ -55,7 +55,7 @@ this:<figure><img src=surface-03.png width=739 height=61 alt="attacker → (0,
 low, or medium) net interface → (passthru) kernel → (passthru) TCP → (low or
 medium) TLS" loading=lazy><figcaption>An attack pathway from the internet to
 the application’s TLS implementation.</figcaption></figure><p>In this case, the attacker is interested only in the application’s TLS
-implementation, and is just using the kernel as a way to get there — they are
+implementation, and is just using the kernel as a way to get there —  they are
 not attacking the device driver or the TCP implementation. (Although those are
 also exposed attack surfaces, of course.) The kernel typically does not do
 anything with the application layer traffic, passing it verbatim to the userland
@@ -94,7 +94,7 @@ privilege so you can’t use that as a filter. Or if you are in userland, but yo
 application is not making use of process sandboxing, consider exploring that
 first before starting a rewrite effort.<p>In any case, we don’t have to “rewrite everything in Rust” to significantly
 improve memory safety, and we are not lost in a sea of undifferentiated attack
-surface. There are ways we can prioritize in a somewhat systematic way — we
+surface. There are ways we can prioritize in a somewhat systematic way —  we
 don’t have to fix random things ad hoc.<p><i>Thanks to Jacob Hoffman-Andrews, Andrew Dunham, and Dev Akhawe for reading
 drafts of this post and suggesting helpful improvements!</i><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is
 in the

@@ -30,8 +30,8 @@ JSON ‘grammar’</a> allows for arbitrarily-long sequences of digits in numeri
 value literals, but the JavaScript language uses fixed-size, 64-bit IEEE
 floating point values to represent numbers. JavaScript can correctly represent
 <a href=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger>only
-53-bit integers</a>.</dl><h3>The Paradox Of Validation</h3><p>If the input language is sufficiently complex — <a href=https://en.wikipedia.org/wiki/XML>which is all too likely in the real
-world</a> — it might be impossible to write a safe validator. In this case, we
+53-bit integers</a>.</dl><h3>The Paradox Of Validation</h3><p>If the input language is sufficiently complex —  <a href=https://en.wikipedia.org/wiki/XML>which is all too likely in the real
+world</a> —  it might be impossible to write a safe validator. In this case, we
 have a paradox: the RP can only trust itself to validate its inputs, but cannot
 safely do so. For example, consider a web server that needs to validate XML
 inputs, or <a href=http://www.c7zero.info/stuff/ASN1_parsing_issues_in_crypto_Latincrypt2015.pdf>applications
@@ -98,8 +98,8 @@ specify a language, and because a few people are still using JSON. Still, we can
 sometimes tighten the effective definitions of poor languages that we are forced
 to accept, by defining subsets and dialects and by writing them into the API
 definition. (E.g., for a JSON validator: “This function will throw
-<code>RangeException</code> for integers not in the range –(2<sup>53</sup> – 1)
-.. 2<sup>53</sup> – 1, inclusive.”)<dt>Sandbox to constrain side-effects.<dd><p>This is ‘obvious’, but it’s <a href=https://scarybeastsecurity.blogspot.com/2017/05/bleed-continues-18-byte-file-14k-bounty.html>not
+<code>RangeException</code> for integers not in the range – (2<sup>53</sup> – 1)
+.. 2<sup>53</sup> –  1, inclusive.”)<dt>Sandbox to constrain side-effects.<dd><p>This is ‘obvious’, but it’s <a href=https://scarybeastsecurity.blogspot.com/2017/05/bleed-continues-18-byte-file-14k-bounty.html>not
 done nearly as often as it should be</a>. <a href=https://android.googlesource.com/platform/external/minijail/>Minijail is
 a good sandboxing option for Linux</a>. There is also <a href=https://github.com/google/nsjail>NsJail</a>.<dt>Cross-implementation unit and integration tests.<dd><p>My favorite example is <a href=http://seriot.ch/parsing_json.php>Nicolas Seriot’s JSON torture
 test/freak show</a>.</dl><h3>Benefits Of Safety And Simplicity</h3><p>A memory-safe implementation of a validator for a language with no

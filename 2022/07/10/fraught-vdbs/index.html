@@ -5,8 +5,8 @@
 💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a>
 🐘&nbsp;<a rel=me href=https://wandering.shop/@fugueish>Mastodon</a></nav><h1>The Fraught Utility Of Vulnerability Disclosure Databases</h1><p><time>10 July 2022</time><p>Do we need vulnerability databases? Are the ones we have working? Should we
 do something else? How can we improve our overall approach to the “WTF is going
-on?” problem?<p>My strong bias is toward the scientific method — which requires open inquiry
-and easy access to knowledge — and against unreliable or false metrics. I also
+on?” problem?<p>My strong bias is toward the scientific method —  which requires open inquiry
+and easy access to knowledge —  and against unreliable or false metrics. I also
 strongly resist any make-work or boondoggling that is not directly relevant to
 understanding how software works and fails, and making it work more
 goodlier.<p>So, I tried to think about vulnerability databases, and what all we might
@@ -59,30 +59,29 @@ notes, hopefully including a link to the bug tracker. (<a href=https://chromium.
 policy</a> is to make security bugs public 14 weeks after the fix has shipped,
 so a link to the bug tracker will become valuable in time.)<h2>Prioritizing Vulnerability Response</h2><p>What do we want in a vulnerability ‘scoring’ system? (Do we want a
 vulnerability scoring system?)<p>As an experiment, I imagined a hypothetical easy to use, network-based,
-denial of service (DoS — not <a href=https://en.wikipedia.org/wiki/Denial-of-service_attack#Distributed_DoS>DDoS</a>)
+denial of service (DoS —  not <a href=https://en.wikipedia.org/wiki/Denial-of-service_attack#Distributed_DoS>DDoS</a>)
 attack, and tried to score it with CVSS. I assumed there is an existing exploit
 that doesn’t completely take down a service, but causes it to consume lots of
 time and/or space.<p><a id=fn4_back></a>For example, imagine a database query that, for some
 reason, is slow in a given database engine. It is for some reason (less than SQL
 injection, more than just using the site normally) remotely-triggerable. Perhaps
 an attacker can make some unauthenticated web request that invokes this
-expensive query, and it’s expensive only because the query planner has a bug
-— normally, the query would be efficient<a href=#fn4>④</a>.<p>The CVSS vector I got is<pre>
+expensive query, and it’s expensive only because the query planner has a bug —  normally, the query would be efficient<a href=#fn4>④</a>.<p>The CVSS vector I got is<pre>
 AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L/E:F/RL:U/RC:C/CR:X/IR:X/AR:H/MAV:N/MAC:L/MPR:N/MUI:N/MS:U/MC:N/MI:N/MA:L
 </pre><p>which scores 6.0 in <a href=https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator>NIST’s CVSS 3.1
 calculator</a>.<p>Since that string is just noise, let’s look at a graphic:<figure><img src=calculator.png width=1024 height=302 alt="A screenshot of
 the NIST CVSS calculator showing the hypothetical bug with a score of 6.0" loading=lazy><figcaption>More readable, though not more
 informative.</figcaption></figure><p>What does “6.0” mean? Is it high enough to call <a href=https://en.wikipedia.org/wiki/Site_reliability_engineering>the on-call
 SRE</a>? Do we only get out of bed for 7.5 or higher? (Why 7.5?) Is this bug bad
-enough to call the vendor to complain — or sue?<p>Some people might use CVSS to make that kind of decision. It is, after all, a
+enough to call the vendor to complain —  or sue?<p>Some people might use CVSS to make that kind of decision. It is, after all, a
 score telling you how severe a problem is.<p>But there is no single threat model, so there can be no single score that
 suits all audiences. Not everyone who uses the DoS-able database engine makes
 that kind of inefficient query. Not all deployers of vulnerable platforms need
-to worry, even if the bug is present — maybe their servers are overprovisioned
+to worry, even if the bug is present —  maybe their servers are overprovisioned
 relative to their load.<p>But what about a shopping site? What about a shopping site during the winter
 holiday season? Such a deployer can put a concrete dollar value on the cost of
 downtime, and that cost changes from quarter to quarter. In turn, that will
-change how the deployer prioritizes different vulnerabilities.<p>Nor do the scores map to real-world costs and risks — will a vulnerability
+change how the deployer prioritizes different vulnerabilities.<p>Nor do the scores map to real-world costs and risks —  will a vulnerability
 with a CVSS score of 10.0 cost you twice as much as (or, say, 5 orders of
 magnitude more than) one with a score of 5.0? The question is nonsensical
 because nobody has the same cost model, either.<p>The CVSS people are aware of these problems, and have tried to address them.
@@ -99,11 +98,11 @@ change over time by leveraging CVSS Temporal and Environmental Metrics. More
 appropriately, a comprehensive risk assessment system should be employed that
 considers more factors than simply the CVSS Base Score. Such systems typically
 also consider factors outside the scope of CVSS such as exposure and threat.</blockquote><p>CVSS 3.0 and greater were (presumably) devised to address the problem of
-nonsensical scores, such as that <a href=https://heartbleed.com/>Heartbleed</a> — a bug that lets unauthenticated
-internet attackers read secrets out of a server’s memory — <a href=https://nvd.nist.gov/vuln/detail/cve-2014-0160>scored only 5.0 at the
+nonsensical scores, such as that <a href=https://heartbleed.com/>Heartbleed</a> —  a bug that lets unauthenticated
+internet attackers read secrets out of a server’s memory — <a href=https://nvd.nist.gov/vuln/detail/cve-2014-0160>scored only 5.0 at the
 time</a>. (Click the <b>CVSS Version 2.0</b> button to see it.) At least in the
 case of Heartbleed, CVSS 3 results in scores that seem more ‘intuitively
-accurate’ — to those of us assuming a particular class of threat model.<p>However, I find that section quoted above to be a bit of a cop-out, given how
+accurate’ —  to those of us assuming a particular class of threat model.<p>However, I find that section quoted above to be a bit of a cop-out, given how
 people have reported using CVSS to me. People are using it to make operational
 decisions. It also feels insufficient: it’s not just that risk is different for
 different people at different times, it’s that severity can vary too!<p>Imagine that a hypothetical shopping app deployer has deployed the DoS-able
@@ -116,22 +115,22 @@ successful attack has stayed the same. This deployer has effectively mitigated
 the bug. (This deployment strategy can mitigate many potential bugs, and can
 change how the deployer prioritizes a wide variety of vulnerabilities.)<p>Another problem with CVSS is its <a href=https://en.wikipedia.org/wiki/False_precision>false precision</a>. If you
 look at the calculator, you’ll see that the ‘measurements’ you can make about a
-vulnerability are of very coarse ‘precision’, e.g. None – Low – High, or (for
-Exploit Code Maturity) Not Defined – Unproven – PoC – Functional – High. The
+vulnerability are of very coarse ‘precision’, e.g. None –  Low –  High, or (for
+Exploit Code Maturity) Not Defined –  Unproven –  PoC – Functional – High. The
 measurements are in tertiles, quartiles, and quintiles, yet the calculator
 produces results purporting 2 significant figures (e.g. 6.2). This is an
 illusion produced by the arithmetic of the CVSS scoring procedure, not actual
 measurements of real bug severity.<p>I have my doubts about whether the severity of vulnerabilities can be scored
 at all, especially without lots and lots of deployer-specific context. Even with
-that context, you still also need a well-grounded cost model — but it is very
+that context, you still also need a well-grounded cost model —  but it is very
 difficult to get one. Not all users that a given deployer is serving will share
 a given model, so you may need many cost models. And then you need a way to
-balance the concerns of all your constituents — another complex and
+balance the concerns of all your constituents —  another complex and
 hard-to-ground model. In real life, people make risk decisions much more
 qualitatively than we or they would like to believe.<p>That doesn’t mean we shouldn’t strive for well-grounded quantitative models!
 Just that we need to be prepared to act without them, and that CVSS is not
 one.<p>If we do away with the spurious numbers and just treat CVSS as purely
-qualitative — which it is, <b>and which is fine!</b> — we’d have a more honest
+qualitative —  which it is, <b>and which is fine!</b> —  we’d have a more honest
 and safer-to-use system. (Nobody is really worrying about the difference between
 7.6 and 7.4 anyway. At least I hope not.) The basic qualities that CVSS
 encompasses are all important and useful, and account for many of the desiderata
@@ -144,7 +143,7 @@ the CVE database (as OVE proposes to do, and which could be done by giving each
 pseudo-quantities.</ul><p>However, it will never be possible to beat the information richness,
 searchability, or authoritativeness of a well-run developer communications
 program. (This is especially true for projects that are open source as well as
-being well-run.) Also great are well-run researcher communications programs — <a href=/2022/04/22/itw-taxonomy/>Taxonomy Of In-The-Wild Exploitation</a> was
+being well-run.) Also great are well-run researcher communications programs —  <a href=/2022/04/22/itw-taxonomy/>Taxonomy Of In-The-Wild Exploitation</a> was
 only possible because so many researchers wrote so many great blog posts and
 PoCs. (Thank you!)<p>Additionally, there will always be vulnerabilities that are known and fixed
 but which don’t get VDB entries. <b>In my experience, the majority of
@@ -157,10 +156,9 @@ developers don’t even realize (or want to admit) that they are fixing a
 vulnerability (as opposed to just a regular bug). And sometimes their own bug
 trackers are already easier to use and more useful than a global database.<p>Therefore no VDB can ever be the sole trigger for action on the part of
 deployers. The only reliable way to get all the available fixes is to track the
-latest stable version. No matter how good any VDB gets, that will always be true
-— and deployers who do so will be insulated from gaps and mistakes on the part
-of developers and of VDB programs.<p>For the sake of public safety — and, honestly, just for the pride of
-engineering excellence — we must improve the quality and discoverability of
+latest stable version. No matter how good any VDB gets, that will always be true —  and deployers who do so will be insulated from gaps and mistakes on the part
+of developers and of VDB programs.<p>For the sake of public safety —  and, honestly, just for the pride of
+engineering excellence —  we must improve the quality and discoverability of
 vulnerability information, and reduce the cost of providing and getting it.
 There’s a lot of room for us to do a lot better as a community. The status quo
 is not working.<hr><p><a id=fn1></a><a href=#fn1_back><b>1.</b></a> When CVE alerts are of

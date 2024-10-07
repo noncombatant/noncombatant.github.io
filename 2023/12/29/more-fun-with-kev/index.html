@@ -25,9 +25,9 @@ graphs, <a href=/2023/05/29/complexities-of-allocation/>nothing but
 heap-walking garbage collection is reliable for achieving temporal safety</a>.
 (GC; as opposed to less expensive lifetime management approaches like reference
 counting, arena allocation, and so on.) Temporal safety is much harder in
-general to fix efficiently than is spatial unsafety.<p>Moreover, browsers — which by definition must have complex object graphs (due
+general to fix efficiently than is spatial unsafety.<p>Moreover, browsers — which by definition must have complex object graphs (due
 to for example the HTML DOM, JavaScript, and cross-process IPC with entangled
-object lifetimes) — are naturally a big focus of exploit developers’ attention.
+object lifetimes) —  are naturally a big focus of exploit developers’ attention.
 For efficiency reasons, browsers tend not to use GC for much of the browser’s
 own internals. I think that accounts for the prominence of UAF in the 2023
 catalog.<p>Let’s consider MITRE’s classification system, though.<h2>Taxonomic Tangles</h2><p>At its core, I find <a href=https://cwe.mitre.org/>the Common Weaknesses
@@ -38,8 +38,8 @@ overflow</a> and <a href=https://cwe.mitre.org/data/definitions/787.html>CWE-787
 write</a>. It’s not immediately clear what the important differences between
 these 2 taxa are. After reading their definitions, I find it even less clear.
 Were the heap-overflows all reads, not writes? Were the OOB writes all on the
-stack?<p>At the high level of analysis we are doing here — that is, helping managers
-and engineers allocate their time and attention most effectively — the read vs.
+stack?<p>At the high level of analysis we are doing here — that is, helping managers
+and engineers allocate their time and attention most effectively —  the read vs.
 write distinction matters, but I’m not sure the heap vs. stack (vs. <a href=https://en.wikipedia.org/wiki/.bss>BSS</a>) part is the biggest deal. It
 matters to exploit developers, but the solutions look similar and have similar
 costs to develop.<p>There is also a <a href=https://cwe.mitre.org/data/definitions/788.html>CWE-788 access of memory
@@ -63,7 +63,7 @@ solving UAF typically does. Allocation and deallocation necessarily have a much
 greater impact on software efficiency and development cost than does the spatial
 safety fix above.<p>Similarly, the 4th-biggest problem of 2023 in MITRE’s analysis is <a href=https://cwe.mitre.org/data/definitions/20.html>CWE-20 improper input
 validation</a>. As defined, that could be a key contributing factor to all of
-the other top 9 problems — and often is. (That
+the other top 9 problems —  and often is. (That
 <code>ABSL_HARDENING_ASSERT</code> above is proper input validation, for
 example.)<p>Along the same lines, type confusion (#8) could lead to spatial unsafety,
 could be an exploitable outcome of UAF, and could be part of the exploitation of
