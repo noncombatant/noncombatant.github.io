@@ -183,5 +183,5 @@ const regenerate = function () {
   console.log("eep")
 }
 
-tryAgain.addEventListener("click", regenerate)
+//tryAgain.addEventListener("click", regenerate)
 regenerate()
