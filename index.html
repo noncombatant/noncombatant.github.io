@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width" />
-  
   <meta name="author" content="Chris Palmer" />
   <meta name="robots" content="noai, noimageai" />
   <title>Noncombatant</title>
@@ -13,10 +12,18 @@
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>" />
 
   <style>
+    html {
+      -moz-text-size-adjust: none;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
+    }
+
     body {
        
       line-height: 1.4;
       font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+      text-wrap: pretty;
+      font-variant-numeric: oldstyle-nums proportional-nums;
 
        
       color: #222;
@@ -99,7 +106,9 @@
     }
 
     input,
-    button {
+    button,
+    textarea,
+    select {
        
       font-size: inherit;
       font-family: inherit;
@@ -114,6 +123,12 @@
       text-align: left;
       vertical-align: bottom;
       padding: 0.25em;
+    }
+
+    td,
+    math,
+    time[datetime*=":"] {
+      font-variant-numeric: tabular-nums lining-nums slashed-zero;
     }
 
      
