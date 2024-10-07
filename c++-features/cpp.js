@@ -63,13 +63,22 @@ const qualifiers = [
   "Signednessless",
   "Genericized",
   "Constexpr",
-  "Type=safe",
+  "Type-safe",
   "Memory-safe",
   "Ranged",
   "Deranged",
   "Overloadable",
   "Multi-paradigmatic",
   "Intrinsic",
+  "Lexical",
+  "Automatic",
+  "Tail-recursive",
+  "Mutually Recursive",
+  "Higher-order",
+  "Vectorized",
+  "Reified",
+  "Category-theoretic",
+  "Throwable",
 ]
 
 const adjectiveyNouns = [
@@ -96,6 +105,9 @@ const adjectiveyNouns = [
   "Behavior",
   "Functor",
   "Qualified",
+  "Vector",
+  "Map",
+  "Nothrow",
 ]
 
 const nouns = [
@@ -148,6 +160,13 @@ const nouns = [
   "Overloads",
   "Constexprs",
   "Type Qualifiers",
+  "Syntagms",
+  "Lexemes",
+  "Categories",
+  "Vulnerabilities",
+  "Errors",
+  "Exceptions",
+  "Bugs",
 ]
 
 const randomElement = function (a) {
@@ -159,7 +178,7 @@ const setSingleTextChild = function (element, text) {
 }
 
 const regenerate = function () {
-  setSingleTextChild(version, "C++" + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10))
+  setSingleTextChild(version, "C++" + (26 + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10) * 3))
   setSingleTextChild(horror, randomElement(qualifiers) + " " + randomElement(adjectiveyNouns) + " " + randomElement(nouns))
 }
 
