@@ -33,6 +33,20 @@
        
     }
 
+    :root {
+      --vf-grad: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --vf-grad: -50;
+      }
+    }
+
+    * {
+      font-variation-settings: "GRAD" var(--vf-grad, 0);
+    }
+
      
     @media (min-width: 55em) {
       body {
