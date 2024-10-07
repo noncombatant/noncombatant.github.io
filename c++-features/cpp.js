@@ -85,7 +85,12 @@ const qualifiers = [
   "Re-virtualized",
   "Type-erased",
   "Committee-neutralized",
+  "Committee-approved",
   "Modular",
+  "Vulnerable",
+  "Type-unsafe",
+  "Memory-unsafe",
+  "Low-level",
 ]
 
 const adjectiveyNouns = [
@@ -178,6 +183,7 @@ const nouns = [
   "Bugs",
   "Concepts",
   "Modules",
+  "Attack surface",
 ]
 
 const randomElement = function (a) {
