@@ -182,7 +182,6 @@ const setSingleTextChild = function (element, text) {
 const regenerate = function () {
   setSingleTextChild(version, "C++" + (26 + Math.floor(Math.random() * 10) * 3))
   setSingleTextChild(horror, randomElement(qualifiers) + " " + randomElement(adjectiveyNouns) + " " + randomElement(nouns))
-  console.log("eep")
 }
 
 tryAgain.addEventListener("click", regenerate)
