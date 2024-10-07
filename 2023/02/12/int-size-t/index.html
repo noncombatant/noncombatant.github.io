@@ -57,7 +57,7 @@ positive range of a <code>signed int</code>. So if the subscript type were
 type for all sizes, lengths, object counts, and indices/subscripts.</b> C89 and
 its standard library use it pervasively for these purposes; not just in
 allocation functions but in functions like <code>strlen</code>,
-<code>memset</code>, <code>memcpy</code> —  <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12>all those old
+<code>memset</code>, <code>memcpy</code> — <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12>all those old
 friends</a>.</p><a id=practical-implications></a><h2>Practical Implications</h2><p>I have a 64-bit machine with 32 GiB of memory. On this system,
 <code>int</code> is 32 bits and <code>size_t</code> is 64. Using C++ to get
 access to <code>std::is_signed</code>, we see:<pre>
@@ -119,7 +119,7 @@ The last byte is: A
 i.e. there is no difference in width, the difference in signedness still
 matters. You might think that, on machines of this era, since the kernel used up
 half of the 4 GiB the address space and userland got the other half, it would be
-OK for <code>size_t</code> to be a signed 32-bit type —  you can only allocate at
+OK for <code>size_t</code> to be a signed 32-bit type — you can only allocate at
 most 2 GiB anyway, right?<p>Well, no. First, it is possible, desirable, and commonplace for <a href=https://www.kernel.org/doc/html/v5.0/vm/highmem.html>the kernel to use 1
 GiB of the address space, leaving 3 GiB for userland</a> on 32-bit systems. If
 you want to write a program to operate on 2.5 GiB of data, <code>size_t</code>
@@ -155,7 +155,7 @@ subscripting. For example, this code has several bugs:<pre>
   // The signed multiplication could overflow and is technically UB. If
   // you’re lucky, your implementation might define it to be modular, and
   // to wrap. But then you’re allocating a region that cannot hold `count`
-  // `Thing`s —  it will have wrapped around to a too-small value.
+  // `Thing`s — it will have wrapped around to a too-small value.
   //
   // In any case, the result of the multiplication is cast to `size_t` for
   // the call to `malloc`, which may result in <a href=https://en.wikipedia.org/wiki/Sign_extension>sign extension</a>, which
@@ -215,7 +215,7 @@ bool check_mul(size_t* result, size_t x, size_t y) {
 style.)</s> If you use signed types, the multiplication may overflow and will
 thus be undefined, and the compiler will therefore typically assume that
 overflow cannot happen. Then it will likely ‘optimize’ the code by removing your
-‘dead’ <code>if</code> block —  removing your safety check.<p><b>Update:</b> Inevitably, sigh 😅, I got this wrong, which I would have
+‘dead’ <code>if</code> block — removing your safety check.<p><b>Update:</b> Inevitably, sigh 😅, I got this wrong, which I would have
 noticed if I had done an exhaustive check of <code>uint32_t</code> as I did for
 another problem, below. (There’s a lesson there!) Jann Horn points out that “you
 can get a multiplication overflow and still have a result that is bigger than
@@ -272,7 +272,7 @@ defined and the invalid array access is defined. This is why I like to say,
 “Java actually is what people imagine C to be.” What is UB in C is very often
 well-defined in Java.<p>That said, Java is still wrong to have used <code>int</code> as the array
 index type, even if only because it is an unnecessary limitation on program data
-size (as discussed above). But it also leads to this incorrectness problem —  in
+size (as discussed above). But it also leads to this incorrectness problem — in
 Java, the program will <code>throw</code> when it actually could have
 successfully completed the binary search. Bloch notes that 1 way to fix it is to
 use (you guessed it) unsigned arithmetic:<blockquote><p>Probably faster, and arguably as clear is:<pre>
@@ -283,7 +283,7 @@ mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1;
 </pre></blockquote><p>Those approaches will work when <code>low</code> and <code>high</code> are
 <code>int</code>s and thus their sum will always fit in <code>unsigned
 int</code>.<p>But if we used the correct index type, <code>size_t</code>, we don’t have the
-extra headroom of <code>unsigned</code> —  it’s already unsigned —  so we need to
+extra headroom of <code>unsigned</code> — it’s already unsigned — so we need to
 actually ensure that the overflow does not happen. Bloch’s first solution,<blockquote><pre>
 int mid = low + ((high - low) / 2);
 </pre></blockquote><p>is the only one that yields the correct midpoint in all cases.<p>To see why, consider an extreme case, in which we are indexing a giant array
@@ -362,10 +362,10 @@ Created sorted array of `uint32_t` values.
 ^C
 ./exhaustive i  1031.42s user 18.88s system 95% cpu 18:22.13 total
 </pre><h2>Conclusion</h2><p>Types matter. That ‘everything is an <code>int</code> in C’ is no more true
-than that ‘everything is a list in Lisp’ —  and we should be glad of that! <a href=https://en.wikipedia.org/wiki/B_(programming_language)>The nearly
+than that ‘everything is a list in Lisp’ — and we should be glad of that! <a href=https://en.wikipedia.org/wiki/B_(programming_language)>The nearly
 typeless B language</a>, and the untyped lambda calculus, are insufficient as
 programming tools. Application-domain types clearly matter, but primitive types
-matter too —  perhaps especially, since higher-level types and functions are
+matter too — perhaps especially, since higher-level types and functions are
 built on the primitives.<p>Proofs of correctness of binary search are valid only on the assumption that
 languages can easily express correct integer arithmetic. (<a href=https://www.cs.cornell.edu/courses/cs211/2006sp/Lectures/L06-Induction/binary_search.html>See
 this one, for example</a>.) In fact, of course, our programming languages make
@@ -379,8 +379,8 @@ unlikely to be significant. The practical performance difference between
 operation on registers, i.e. 1 machine cycle. (<a href=https://godbolt.org/z/sPqTG96fd>The <code>/ 2</code> gets
 optimized to
 <code>&gt;&gt; 1</code> on a modern optimizing compiler</a>.) In a loop
-involving non-local accesses to main memory —  you’re jumping around in the
-array, not processing it in a linear, cache-friendly way —  that fraction of a
+involving non-local accesses to main memory — you’re jumping around in the
+array, not processing it in a linear, cache-friendly way — that fraction of a
 nanosecond is not going to make or break the performance-fitness of your
 program.<p>Assuming we’re already using the best available data structures and
 algorithms, the most significant way to make programs faster is by increasing
@@ -405,7 +405,7 @@ function that checks the multiplication and then passes the result to
 performance fitness tests. Unless you have such tests, <code>calloc</code> is
 not too slow.<p><a id=fn4></a><a href=#fn4_back><b>4.</b></a> It reminds me a bit of
 how with big-O notation, we ignore constant factors because in principle they
-don’t matter —  but in practice, for actual inputs to algorithms implemented on
+don’t matter — but in practice, for actual inputs to algorithms implemented on
 actual computers, the constant factors can be decisive.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is
 in the
 Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike

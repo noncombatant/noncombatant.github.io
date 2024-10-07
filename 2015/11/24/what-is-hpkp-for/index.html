@@ -13,7 +13,7 @@ did not come to realize this until many months after the computers were sold!
 (See also <a href=http://arstechnica.com/security/2015/11/dell-does-superfish-ships-pcs-with-self-signed-root-certificates/>Ars
 Technica’s coverage</a>.)<p>People who want HPKP to solve the problem wish that, when setting public key
 pins, servers should be able to expect clients to perform Pin Validation
-unconditionally — to <em>always</em> obey the server’s requirements, regardless
+unconditionally — to <em>always</em> obey the server’s requirements, regardless
 of the client’s configuration. Even, if necessary, taking priority over the
 requirements of the client machine’s owner. This would be a weak form of Remote
 Attestation. The goal, in this case, is to make things like the Superfish and
@@ -25,16 +25,16 @@ violate a crucial digital rights principle: The computer’s owner should get to
 decide how the computer behaves. Dell and Lenovo let their customers down in
 that way, but for better and for worse, it’s not something that a web browser
 can fix.<p>Our idea when designing HPKP was to <a href=/2015/05/01/about-http-public-key-pinning/>allow a site to reduce the
-number of issuers that can issue certificates for the site</a> — assuming the
+number of issuers that can issue certificates for the site</a> — assuming the
 client is not already compromised. We assumed that because we must: as <a href=https://www.chromium.org/Home/chromium-security/security-faq>the Chromium
 Security FAQ</a> and <a href=http://blogs.technet.com/b/rhalbheer/archive/2011/06/16/ten-immutable-laws-of-security-version-2-0.aspx>Microsoft’s
 10 Immutable Laws Of Security</a> document, if a computer’s operating system is
-compromised, there is nothing certain that a mere userland application — which
-must depend on the underlying layers, including the OS — can do.<p>Specifically, browsers do not perform Pin Validation when the presented
+compromised, there is nothing certain that a mere userland application — which
+must depend on the underlying layers, including the OS — can do.<p>Specifically, browsers do not perform Pin Validation when the presented
 certificate chain chains up to a locally-installed, ‘private’, or ‘non-system’
 trust anchor. (Microsoft ships a standard set of trust anchors for the system,
 but also enables the system’s administrators/owners to install additional, local
-anchors.) There are 3 reasons for this:<ul><li>There are legitimate reasons to proxy TLS connections — <a href=http://www.telerik.com/fiddler>not least of
+anchors.) There are 3 reasons for this:<ul><li>There are legitimate reasons to proxy TLS connections — <a href=http://www.telerik.com/fiddler>not least of
 which is debugging</a>.
 Personally I am extremely skeptical of the value of AV/IDS/IPS/DLP proxies, but
 some people use them on the computers they own. To them, that’s legitimate use,
@@ -52,7 +52,7 @@ impossible. (Or, if you prefer, so impractical and theoretical as to be
 impossible for now.)<p>There are many, many ways in which the higher-privilege operating system or
 other software can force the lower-privilege client program to connect through a
 proxy, in spite of a hypothetical ‘strict’ HPKP behavior. Here are a few
-examples — I don’t imagine this list is exhaustive:<ul><li>Installing a new trust anchor in the local store<li>Installing a new trust anchor in the system store<li>Injecting a DLL that overrides the usual Pin Validation and X.509 validation
+examples — I don’t imagine this list is exhaustive:<ul><li>Installing a new trust anchor in the local store<li>Installing a new trust anchor in the system store<li>Injecting a DLL that overrides the usual Pin Validation and X.509 validation
 code<li>Overwriting the application’s code on disk<li>Overwriting the application’s code in memory at run-time<li>Installing a <a href=https://en.wikipedia.org/wiki/Layered_Service_Provider>layered service
 provider</a> (LSP)</ul><p>The ironic thing is that, if clients did implement the ‘strict’ form of Pin
 Validation, many of the same people who are now calling for it would either
