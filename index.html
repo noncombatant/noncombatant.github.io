@@ -12,11 +12,12 @@
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>" />
 
   <style>
-    @font-face {
-      font-family: 'Chicago Plain';
-      font-style: normal;
-      font-weight: normal;
-      src: local('Chicago Plain'), url('/Chicago.woff') format('woff');
+    :root {
+      color-scheme: light dark;
+      --fg: light-dark(#333, #ccc);
+      --bg: light-dark(#fff, #333);
+      --alt-bg: light-dark(#eee, #444);
+      --vf-grad: light-dark(0, -50);
     }
 
     html {
@@ -28,26 +29,16 @@
     body {
        
       line-height: 1.4;
-      font-family: "SF Pro", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+      font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
       text-wrap: pretty;
       font-variant-numeric: oldstyle-nums proportional-nums;
 
        
-      color: #222;
-      background-color: #fff;
+      color: var(--fg);
+      background-color: var(--bg);
 
        
        
-    }
-
-    :root {
-      --vf-grad: 0;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --vf-grad: -50;
-      }
     }
 
     * {
@@ -122,7 +113,7 @@
     }
 
     img {
-      border: 1px solid #222;
+      border: 1px solid var(--fg);
       border-radius: 3px;
        
       max-width: 100%;
@@ -157,7 +148,7 @@
 
      
     table tr:nth-child(even) {
-      background-color: #eee;
+      background-color: var(--alt-bg);
     }
 
      
