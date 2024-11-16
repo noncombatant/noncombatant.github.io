@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="view-transition" content="same-origin"/>
+<meta name="author" content="Chris Palmer"/>
+<meta name="robots" content="noai, noimageai"/>
+<title>{{.Title}}</title>
+<link rel="alternate" type="application/rss+xml" href="/feed/" title="Noncombatant"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎶</text></svg>">
+
+<style>
+body {
+  /* Readability: */
+  line-height: 1.4;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+
+  /* High, but not eyeball-vibrating, contrast: */
+  color: #222;
+  background-color: #fff;
+}
+
+/* If the screen is wide enough, give some space on the leading edge (left, for
+ * LTR languages). */
+@media (min-width: 55em) {
+  body {
+    margin-inline-start: 5em;
+  }
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.2;
+}
+
+h1, h2, h3, h4, h5, p, ul, ol, dl, fieldset, aside, figcaption, nav, header, footer {
+  /* Readability (not too wide), without limiting the width of things that might
+   * naturally be wider: */
+  max-width: 40rem;
+}
+
+/* blockquote can't be 40 rem wide because it’s indented. */
+blockquote {
+  max-width: 35rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+pre, code, kbd {
+  font-family: Inconsolata, Monaco, Consolas, monospace;
+}
+
+pre {
+  /* Horizontal scrolling is agony, especially on mobile: */
+  white-space: pre-wrap;
+}
+
+footer, nav, aside, figcaption {
+  opacity: 0.8;
+  font-size: 90%;
+}
+
+footer, nav {
+  margin-top: 3em;
+}
+
+img {
+  border: 1px solid #222;
+  border-radius: 3px;
+  /* TODO: Not sure if these are necessary: */
+  max-width: 100%;
+  height: auto;
+}
+
+input, button {
+  /* Readability and usability (large enough touch target): */
+  font-size: inherit;
+  font-family: inherit;
+}
+
+table {
+  border-spacing: 0em;
+}
+
+td, th {
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0.25em;
+}
+
+/* Readability: */
+table tr:nth-child(even) {
+  background-color: #eee;
+}
+
+/* For when you need to adjust the defaults in tables: */
+.right {
+  text-align: right;
+}
+.bottom {
+  vertical-align: bottom;
+}
+</style>
+</head>
+
+<body>
+
+{{.Body}}
+
+</body>
+</html>

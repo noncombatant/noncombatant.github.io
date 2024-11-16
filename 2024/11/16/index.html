@@ -1,0 +1,95 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Styling Graphviz with CSS</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn462PC90ZXh0Pjwvc3ZnPg=="><style>:root{color-scheme:light dark;--fg: light-dark(#333, #ccc);--bg: light-dark(#fff, #333);--alt-bg: light-dark(#eee, #444);--vf-grad: light-dark(0, -50)}html{-moz-text-size-adjust:none;-webkit-text-size-adjust:none;text-size-adjust:none}body{line-height:1.4;font-family:helvetica neue,Helvetica,Roboto,Arial,sans-serif;text-wrap:pretty;font-variant-numeric:oldstyle-nums proportional-nums;color:var(--fg);background-color:var(--bg)}*{font-variation-settings:"GRAD" var(--vf-grad,0)}@media(min-width:55em){body{margin-inline-start:5em}}h1,h2,h3,h4,h5{line-height:1.2}h1,h2,h3,h4,h5,p,ul,ol,dl,fieldset,aside,figcaption,nav,header,footer{max-width:40rem}blockquote{max-width:35rem}dt{font-weight:700}pre,code,kbd{font-family:Inconsolata,Monaco,Consolas,monospace}pre{white-space:pre-wrap}footer,nav,aside,figcaption{opacity:.8;font-size:90%}footer,nav{margin-top:3em}img{border:1px solid var(--fg);border-radius:3px;max-width:100%;height:auto}input,button,textarea,select{font-size:inherit;font-family:inherit}table{border-spacing:0}td,th{text-align:left;vertical-align:bottom;padding:.25em}td,math,time[datetime*=":"]{font-variant-numeric:tabular-nums lining-nums slashed-zero}table tr:nth-child(even){background-color:var(--alt-bg)}.right{text-align:right}.bottom{vertical-align:bottom}@view-transition{navigation:auto;}::view-transition-group(root){animation-duration:.5s}.node{stroke:var(--fg);fill:var(--fg)}.edge{fill:var(--fg);stroke:var(--fg)}text{font-family:inherit;font-size:70%}</style><nav><a href=/>Noncombatant</a>
+🙂&nbsp;<a href=/about/>About</a>
+✍️&nbsp;<a href=/publications/>Other Writing</a>
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
+💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a>
+🐘&nbsp;<a rel=me href=https://wandering.shop/@fugueish>Mastodon</a></nav><h1>Styling Graphviz with CSS</h1><p><time>16 November 2024</time><p>Here is a nice SVG of a graph:</p><svg width="450pt" height="114pt" viewBox="0 0 450.45 114.33" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 110.33)"><g id="node1" class="node"><title>gourd</title><ellipse fill="none" stroke="var(--fg)" cx="36" cy="-53.16" rx="36" ry="36"/><text text-anchor="middle" x="36" y="-49.46" font-family="Times,serif" font-size="14">gourd</text></g><g id="node2" class="node"><title>pumpkin</title><ellipse fill="none" stroke="var(--fg)" cx="150.06" cy="-53.16" rx="42.13" ry="42.13"/><text text-anchor="middle" x="150.06" y="-49.46" font-family="Times,serif" font-size="14">pumpkin</text></g><g id="edge1" class="edge"><title>gourd&#45;&gt;pumpkin</title><path fill="none" stroke="var(--fg)" d="M72.15-53.16C80.27-53.16 89.07-53.16 97.72-53.16"/><path fill="var(--fg)" stroke="var(--fg)" d="M97.76-56.66l10 3.5-10 3.5v-7z"/></g><g id="node3" class="node"><title>squash</title><ellipse fill="none" stroke="var(--fg)" cx="264.13" cy="-53.16" rx="36" ry="36"/><text text-anchor="middle" x="264.13" y="-49.46" font-family="Times,serif" font-size="14">squash</text></g><g id="edge2" class="edge"><title>pumpkin&#45;&gt;squash</title><path fill="none" stroke="var(--fg)" d="M192.15-53.16C200.5-53.16 209.33-53.16 217.82-53.16"/><path fill="var(--fg)" stroke="var(--fg)" d="M217.94-56.66l10 3.5-10 3.5v-7z"/></g><g id="node4" class="node"><title>decoration</title><ellipse fill="none" stroke="var(--fg)" cx="389.29" cy="-53.16" rx="49.32" ry="49.32"/><ellipse fill="none" stroke="var(--fg)" cx="389.29" cy="-53.16" rx="53.33" ry="53.33"/><text text-anchor="middle" x="389.29" y="-49.46" font-family="Times,serif" font-size="14">decoration</text></g><g id="edge3" class="edge"><title>squash&#45;&gt;decoration</title><path fill="none" stroke="var(--fg)" d="M300.42-53.16C308.39-53.16 317.08-53.16 325.8-53.16"/><path fill="var(--fg)" stroke="var(--fg)" d="M326-56.66l10 3.5-10 3.5v-7z"/></g></g></svg><p>Since <a href=https://www.mcsweeneys.net/articles/its-decorative-gourd-season-motherfuckers>Decorative
+Gourd Season is coming to an end, motherfuckers</a>, this fine graph will soon
+lose its relevance until next year. So it goes.<p>Since I sometimes use Graphviz for articles, and now that I’m trying to make
+this site respect light and dark mode preferences smoothly, I wanted to get my
+graphs to do so as well. In the past, I’ve assumed light mode only, and so my
+graphs look bad in dark mode — they’re a sudden flash of bright in an otherwise
+dark page.<p>To see it in action: If you’re in dark mode, switch to light, and vice-versa.
+(On macOS, for example, you can do this in <b>System Settings</b> →
+<b>Appearance</b>.) If it’s not easy for you to switch back and forth betwixt
+the modes, here are screenshots:<figure><img src=light-screenshot.png width=719 height=416 alt="A
+screenshot of a draft of this page in light mode."><figcaption>Light mode: Like
+the text, the graph is dark on a light background.</figcaption></figure><figure><img src=dark-screenshot.png width=719 height=416 alt="A
+screenshot of a draft of this page in dark mode."><figcaption>Dark mode: Like
+the text, the graph is light on a dark background.</figcaption></figure><p>It took me longer than it should have to figure out how to get this to work,
+so I thought I’d write it down. These are the key things to know:<ul><li>Graphviz can indeed produce Scalable Vector Graphics (SVG) files. Woo
+hoo!<li>You can indeed style SVGs with CSS. (SVG is an application of XML, so things
+work as you’d hope.) As always, <a href=https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS>Mozilla
+Developer Network’s documentation</a> is good.<li>You can embed SVG directly into HTML (!) — you don’t have to use an
+<code>img</code> tag.<li>To get this to work easily and consistently, you really want to do the
+direct embedding.</ul><p>Crucial to all this is that the SVG be inline in the HTML, inside a
+<code>div</code>. I found that trying to <a href=https://graphviz.org/docs/attrs/stylesheet/>set the
+<code>stylesheet</code> attribute in the <code>digraph</code></a>, and then
+loading the image in an HTML page with the <code>img</code> tag, resulted in
+Total CSS Chaos. I am nowhere near good enough at the DOM and CSS to understand
+what was going on; but, thankfully, putting the SVGs inline seems to fix
+things.<p>This also means you can maintain just a single CSS file for your main site;
+you just have to add some declarations for SVG XML elements.<p>Here’s the core of my CSS that gets this working:<pre>
+:root {
+    color-scheme: light dark;
+    --fg: light-dark(#333, #ccc);
+    --bg: light-dark(#fff, #333);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: "Helvetica Neue";
+}
+
+.node {
+    stroke: var(--fg);
+    fill: var(--fg);
+}
+
+.edge {
+    fill: var(--fg);
+    stroke: var(--fg);
+}
+
+text {
+    font-family: inherit;
+    font-size: 70%;
+}
+</pre><p><code>.node</code>, <code>.edge</code>, and <code>text</code> are the
+relevant SVG elements. The rest is for the main HTML page, but it provides
+variables that we’ll use in the SVG-related CSS.<p>Here’s the Graphviz file:<pre>
+digraph {
+  splines = polyline
+  rankdir = LR
+  bgcolor = transparent
+  node [
+    shape = circle
+    margin = 0.1
+    width = 1
+  ]
+  edge [
+    margin = 0.1
+  ]
+
+  gourd [ label = "gourd" ]
+  pumpkin [ label = "pumpkin" ]
+  squash [ label = "squash" ]
+  decoration [ label = "decoration", shape = doublecircle ]
+
+  gourd -&gt; pumpkin
+  pumpkin -&gt; squash
+  squash -&gt; decoration
+}
+</pre><p>To render it as an SVG, and to get the output SVG to respect our CSS, we use
+this pipeline:<pre>
+% <b>dot -Tsvg test.dot | sed -E -e s'/(fill|stroke)="black"/\1="var(--fg)"/g' &gt; test.svg</b>
+</pre><p>Note that the <code>-E</code> option for <code>sed</code> gives us POSIX
+Extended regular expressions. Some <code>sed</code> implementations use a
+different option flag for Extended REs.<p>The <code>sed</code> is necessary because Graphviz inserts
+<code>stroke</code> and <code>fill</code> attributes into the XML elements,
+which override the global CSS. So, we zap ’em.<p>There’s probably an easier way to do this, but this is what I’ve got so
+far.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is
+in the
+Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
+4.0 International License</a>.</footer>
