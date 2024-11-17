@@ -1,6 +1,7 @@
 digraph {
   splines = polyline;
   rankdir = LR
+  bgcolor = transparent
   node [
     shape = box
     style = rounded

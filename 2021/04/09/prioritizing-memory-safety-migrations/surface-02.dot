@@ -1,27 +1,28 @@
 digraph {
-  splines = polyline;
+  splines = polyline
   rankdir = LR
+  bgcolor = transparent
   node [
     shape = box
     style = rounded
     fontname = "Roboto"
     fontsize = 9
     margin = 0.1
-  ];
+  ]
   edge [
     fontname = "Roboto"
     fontsize = 9
     margin = 0.1
-  ];
+  ]
 
-  attacker [ label = "attacker" ];
-  radio [ label = "radio chip" ];
-  kernel [ label = "device driver" ];
+  attacker [ label = "attacker" ]
+  radio [ label = "radio chip" ]
+  kernel [ label = "device driver" ]
 
   attacker -> radio [
     label = "0"
-  ];
+  ]
   radio -> kernel [
     label = "low or\nmedium"
-  ];
+  ]
 }
