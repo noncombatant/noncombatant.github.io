@@ -62,7 +62,7 @@ variables that we’ll use in the SVG-related CSS.<p>Here’s the Graphviz file:
 digraph {
   splines = polyline
   rankdir = LR
-  bgcolor = transparent
+  <b>bgcolor = transparent</b>
   node [
     shape = circle
     margin = 0.1
@@ -81,14 +81,22 @@ digraph {
   pumpkin -&gt; squash
   squash -&gt; decoration
 }
-</pre><p>To render it as an SVG, and to get the output SVG to respect our CSS, we use
+</pre>Note the <code>bgcolor = transparent</code> — that’s important.<p>To render it as an SVG, and to get the output SVG to respect our CSS, we use
 this pipeline:<pre>
 % <b>dot -Tsvg test.dot | sed -E -e s'/(fill|stroke)="black"/\1="var(--fg)"/g' &gt; test.svg</b>
 </pre><p>Note that the <code>-E</code> option for <code>sed</code> gives us POSIX
 Extended regular expressions. Some <code>sed</code> implementations use a
 different option flag for Extended REs.<p>The <code>sed</code> is necessary because Graphviz inserts
 <code>stroke</code> and <code>fill</code> attributes into the XML elements,
-which override the global CSS. So, we zap ’em.<p>There’s probably an easier way to do this, but this is what I’ve got so
+which override the global CSS. So, we zap ’em.<p>When embedding the SVG into your HTML, you need to supply <code>alt</code>
+text for accessibility. Unlike <code>img</code> the <code>svg</code> element
+doesn’t support the <code>alt</code> attribute. Instead, use <code>role</code>
+and <code>aria-label</code>:<pre>
+&lt;svg width="200pt" height="300pt" <b>role="img"</b> <b>aria-label="Some
+descriptive text goes here"</b>
+  viewBox="0.00 0.00 242.00 260.00" xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"&gt;
+</pre><p>There’s probably an easier way to do this, but this is what I’ve got so
 far.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is
 in the
 Creative Commons, under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
