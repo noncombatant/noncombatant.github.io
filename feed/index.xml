@@ -5,7 +5,15 @@
     <description>A blog about software engineering, music, and feelings</description>
     <managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor>
     <pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate>
-    <lastBuildDate>Tue, 17 Dec 2024 18:39:31 -0800</lastBuildDate>
+    <lastBuildDate>Tue, 17 Dec 2024 18:56:23 -0800</lastBuildDate>
+    <item>
+      <title>Florilegium</title>
+      <link>https://noncombatant.org/2024/12/18/florilegium/index.content</link>
+      <description>&lt;h1&gt;&lt;i&gt;Florilegium&lt;/i&gt;&lt;/h1&gt;&#xA;&#xA;&lt;p&gt;&lt;time&gt;18 December 2024&lt;/time&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;About 11 months after I thought for sure we’d be done, my band &lt;a&#xA;        href=&#34;https://telltaleshimmer.com/&#34;&gt;Telltale&#xA;        Shimmer&lt;/a&gt; released our new EP, &lt;a&#xA;        href=&#34;https://telltaleshimmer.bandcamp.com/album/florilegium&#34;&gt;&lt;i&gt;Florilegium&lt;/i&gt;!&#xA;        I’m pretty happy with how it turned out. I think it’s a decent&#xA;        representation of what I was trying to achieve,&#xA;        which I call “&lt;a&#xA;            href=&#34;https://en.wikipedia.org/wiki/Discipline_(King_Crimson_album)&#34;&gt;&lt;i&gt;Discipline&lt;/i&gt;&lt;/a&gt;-era&#xA;        &lt;a href=&#34;https://en.wikipedia.org/wiki/Cocteau_Twins&#34;&gt;Cocteau&#xA;            Twins&lt;/a&gt;”. If you dig it, we’re working on a new&#xA;        batch of tunes. Ideally, it’ll come out in less than a year...&lt;/p&gt;</description>
+      <author>Chris Palmer</author>
+      <guid>2024/12/18/florilegium/index.html</guid>
+      <pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate>
+    </item>
     <item>
       <title>Styling Graphviz with CSS</title>
       <link>https://noncombatant.org/2024/11/16/styling-graphviz-with-css/index.content</link>
