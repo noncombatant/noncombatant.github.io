@@ -8,4 +8,7 @@ User-agent: Omgili
 User-agent: FacebookBot
 User-agent: Bytespider
 User-agent: Applebot
+User-agent: amazonbot
+User-agent: meta-externalagent
+User-agent: ClaudeBot
 Disallow: /
