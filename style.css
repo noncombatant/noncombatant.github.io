@@ -36,6 +36,15 @@ body {
   hyphenate-limit-last: always;*/
 }
 
+/* If the screen is wide enough, give some space on the leading edge (left, for
+ * LTR languages). */
+/*@media (min-width: 55rem) {
+    body {
+        max-width: 45rem;
+        margin-inline-start: 5rem;
+    }
+}*/
+
 * {
     font-variation-settings: "GRAD" var(--vf-grad, 0);
 }
