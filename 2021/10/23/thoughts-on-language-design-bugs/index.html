@@ -100,8 +100,8 @@ browsers do enforce limits on 3rd-party resource consumption</a>, but they are
 too generous. These interventions require the browser to be able to recognize 3P
 resources as such, which is not always possible. A common practice on the web is
 to pull the 3rd-party content into the first party itself: what should be
-<code>&lt;iframe src="https://ads.com/ad"&gt;&lt;/iframe&gt;</code> becomes
-<code>&lt;script src="https://ads.com/ad"&gt;&lt;/script&gt;</code>. At that
+<code>&lt;iframe src="https://ads.com/ad">&lt;/iframe></code> becomes
+<code>&lt;script src="https://ads.com/ad">&lt;/script></code>. At that
 point, the browser can’t reliably recognize the 3P script as 3P, and thus to
 impose limits on its performance and functionality would be even more
 contentious than it already is.<li><p>The JS standard library is too small, and that encourages the development of
@@ -181,6 +181,6 @@ For example, you could certainly implement the typestate pattern, or traits, or
 spiffier <code>enum</code>s (<code>enum class</code> exists!) in C++. It might
 require establishing new idioms, but, we can do that. It’s a lot cheaper than
 reimplementing everything, and it might make gradual migration and
-interoperability easier, too.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+interoperability easier, too.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>
