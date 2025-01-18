@@ -1,1 +1,49 @@
-"use strict";const parseQuantity=function(e){const t=e.split(" ");return t},toMetric={tbsp:[e=>e*15,"mL"],tsp:[e=>e*5,"mL"],cup:[e=>e*237,"mL"],lb:[e=>e*.45,"kg"],in:[e=>e*2.54,"cm"],"°F":[e=>e*5/9-32,"°C"],oz:[e=>e*28.35,"g"],qt:[e=>e,"L"]},round=function(e){const t=Math.round(e);return t!==0?t:e},convertToMetric=function(e){try{const[n,t]=[e[0],e[1]],s=toMetric[t][0];return[round(s(Number.parseFloat(n))),toMetric[t][1]]}catch(e){return void 0}},convertAll=function(){const e=document.querySelectorAll("span.quant");for(const n of e){const o=parseQuantity(n.innerText),t=convertToMetric(o);if(t===void 0)continue;const s=document.createElement("span");s.innerText=" ("+t[0]+" "+t[1]+") ",n.insertAdjacentElement("afterend",s)}};convertAll()
+"use strict";
+
+const parseQuantity = function(string) {
+  const quantity = string.split(" ")
+  return quantity
+}
+
+const toMetric = {
+  "tbsp": [n => n * 15.0, "mL"],
+  "tsp": [n => n * 5.0, "mL"],
+  "cup": [n => n * 237.0, "mL"],
+  "lb": [n => n * 0.45, "kg"],
+  "in": [n => n * 2.54, "cm"],
+  "°F": [n => n * 5.0 / 9.0 - 32, "°C"],
+  "oz": [n => n * 28.35, "g"],
+  "qt": [n => n, "L"],
+}
+
+const round = function(n) {
+  const x = Math.round(n)
+  return x !== 0 ? x : n
+}
+
+const convertToMetric = function(quantity) {
+  try {
+  const [q, unit] = [quantity[0], quantity[1]]
+  const convert = toMetric[unit][0]
+  return [round(convert(Number.parseFloat(q))), toMetric[unit][1]]
+  } catch (Exception) {
+    return undefined
+  }
+}
+
+const convertAll = function(event) {
+  const quantities = document.querySelectorAll("span.quant")
+  for (const q of quantities) {
+    const parsed = parseQuantity(q.innerText)
+    const converted = convertToMetric(parsed)
+    if (converted === undefined) {
+      continue
+    }
+    
+    const span = document.createElement("span")
+    span.innerText = " (" + converted[0] + " " + converted[1] + ") "
+    q.insertAdjacentElement("afterend", span)
+  }
+}
+
+convertAll()

@@ -1,1 +1,26 @@
-:root{color-scheme:light dark;--fg:light-dark(#333, #ccc);--bg:light-dark(#fff, #333)}body{background-color:var(--bg);color:var(--fg);font-family:helvetica neue}.node{stroke:var(--fg);fill:var(--fg)}.edge{fill:var(--fg);stroke:var(--fg)}text{font-family:inherit;font-size:70%}
+:root {
+    color-scheme: light dark;
+    --fg: light-dark(#333, #ccc);
+    --bg: light-dark(#fff, #333);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: "Helvetica Neue";
+}
+
+.node {
+    stroke: var(--fg);
+    fill: var(--fg);
+}
+
+.edge {
+    fill: var(--fg);
+    stroke: var(--fg);
+}
+
+text {
+    font-family: inherit;
+    font-size: 70%;
+}

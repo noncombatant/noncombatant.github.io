@@ -23,8 +23,8 @@ post: HTTPS not being available, and the HTTPS site differing in contents from
 the HTTP site. Again, for a software distribution site, we’d like <a href=http://noncombatant.org/2014/01/16/security-smells-for-modern-software/>something
 that smells a bit better</a>.<li><p>Some people claim that PGP keyservers don’t need to use HTTPS, because
 the keys authenticate themselves with the <a href=http://en.wikipedia.org/wiki/Web_of_trust>web of trust</a>. And it’s
-true, the WoT does allow us to fairly easily distinguish <a href="http://pgp.mit.edu/pks/lookup?op=vindex&search=0x47518EC82F1123AD">this
-fake key</a> from <a href="http://pgp.mit.edu/pks/lookup?op=vindex&search=0xC11B36DC9C7DD150">this
+true, the WoT does allow us to fairly easily distinguish <a href="http://pgp.mit.edu/pks/lookup?op=vindex&amp;search=0x47518EC82F1123AD">this
+fake key</a> from <a href="http://pgp.mit.edu/pks/lookup?op=vindex&amp;search=0xC11B36DC9C7DD150">this
 real key</a> for EFF’s Seth Schoen. But,<ul><li><p>Seth is one of the most well-connected people in the WoT, so a key with
 only 1 signature stands out as odd. Would a fake key for a normal person stand
 out so well? The WoT is not as good an authentication mechanism as we might hope
@@ -60,6 +60,6 @@ challenge-response protocols, and so on are in for a heartbreak. But still,
 there are potentially good applications for cryptographic algorithms exposed to
 JavaScript, and native code does not have a privileged place in crypto. If
 anything, due to the lack of privilege separation in legacy platforms, native
-code is a worse place to put powerful code.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+code is a worse place to put powerful code.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>
