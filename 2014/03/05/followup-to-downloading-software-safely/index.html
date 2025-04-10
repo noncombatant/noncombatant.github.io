@@ -14,7 +14,7 @@ Microsoft, Lenovo, and any number of Lenovo’s business partners intended for i
 to have.” Our goal as security engineers is to limit the size of the TCB. It is,
 after all, quite goaty already...<li><p>The TCB includes the set of X.509 trust anchors for our TLS
 library.<li><p>Yes, I harp on and on about HTTPS. That is because authenticating the
-delivery channelax yb—cx ydwhile not necessarily sufficient to indicate code integrityax yb—cx ydis the bare minimum effort we should require from our software sources.
+delivery channela b—c dwhile not necessarily sufficient to indicate code integritya b—c dis the bare minimum effort we should require from our software sources.
 Especially for software that is related to cryptography and security. Here is
 GnuPG’s bug tracker; would you want to log into it or report security-sensitive
 bugs using it? :</ul><figure><img alt="GnuPG’s bug tracker: Not inspiring confidence." src=gnupg-bug-tracker.png width=787 height=518 loading=lazy><figcaption>Not inspiring confidence.</figcaption></figure><ul><li><p>Also note that there are at least 2 different problems with HTTPS in that
@@ -29,7 +29,7 @@ only 1 signature stands out as odd. Would a fake key for a normal person stand
 out so well? The WoT is not as good an authentication mechanism as we might hope
 it to be. As nice as it is, verifying software packages based on PGP keys we
 grab from key servers is thus not a slam-dunk alternative to or replacement for
-HTTPSax yb—cx ydand nevermind the usability delta between HTTPS and PGP.<li><p>By now, we understand that metadata for communications is at least as
+HTTPSa b—c dand nevermind the usability delta between HTTPS and PGP.<li><p>By now, we understand that metadata for communications is at least as
 valuable as the contents, in many cases. Shouldn’t PGP users have
 confidentiality in their directory lookups? Yes.</ul><li><p>Yes, as many commentators noted, we should use something like <a href=http://technet.microsoft.com/en-us/library/cc750035.aspx>Authenticode</a>:
 binaries should be signed, and their signatures checked at run- or install-time.
@@ -43,7 +43,7 @@ the problem uphill.<li><p>A big part of the solution is to isolate sources of co
 cryptographic identity. This is how Android works, and it is how the open web
 works (when you use HTTPS or other authenticated origins). I’m not very
 knowledgeable about iOS, but I understand they also rely on code-signing and on
-sandboxing. If the isolation is strong, much of the risk is reducedax yb—cx ydremember,
+sandboxing. If the isolation is strong, much of the risk is reduceda b—c dremember,
 a big part of my problem was that PuTTY (or any program) runs with the full
 privilege of my user account on the platform. Reduce the privilege, reduce the
 problem.<ul><li>If course, now the problem is exposing a privilege-granting UI to users so

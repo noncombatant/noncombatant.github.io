@@ -7,8 +7,8 @@
 🦋&nbsp;<a href=https://bsky.app/profile/fugueish.bsky.social>Bluesky</a></nav><h1>Everyone Needs Secure Usability</h1><p><time>30 January 2016</time><p>There’s an interesting <a href=https://lwn.net/Articles/586838/>article in
 LWN about C11 atomic variables and the kernel</a> that struck me for a few
 reasons:<ul><li>Atomics and concurrency are always weird and fun and surprising<li>I keep hoping for C11 to be kind of awesome, or at least interesting, and it
-is!<li>Although they might not frame it this way, secure usabilityax yb—cx yd<a href="https://docs.google.com/presentation/d/1Qmpl-5epx0B5C2t4XsUTyjgbwab_rXfK_4iHqX3IC30/pub?start=false&loop=false&delayms=3000&slide=id.gf44795496_0_1">in
-the same sense that we worry about it in Chrome</a> (<a href="https://www.youtube.com/watch?v=XfFjde0UPbY">see also</a>)ax yb—cx yd is a
+is!<li>Although they might not frame it this way, secure usabilitya b—c d<a href="https://docs.google.com/presentation/d/1Qmpl-5epx0B5C2t4XsUTyjgbwab_rXfK_4iHqX3IC30/pub?start=false&loop=false&delayms=3000&slide=id.gf44795496_0_1">in
+the same sense that we worry about it in Chrome</a> (<a href="https://www.youtube.com/watch?v=XfFjde0UPbY">see also</a>)a b—c d is a
 make-or-break concern for these Linux kernel developers and C standardizers</ul><p>In Chrome Land, we’re always trying to improve people’s ability to understand
 and effectively use Chrome’s security indicators and controls, such as the
 Location Icon (the green padlock, the red padlock, et c.), the Origin Info
@@ -21,7 +21,7 @@ standardizers are trying to improve C developers’ ability to understand and
 effectively use atomic variables so that we can all enjoy efficient yet safe
 concurrent programs. If the mechanisms that enable concurrency (like locks and
 atomics) are confusing, we’re going to get buggy (and vulnerable) programs. But
-if they’re too slow or heavyweight, people won’t use themax yb—cx yd and we’ll get buggy
+if they’re too slow or heavyweight, people won’t use thema b—c d and we’ll get buggy
 (and vulnerable) programs.<p>So the first thing to do is to find out what it is that the community using
 the product needs and can effectively use. So the C11 standards people, academic
 programming language researchers, and kernel developers are all working together
@@ -43,7 +43,7 @@ x = atomic_load(&a, memory_order_control);
 if (control_dependency(x))
     atomic_store(&b, 42, memory_order_relaxed);
 </pre><p>But this approach is unlikely to be taken, given just how unhappy Linus was
-with the idea. From his point of view, the control dependency should be obviousax yb—cx ydthe code is testing the value of <code>x</code>, after all. Any compiler that
+with the idea. From his point of view, the control dependency should be obviousa b—c dthe code is testing the value of <code>x</code>, after all. Any compiler that
 would move the <code>atomic_store()</code> operation in an externally visible
 way, he said, is simply broken.</blockquote><p>Just as with ‘end-user’ interfaces, these low-level APIs must adapt to the
 needs and expectations of the people who use them. Despite the tendency to
@@ -89,7 +89,7 @@ legalistic reading of standards to justify “optimizations” that (from the ke
 developer’s viewpoint) make no sense and break code needlessly. Highly
 concurrent code, as is found in the kernel, tends to be more susceptible to
 optimization-caused problems than just about anything else. So kernel developers
-have learned to be careful.</blockquote><p>This pressureax yb—cx ydspeed, speed, speed!ax yb—cx yd leads compiler developers to make the
+have learned to be careful.</blockquote><p>This pressurea b—c dspeed, speed, speed!a b—c d leads compiler developers to make the
 language opaque, and to break the conceptual integrity of the language in a way
 that can actually make it unsafe and unusable:<blockquote><blockquote>There are too many compiler optimisations for people to reason
 directly in terms of the set of all transformations that they do, so we need
@@ -105,11 +105,11 @@ high-performance code, in the general case? Where needed, <em>can</em> they? And
 if not, is the damage to the language’s conceptual integrity worth it? He
 contends (as I read him, at least) that the answer to these questions is No:
 Most code is not hot (run often and hence in need of optimization); and, true
-hot spots require optimizations that compilers cannot yet performax yb—cx ydonly humans,
+hot spots require optimizations that compilers cannot yet performa b—c donly humans,
 locally optimizing, understand their application domain and their machine well
 enough to get a good result. (Bernstein is generally working on cryptographic
 algorithms that he optimizes to work absolutely as well as possible on each
-distinct chipax yb—cx yd local optimizables that the general-purpose (‘global’, if you
+distinct chipa b—c d local optimizables that the general-purpose (‘global’, if you
 will) compiler optimizations don’t really help with.) From Bernstein’s
 presentation:<blockquote>Mike Pall, LuaJIT author, 2011: “If you write an interpreter loop in
 assembler, you can do much better... There’s just no way you can reasonably
@@ -117,7 +117,7 @@ expect even the most advanced C compilers to do this on your
 behalf.”</blockquote><p>Thus it might not be that people need optimizing compilers; instead, they may
 benefit more from dumb-but-conceptually-integral compilers, and more usable
 tools for writing, profiling, and testing hand-written assembly code.<p>I think we can learn a few widely-applicable UX design lessons from all this
-compiler talk:<ul><li>Augment the human, rather than try (and fail) to replace them.<li>Optimize locally onlyax yb—cx yd we know that we don’t know everything we need to
+compiler talk:<ul><li>Augment the human, rather than try (and fail) to replace them.<li>Optimize locally onlya b—c d we know that we don’t know everything we need to
 know to best serve people.<li>Check that the local optimizations are actually optimizations.<li>Never violate the conceptual integrity of the system.<li>Sometimes it’s better to give people tools to build their own tools, rather
 than try to build The Ultimate Thing.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
