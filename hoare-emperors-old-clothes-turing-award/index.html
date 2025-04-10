@@ -56,7 +56,7 @@ had invented a sorting method that would usually run faster than
 <small>SHELLSORT</small>, without taking much extra store. He bet me sixpence
 that I had not. Although my method was very difficult to explain, he finally
 agreed that I had won my bet.<p>I wrote several other tightly coded library subroutines but after six months
-I was given a much more important taska b—c dthat of designing a new advanced high
+I was given a much more important task — that of designing a new advanced high
 level programming language for the company’s next computer, the Elliott 503,
 which was to have the same instruction code as the existing 803 but run sixty
 times faster. In spite of my education in classical languages, this was a task
@@ -78,7 +78,7 @@ invention so elegantly to the world. I have regarded it as the highest goal of
 programming language design to enable good ideas to be elegantly expressed.<p>After the <small>ALGOL</small> course in Brighton, Roger Cook was driving me
 and my colleagues back to London when he suddenly asked, “Instead of designing a
 new language, why don’t we just implement <small>ALGOL</small> 60?” We all
-instantly agreeda b—c din retrospect, a very lucky decision for me. But we knew we
+instantly agreed — in retrospect, a very lucky decision for me. But we knew we
 did not have the skill or experience at that time to implement the whole
 language, so I was commissioned to design a modest subset. In that design I
 adopted certain basic principles which I believe to be as valid today as they
@@ -93,7 +93,7 @@ occurrence of every subscript of every subscripted variable was on every
 occasion checked at run time against both the upper and the lower declared
 bounds of the array. Many years later we asked our customers whether they wished
 us to provide an option to switch off these checks in the interests of
-efficiency on production runs. Unanimously, they urged us not toa b—c dthey already
+efficiency on production runs. Unanimously, they urged us not to — they already
 knew how frequently subscript errors occur on production runs where failure to
 detect them could be disastrous. I note with fear and horror that even in 1980,
 language designers and users have not learned this lesson. In any respectable
@@ -118,7 +118,7 @@ simplify the programming task and shorten the object code. Thus there must be no
 impediment to their frequent use.<li><p>The fourth principle was that <i>the compiler should use only a single
 pass</i>. The compiler was structured as a collection of mutually recursive
 procedures, each capable of analyzing and translating a major syntactic unit of
-the languagea b—c da statement, an expression, a declaration, and so on. It was
+the language — a statement, an expression, a declaration, and so on. It was
 designed and documented in <small>ALGOL</small> 60, and then coded into decimal
 machine code using an explicit stack for recursion. Without the
 <small>ALGOL</small> 60 concept of recursion, at that time highly controversial,
@@ -195,7 +195,7 @@ alternatives according to the value of an integer expression. That was my second
 language design proposal. I am still most proud of it, because it raises
 essentially no problems either for the implementor, the programmer, or the
 reader of a program. Now, after more than fifteen years, there is the prospect
-of international standardization of a language incorporating this notationa b—c da
+of international standardization of a language incorporating this notation — a
 remarkably <i>short</i> interval compared with other branches of
 engineering.<p>Back again to my work at Elliott’s. After the unexpected success of our
 <small>ALGOL</small> Compiler, our thoughts turned to a more ambitious project:
@@ -207,7 +207,7 @@ system.<p>It comprised:<ol><li>An assembler for a symbolic assembly language in 
 software was to be written.<li>A scheme for automatic administration of code and data overlays, either from
 magnetic tape or from core backing store. This was to be used by the rest of the
 software.<li>A scheme for automatic buffering of all input and output on any available
-peripheral device,a b—c dagain, to be used by all the other software.<li>A filing system on magnetic tape with facilities for editing and job
+peripheral device, — again, to be used by all the other software.<li>A filing system on magnetic tape with facilities for editing and job
 control.<li>A completely new implementation of <small>ALGOL</small> 60, which removed
 all the nonstandard restrictions which we had imposed on our first
 implementation.<li>A compiler for <small>FORTRAN</small> as it was then.</ol><p>I wrote documents which described the relevant concepts and facilities and we
@@ -227,7 +227,7 @@ again to draw up revised schedules, which again showed that the software could
 be delivered within another three months. I desperately wanted to believe it but
 I just could not. I disregarded the schedules and began to dig more deeply into
 the project.<p>It turned out that we had failed to make any overall plans for the allocation
-of our most limited resourcea b—c dmain storage. Each programmer expected this to be
+of our most limited resource — main storage. Each programmer expected this to be
 done automatically, either by the symbolic assembler or by the automatic overlay
 scheme. Even worse, we had failed to simply count the space used by our own
 software which was already filling the main store of the computer, leaving no
@@ -249,9 +249,9 @@ with the existing version of the compiler operating at about a thousand
 characters per second. We soon identified the cause of the problem: It was
 thrashing between the main store and the extension core backing store which was
 fifteen times slower. It was easy to make some simple improvements, and within a
-week we had doubled the speed of compilationa b—c dto four characters per second. In
+week we had doubled the speed of compilation — to four characters per second. In
 the next two weeks of investigation and reprogramming, the speed was doubled
-againa b—c dto eight characters per second. We could see ways in which within a
+again — to eight characters per second. We could see ways in which within a
 month this could be still further improved; but the amount of reprogramming
 required was increasing and its effectiveness was decreasing; there was an awful
 long way to go. The alternative of increasing the size of the main store so
@@ -271,7 +271,7 @@ would not have known how to use its sophisticated features, and anyway many such
 large projects get cancelled before delivery. In retrospect, I believe our
 customers were fortunate that hardware limitations had protected them from the
 arbitrary excesses of our software designs. In the present day, users of
-microprocessors benefit from a similar protectiona b—c dbut not for much longer.<p>At that time I was reading the early documents describing the concepts and
+microprocessors benefit from a similar protection — but not for much longer.<p>At that time I was reading the early documents describing the concepts and
 features of the newly announced OS 360, and of a new time-sharing project called
 Multics. These were far more comprehensive, elaborate, and sophisticated than
 anything I had imagined, even in the first version of the 503 Mark II software.
@@ -290,7 +290,7 @@ teams. Each of my managers explained carefully his own theory of what had gone
 wrong and all the theories were different. At last, there breezed into my office
 the most senior manager of all, a general manager of our parent company, Andrew
 St. Johnston. I was surprised that he had even heard of me. “You know what went
-wrong?” he shouteda b—c dhe always shouteda b—c d“You let your programmers do things
+wrong?” he shouted — he always shouted — “You let your programmers do things
 which you yourself do not understand.” I stared in astonishment. He was
 obviously out of touch with present day realities. How could one person ever
 understand the whole of a modem software product like the Elliott 503 Mark II
@@ -298,7 +298,7 @@ software system?<p>I realized later that he was absolutely right; he had diagnos
 cause of the problem and he had planted the seed of its later solution.<p>I still had a team of some forty programmers and we needed to retain the good
 will of customers for our new machine and even regain the confidence of the
 customers for our old one. But what should we actually plan to do when we knew
-only one thinga b—c dthat all our previous plans had failed? I therefore called an
+only one thing — that all our previous plans had failed? I therefore called an
 all-day meeting of our senior programmers on October 22, 1965, to thrash out the
 question between us. I still have the notes of that meeting. We first listed the
 recent major grievances of our customers: Cancellation of products, failure to
@@ -335,7 +335,7 @@ an early warning that things were going wrong. There were faults in our control
 of program changes, documentation, liaison with other departments, with our
 management, and with our customers. We failed in giving clear and stable
 definitions of the responsibilities of individual programmers and project
-leaders,a b—c dOh, need I go on? What was amazing was that a large team of highly
+leaders, — Oh, need I go on? What was amazing was that a large team of highly
 intelligent programmers could labor so hard and so long on such an unpromising
 project. You know, you shouldn’t trust us intelligent programmers. We can think
 up such good arguments for convincing ourselves and each other of the utterly
@@ -349,7 +349,7 @@ every program.” We then made a list of no less than seventeen criteria which h
 been published in a guest editorial in Volume 2 of the journal, <i>Software
 Practice and Experience</i>.<p>How did we recover from the catastrophe? First, we classified our 503
 customers into groups, according to the nature and size of the hardware
-configurations which they had boughta b—c dfor example, those with magnetic tapes
+configurations which they had bought — for example, those with magnetic tapes
 were all in one group. We assigned to each group of customers a small team of
 programmers and told the team leader to visit the customers to find out what
 they wanted; to select the easiest request to fulfil, and to make plans (but not
@@ -368,7 +368,7 @@ approaching success. But I was not satisfied. I did not see why the design and
 implementation of an operating system should be so much more difficult than that
 of a compiler. This is the reason why I have devoted my later research to
 problems of parallel programming and language constructs which would assist in
-clear structuring of operating systemsa b—c dconstructs such as monitors and
+clear structuring of operating systems — constructs such as monitors and
 communicating processes.<p>While I was working at Elliotts’, I became very interested in techniques for
 formal definition of programming languages. At that time, Peter Landin and
 Christopher Strachey proposed to define a programming language in a simple
@@ -452,7 +452,7 @@ but to me, equally unattractive language. Niklaus Wirth and I spent some time
 trying to get removed some of the deficiencies in the design and in the
 description, but in vain. The completed final draft of the language was promised
 for the next meeting of the full <small>ALGOL</small> committee in three months
-time.<p>Three months came and wenta b—c dnot a word of the new draft appeared. After six
+time.<p>Three months came and went — not a word of the new draft appeared. After six
 months, in October 1966, the <small>ALGOL</small> working group met in Warsaw.
 It had before it an even longer and thicker document, full of errors corrected
 at the last minute, describing equally obscurely yet another different, and to
@@ -526,7 +526,7 @@ part of the program has avoided all the traps and pitfalls of the language.<p>At
 soon realized it was doomed to success. Almost anything in software can be
 implemented, sold, and even used given enough determination. There is nothing a
 mere scientist can say that will stand against the flood of a hundred million
-dollars. But there is one quality that cannot be purchased in this waya b—c dand
+dollars. But there is one quality that cannot be purchased in this way — and
 that is reliability. The price of reliability is the pursuit of the utmost
 simplicity. It is a price which the very rich find most hard to pay.<p>All this happened a long time ago. Can it be regarded as relevant in a
 conference dedicated to a preview of the Computer Age that lies ahead? It is my
@@ -559,7 +559,7 @@ extensions can be specially designed where necessary for particular hardware
 devices and for particular applications. That is the great strength of
 <small>PASCAL</small>, that there are so few unnecessary features and almost no
 need for subsets. That is why the language is strong enough to support
-specialized extensionsa b—c dConcurrent <small>PASCAL</small> for real time work,
+specialized extensions — Concurrent <small>PASCAL</small> for real time work,
 <small>PASCAL PLUS</small> for discrete event simulation, <small>UCSD
 PASCAL</small> for microprocessor work stations. If only we could learn the
 right lessons from the successes of the past, we would not need to learn from

@@ -20,7 +20,7 @@ impossible (or at least difficult) to use the interface unsafely. (“Unsafety�
 could mean whatever you like: deleting important information, not deleting
 information that the person needs deleted, sending information to the wrong
 person, not sending information to the right person, crashing the machine, and
-so on.)<p>A learnable interface explains itself upon contacta b—c dthe person using it has
+so on.)<p>A learnable interface explains itself upon contact — the person using it has
 no need of secondary interface definitions such as documentation. Like a
 screwdriver, the shape of the head either fits or does not fit the screw. If the
 person somehow manages to crank the wrong screwdriver into a screw head, the
@@ -30,7 +30,7 @@ later...)<figure><img src=screws.jpg alt="Picture of screwdrivers and their matc
 screw heads." width=456 height=232 loading=lazy><figcaption>From <a href=http://universalscrewdriver.com/>Universal Screwdriver</a>. Maybe we can
 make software interfaces more universal.</figcaption></figure><p>I also assumed people would know what it means for an interface to be as
 simple as possible, but no simpler. For example, maybe the <a href=http://universalscrewdriver.com/>Universal
-Screwdriver</a> really worksa b—c dbut maybe it doesn’t. It seems unlikely to perfectly fit the different types of
+Screwdriver</a> really works — but maybe it doesn’t. It seems unlikely to perfectly fit the different types of
 screw heads. It’s worth a try, but we should fall back to regular screwdrivers
 if necessary.<p>Here are 2 more examples. I am a fan of dialog boxes that really offer
 choice, rather than the often meaningless <strong>OK</strong> and
@@ -112,12 +112,12 @@ like <strong>All Events In The Series</strong> and <strong>Close Without
 Saving</strong> explain themselves concisely, the names of types and identifiers
 explain themselves to readers who have understood the 1-paragraph definitions of
 <code>Map</code> and <code>Maybe</code>. Callers that violate the interface
-simply won’t compile, let alone runa b—c dno nasty run-time surprises like in
+simply won’t compile, let alone run — no nasty run-time surprises like in
 Python.<p>(Note that in defining the key type <code>K</code> as the argument type of
 <code>get</code>, we avoid another ambiguity in the Java <code>Map</code>
 interface: the possibility of <code>ClassCastException</code> (<a href=https://docs.oracle.com/javase/7/docs/api/java/util/Map.html#get(java.lang.Object)>documented
 as “optional”</a>). Recall from the documentation above that Java’s
-<code>Map.get</code> takes <code>Object</code> as the argument typea b—c dwhich may
+<code>Map.get</code> takes <code>Object</code> as the argument type — which may
 not correctly cast, at run-time (!), to <code>K</code>.)<p>There is a whole rant to be written on another topic I touched on in the last
 post: Whether or not an interface’s guarantee is <em>computable</em>. But, it
 will have to wait; for now, it is time to compose these 2 interfaces:<pre>
