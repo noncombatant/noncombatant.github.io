@@ -31,7 +31,7 @@ issuing certificates for organizations from nations <var>Y</var> and
 is World-Wide by nature and its many great benefits flow directly from that.
 Additionally, it is not always clear what nation a given organization is really
 ‘from’, and hence it is not always clear what CA ‘should’ have issued the
-organization’s certificates.<p>There can be no perfect set of ‘golden roots’ — you cannot construct a
+organization’s certificates.<p>There can be no perfect set of ‘golden roots’ — you cannot construct a
 minimal set of issuing certificates whose operators are more certain than some
 other set not to mis-issue (whether on purpose or by accident). If you partition
 the web, you reduce its value without actually reducing the threat of
@@ -51,8 +51,7 @@ its identity. The problem is, my client has no knowledge of that
 (<var>server-name</var>, <var>public-key</var>) pair. So it asks me to resolve
 the confusion. I am supposed to perform some out-of-band check that the key
 fingerprint is correct, and say Yes or No.<p>Assuming I say Yes, my client will henceforth expect this server to present
-that key <em>and only that key</em>. If my server ever presents a different key
-— whether due to legitimate key rotation or an actual network attack — my client
+that key <em>and only that key</em>. If my server ever presents a different key — whether due to legitimate key rotation or an actual network attack — my client
 will refuse to connect, and print a message like this:<pre>
 No ECDSA host key is known for freebsd and you have requested strict checking.
 Host key verification failed.
@@ -67,7 +66,7 @@ browsers have no special knowledge of cryptographic authentication. Therefore,
 we must still rely on CAs to provide the introductions, and we still use chains
 of certificates to give us flexible continuity for our web servers’
 cryptographic identities. And rather than pinning a <em>single</em> end-entity
-key, as in SSH, we can pin a <em>set</em> of keys — potentially at several
+key, as in SSH, we can pin a <em>set</em> of keys — potentially at several
 places in the certificate chain. As we’ll see below, this can greatly increase
 reliability.<p><a href=https://tools.ietf.org/html/rfc7469#section-2.6>HPKP Pin
 Validation</a> is essentially <em>set intersection</em>: given the set of public
@@ -93,7 +92,7 @@ the end of a chain of (usually) at least 3 certificates: the <em>root
 certificate</em> or <em>trust anchor</em>, 1 or more <em>intermediate issuer
 certificates</em>, and finally the <em>end-entity certificate</em>. Typically,
 the web server must serve as part of its TLS handshake all of these certificates
-except the root or trust anchor — the client maintains a set of trust anchors
+except the root or trust anchor — the client maintains a set of trust anchors
 and finds 1 that signed the top-most intermediate. In certain cases, a server
 can serve only its EE and the clients will discover the intermediate issuers,
 but this often leads to trouble. Generally, expect to have to serve a chain
@@ -123,22 +122,22 @@ reality, you <em>cannot simply assume this</em>.)<p>We can choose to pin the key
 EE1, and EE2. The implications of pinning at different levels vary:<dl><dt>Pinning at the EE(s).<dd>This gives the site operator a security
 guarantee as strong as SSH: any misissuance will cause clients to reject the
 misissued chain. The downside is that the server operator ties themselves to
-those specific EE public keys — simply getting a new EE issued by the same
+those specific EE public keys — simply getting a new EE issued by the same
 issuer(s) will not work (although see below about backup pins).<dt>Pinning at the intermediary/ies.<dd>This reduces the threat of
-misissuance to only the pinned intermediary/ies — a significant improvement over
+misissuance to only the pinned intermediary/ies — a significant improvement over
 the status quo, but not strictly as strong as pinning to only the EEs. By the
 same token, any new certificate issued for the site by those issuers will pass
 Pin Validation.<dt>Pinning at the root(s).<dd>This is similar to pinning to the
 intermediary/ies. Often, the same organization controls the private keys of the
 root and the intermediary/ies. If that is not the case, then this option becomes
 different from pinning to intermediaries: the site operator now trusts more or
-different private key holders not to misissue.</dl><p>By pinning at multiple levels in the certificate chain — e.g. the EEs and the
+different private key holders not to misissue.</dl><p>By pinning at multiple levels in the certificate chain — e.g. the EEs and the
 intermediaries, the EEs and the root, the intermediaries and the root, or at all
-3 — the site operator can trade off trusting more issuers with greater ease of
+3 — the site operator can trade off trusting more issuers with greater ease of
 avoiding bricking the site.<h3>Generate A Backup Pin</h3><p>The RFC mandates that hosts MUST provide a backup pin: A pin that is
 <em>not</em> present in the chain that the client validates. This is for your
 own good: if you lose control of your private keys and need to re-key your site
-and get new certificates, you don’t want your site to have any down time — and
+and get new certificates, you don’t want your site to have any down time — and
 certainly not to be bricked! Unless clients have already pinned your backup key,
 your site would be bricked until the max-age timed out.<p>In this example, I’ll use a backup EE certificate as a backup pin. (You
 could, and likely should, also use an alternate intermediary or root issuer
@@ -193,7 +192,7 @@ Public-Key-Pins header:<figure><img src=hsts-internals.png alt="A view of
 chrome://net-internals/#hsts showing key pins for nonfreesoftware.org" width=539 height=354 loading=lazy><figcaption>chrome://net-internals/#hsts allows you to query the
 state of Chrome’s HSTS and HPKP database.</figcaption></figure><aside><p>Update 08 Mar 2017: A previous version of this post used the word
 ‘Balkanize’ to mean ‘partition’. A nice reader took the time to email me to say
-that the term is offensive to people from the Balkans — something that I admit I
+that the term is offensive to people from the Balkans —  something that I admit I
 had not realized or considered. I’ve switched to using the term ‘partition’
 instead. I apologize for that! And thanks to the helpful reader.</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike

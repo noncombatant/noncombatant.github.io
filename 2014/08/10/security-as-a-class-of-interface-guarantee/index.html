@@ -53,15 +53,13 @@ GUI or CLI. A <strong>secondary interface definition</strong> is supplementary
 material; usually documentation, annotation, post-facto errata, entries in
 issue trackers, commit log messages, et c.</aside><h2>Security Is Part Of Every Interface</h2><p>I prefer to think of security as a class of interface guarantee. In
 particular, security guarantees are a kind of correctness guarantee. At every
-interface of every kind — user interface, programming language syntax and
-semantics, in-process APIs, kernel APIs, RPC and network protocols, ceremonies —
-<a href=http://en.wikipedia.org/wiki/Design_by_contract>explicit and implicit
+interface of every kind — user interface, programming language syntax and
+semantics, in-process APIs, kernel APIs, RPC and network protocols, ceremonies — <a href=http://en.wikipedia.org/wiki/Design_by_contract>explicit and implicit
 design guarantees</a> (promises, contracts) are in place, and determine the
-degree of “security” (however defined) the system can possibly achieve.<p>Design guarantees might or might not actually hold in the implementation —
-software tends to have bugs, after all. Callers and callees can sometimes (but
+degree of “security” (however defined) the system can possibly achieve.<p>Design guarantees might or might not actually hold in the implementation — software tends to have bugs, after all. Callers and callees can sometimes (but
 not always) defend themselves against untrustworthy callees and callers
 (respectively) in various ways that depend on the circumstances and on the
-nature of caller and callee. In this sense an interface is an <a href=http://en.wikipedia.org/wiki/Attack_surface>attack surface</a> — but
+nature of caller and callee. In this sense an interface is an <a href=http://en.wikipedia.org/wiki/Attack_surface>attack surface</a> — but
 properly constructed, it can also be a <strong>defense surface</strong>.<p>Here are some example security guarantees in hypothetical and real
 interfaces:<ul><li><p>The function <code>bool isValidEmailAddress(String address, Set
 knownTLDs)</code> returns true if the email address is syntactically valid for
@@ -97,14 +95,14 @@ with a high degree of entropy.<ul><li>And ASLR is an all-or-nothing affair: If t
 <em>any</em> executable code, they can almost certainly find gadgets useful for
 exploitation there.</ul><li><p>Programs generally must be recompiled with new options, or at least with
 old options previously thought of as being exclusively for dynamically-loadable
-library code — that is, there wasn’t <em>enough</em> of a perception gap in the
+library code — that is, there wasn’t <em>enough</em> of a perception gap in the
 toolchains’ interfaces! As a result, the guarantee of ASLR is still not
 ubiquitous, more than a decade later.<li><p>Many program errors are still exploitable due to the limited granularity
-of what program parts can be efficiently randomized — there is an implicit
+of what program parts can be efficiently randomized — there is an implicit
 guarantee of run-time efficiency that extreme ASLR could violate.<ul><li>Sometimes even coarse-grained ASLR violates certain extreme performance
 requirements.</ul><li><p>In applications that give attackers significant but not
-directly malicious control over run-time behavior — for example, as any dynamic
-programming environment like a web browser <em>must</em> do — the <a href=https://www.blackhat.com/presentations/bh-europe-07/Sotirov/Presentation/bh-eu-07-sotirov-apr19.pdf>attacker
+directly malicious control over run-time behavior — for example, as any dynamic
+programming environment like a web browser <em>must</em> do — the <a href=https://www.blackhat.com/presentations/bh-europe-07/Sotirov/Presentation/bh-eu-07-sotirov-apr19.pdf>attacker
 can significantly reduce the effective entropy of ASLR</a>, thus weakening the
 already-weak guarantee.<li><p>Previously low-severity bugs, like single-word out-of-bounds read errors,
 become information leaks that can undo all the benefits of ASLR and enable an
@@ -123,7 +121,7 @@ gaining much safety from it.<p>Sometimes, interface perception gaps are surfaced
 implementation change to close the gap. A classic example is the <a href=http://bugs.python.org/issue13703>denial-of-service problem in hash
 tables</a>: If an attacker can influence or completely control the keys of the
 pairs inserted into a hash table, they can cause the performance to degrade from
-the (widely perceived — but usually explicitly disclaimed!) ~ <em>O</em>(1)
+the (widely perceived  —  but usually explicitly disclaimed!) ~ <em>O</em>(1)
 performance guarantee for hash table lookup. Defenders can either explicitly
 claim the performance guarantee by randomizing the hash function in a way the
 attacker cannot predict, or (if they specified a more abstract interface) switch
@@ -139,8 +137,8 @@ But if they don’t understand that part of the interface definition, they might
 mistakenly waste time and space by extracting all the keys into an array and
 pointlessly re-sorting it. The problem is reversed if the interface is
 explicitly defined to be (say) a hash table, but the caller does not realize
-that.<p>Similarly, a security guarantee that callers do not perceive — but which is
-present — can cause callers to miscalculate their risk as being higher than it
+that.<p>Similarly, a security guarantee that callers do not perceive — but which is
+present — can cause callers to miscalculate their risk as being higher than it
 is. While it might seem that is OK, because callers will “err on the side of
 caution”, in fact the misperception can have an opportunity cost. (In a sense, a
 self-denial-of-service.)<p>A non-guarantee that is not perceived can also become dangerous. For example,
@@ -204,7 +202,7 @@ than directly comparing the timing-sensitive tokens (say, SAML blob signatures
 or CSRF tokens), HMAC the received blob and the expected blob again (with a new,
 separate HMAC key), and then compare those HMAC outputs (with any comparison
 function you want, even <code>memcmp</code>). The attacker may indeed observe a
-timing side-channel — but the timing information will be random relative to the
+timing side-channel — but the timing information will be random relative to the
 input. This is due to the straightforward, documented, and tested interface
 guarantee of the HMAC function as a pseudo-random function. And it works as
 expected in <em>any</em> language, on any computing substrate.<p>Consider another cryptography-related security conundrum: the supposed need
@@ -241,7 +239,7 @@ a tamper-resistant, tamper-evident <a href=http://en.wikipedia.org/wiki/Hardware
 module</a>.<h2>“Conclusion”</h2><p>This post is partly an attempt to investigate why the “security vs.
 convenience” dichotomy is false. I think it’s worse than a false dichotomy,
 really; it’s a fundamental misconception of what security is and of what an
-interface is — and of what ‘convenience’ (an impoverished view of usability)
+interface is — and of what ‘convenience’ (an impoverished view of usability)
 is.<p>But also it’s an attempt to re-frame security engineering in a way that
 allows us to imagine more and better solutions to security problems. For
 example, when you frame your interface as an attack surface, you find yourself
@@ -256,7 +254,7 @@ enough to carry and use effectively. It might seem like a semantic game; but in
 my experience, thinking of a boundary as a place to build a point of strength
 rather than thinking of it as something that must inevitably fall to attack
 leads to solutions that in fact withstand attack better while also functioning
-better for friendly callers.<p>The safest interface is still no interface — don’t multiply interfaces
+better for friendly callers.<p>The safest interface is still no interface — don’t multiply interfaces
 unnecessarily. But when you must expose something, expose a well-tested shield
 rather than merely trying to narrow your profile or hide behind a tree.<h2>And Now, Your Moment Of Zen</h2><p><a href=https://twitter.com/rootkovska/status/498227129969295360>https://twitter.com/rootkovska/status/498227129969295360</a><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike

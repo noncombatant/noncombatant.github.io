@@ -25,7 +25,7 @@ University
 Computer Museum</a>. Searching the web for some of the citations can get you
 closer, but the holy grails that I haven’t found yet are H. Johnson, “PROTEL: A
 programming Language for Large Real-Time Applications” (1984); and <i>Protel
-Technical Notes, BNR, Language Development Group</i>; issues: vol. 1, nr. 1 – 7,
+Technical Notes, BNR, Language Development Group</i>; issues: vol. 1, nr. 1 – 7,
 1980.<p>The broad view these sources provide of Protel and SOS is of a type-checked
 and spatially memory-safe systems programming language, compiled into
 dynamically linkable and swappable shared objects, which all run as real-time,
@@ -138,11 +138,10 @@ the knowledge that most changes really are well hidden and do not compromise
 system integrity.”<li><p>The <code>DESC</code> (“descriptor”) type was what we now call
 <code>span</code> or <code>slice</code>: A pointer to a (sub-)region of
 elements, together with the number of elements in that (sub-)region. This
-provided spatial safety — the bounds were checked. They also recognized that
+provided spatial safety —  the bounds were checked. They also recognized that
 built-in mechanisms for safety can yield efficiency improvements. From
 Clement:<blockquote>A Protel <code>DESC</code>riptor is used to refer to a range of
-elements in an array of &lt;type>. It is used in the same way [as] an array —
-with a subs[c]ript as an lvalue or rvalue to an expression (though the usual
+elements in an array of &lt;type>. It is used in the same way [as] an array — with a subs[c]ript as an lvalue or rvalue to an expression (though the usual
 meaning of those terms is confused by <a href=https://en.wikipedia.org/wiki/Protel#GAZINTA>the Gozinta
 operator</a>!).
 The compiler is aware of the of the slice being <code>DESC</code>ribed, and by
@@ -169,16 +168,16 @@ obvious (even to me) now</a> that memory protection alone can never suffice:
 untrustworthy programs can call and corrupt a program even from outside its
 protection zone (and even, of course, from other machines entirely). Add to that
 side-channels and the practical difficulty of maximally reducing the privilege
-of programs in real-world systems, and you have a recipe for sadness.<p>Having no memory protection does make language safety paramount — clearly, we
+of programs in real-world systems, and you have a recipe for sadness.<p>Having no memory protection does make language safety paramount —  clearly, we
 must have at least one of language safety and protected memory. But we also know
 that there will always be unavoidable zones of language un-safety, even if they
 are few and small. (Although it’s worth noting that, according to Foxall, et
 al., “Furthermore, it was decided that PROTEL should be the only implementation
-language — no assembly language was provided for DMS-100.”) In the end, even
+language — no assembly language was provided for DMS-100.”) In the end, even
 Singularity had to provide virtual memory protection. I do think, though, that
 strong language safety provides trustworthiness that can allow us to reduce the
 proliferation of memory protected address spaces, and hence to regain some
-efficiency.<p>Here’s a simple example of scripting in the DMS-100 shell — it was still in
+efficiency.<p>Here’s a simple example of scripting in the DMS-100 shell —  it was still in
 use at least as late as 2012:</p><iframe width=560 height=315 src=https://www.youtube.com/embed/6r151EuVlfQ title="YouTube video player" frameborder=0 allow="accelerometer; autoplay;
 clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading=lazy></iframe><p>And, finally, your moment of Zen (Cashin, et al.):<blockquote>Rather than increasing complexity by allowing module nesting as in
 ADA, our experience leads us to believe that even our current structure may be

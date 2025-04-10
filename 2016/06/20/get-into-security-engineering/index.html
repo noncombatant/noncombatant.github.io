@@ -23,16 +23,16 @@ of time, because for me it makes the choices much less stressful. And you will
 most certainly need a moral compass as you progress through this adventure.<h2>Go For It!</h2><p>You can, and should, get started right away! Yes, there is a lot to learn,
 but you can do it, and you can start being effective immediately. I know this
 from first-hand experience, and from seeing other people do it. You might feel
-daunted by the size of the problem — everyone is, whether they admit it or not.
+daunted by the size of the problem — everyone is, whether they admit it or not.
 The only way anyone has ever made progress is bit by bit, and you can too.<p>There are more security problems right now than there are problem solvers. We
 need you!<h2>Security Engineering Is Just Engineering</h2><p>Security is a specialization within the overall field of software
 engineering. In that sense, it is no different than any other specialization
 like networking, databases, performance, games, or whatever else. And software
-engineering is much more than just reading and writing code — it also includes
+engineering is much more than just reading and writing code —  it also includes
 design, technical and non-technical writing and communication, interpersonal and
 political skills, at least some understanding of business and economics, and
 more. Security engineers need those skills, too. Code is definitely important
-but it is not the whole story.<p>You can learn the general partly by focusing on the specific — and you can
+but it is not the whole story.<p>You can learn the general partly by focusing on the specific — and you can
 learn the specific by learning the general. That is, you can learn engineering
 by diving right into security specifically, and you can also learn about
 security by learning engineering generally. (After all, security is really just
@@ -59,10 +59,10 @@ the Python interpreter and standard library source code) exactly how that object
 C library’s <code>FILE</code> type, which itself is a rather thick (and useful)
 wrapper around the operating system’s <em>file descriptor</em> or
 <em>handle</em> concept. In turn, file descriptors are abstract representations
-of a wide variety of hardware and software systems:<ul><li>Possibly volatile, possibly not<li>Possibly stored on a device attached to this computer — or possibly
+of a wide variety of hardware and software systems:<ul><li>Possibly volatile, possibly not<li>Possibly stored on a device attached to this computer —  or possibly
 remote, retrieved over the network in a way that might violate your expectations
-for integrity or confidentiality<li>Possibly stored on any kind of hardware: spinning disk, tape, SSD — all with
-wildly different performance and reliability properties<li>Possibly cached at 1 or more places in the <a href=https://en.wikipedia.org/wiki/Memory_hierarchy>memory hierarchy</a> — and
+for integrity or confidentiality<li>Possibly stored on any kind of hardware: spinning disk, tape, SSD —  all with
+wildly different performance and reliability properties<li>Possibly cached at 1 or more places in the <a href=https://en.wikipedia.org/wiki/Memory_hierarchy>memory hierarchy</a> —  and
 possibly stale or inconsistent</ul><p>The <em>pathname</em> of the file, in this case <code>something.txt</code>,
 is also a very high-level abstraction. Different platforms implement different
 pathname interpretation semantics, but most do a lot of work to hide complexity.
@@ -73,7 +73,7 @@ of things:<ul><li>Hardware devices (e.g. <code>/dev/disk1</code>)<li>Software �
 Report.xls</code>)<li>And more...</ul><p><a href=https://googleprojectzero.blogspot.com/2016/02/the-definitive-guide-on-win32-to-nt.html>Windows
 systems have even stranger pathname semantics</a>. PHP will also interpret
 pathnames as URLs and <a href=http://php.net/manual/en/wrappers.php>will
-perform certain transformations of the data based on the URL scheme!</a><h3>Abstractions Are Lossy — And Vulnerable</h3><p>They have to be — that’s their value! The purpose of an abstraction is to
+perform certain transformations of the data based on the URL scheme!</a><h3>Abstractions Are Lossy —  And Vulnerable</h3><p>They have to be —  that’s their value! The purpose of an abstraction is to
 hide complexity, and thereby help you get work done faster. An abstraction that
 does not hide something from its caller is not an abstraction at all.<p>But a security engineer is always skeptical, because they know that in the
 gap between what the abstraction <em>seems to provide</em> and what it
@@ -85,15 +85,14 @@ to say this is, <a href=/2014/08/10/security-as-a-class-of-interface-guarantee/>
 callees, and know your callers</strong></a>. The difference between an engineer
 and a security engineer is that the security engineer is looking for the tension
 and friction in those edges.<h2>Skills</h2><p>For the rest of this post, I’ll talk about what skills I have found useful in
-application security. But there are other areas, and other paths into them
-— this is just one person’s perspective!<h3>Foundations</h3><p>Certain skills will be of use throughout your career and will help you build
+application security. But there are other areas, and other paths into them —  this is just one person’s perspective!<h3>Foundations</h3><p>Certain skills will be of use throughout your career and will help you build
 a foundation from which you can learn anything else you need to learn.<ul><li>Know at least 1 programming language (C, Ruby, Python, Java, et c.) in
 depth.<li>Know the standard library of your programming language as well as possible.
 This includes collections types (lists, <a href=/2014/03/02/maps-and-their-applications/>maps</a>, et c.), basic file
 I/O, basic networking, basic text processing, and so on.<li>Know at least 1 platform (iOS, Linux, web, Windows, et c.) in depth.<li>Know at least the basics of TCP/IP. Spend some quality time with <a href=https://www.amazon.com/TCP-Illustrated-Protocols-Addison-Wesley-Professional/dp/0321336313/><em>TCP/IP
 Illustrated</em></a> and <a href=https://www.wireshark.org/>Wireshark</a>.</ul><h3>Progressing</h3><p>After some years building your foundations, there are more things to learn
 and more adventures to enjoy. Here are some:<ul><li>Master additional languages and platforms<li>Contribute to the implementation of a language or platform<li>Learn about cryptography, and what it does and does not provide<li>Learn about hardware engineering<li>Learn programming language theory<li>Branch out into platform security engineering (changing platforms, and
-developing new platforms, to better serve application security needs)<li>Study distributed systems theory<li>Learn about performance engineering — it’s important to make sure that
+developing new platforms, to better serve application security needs)<li>Study distributed systems theory<li>Learn about performance engineering —  it’s important to make sure that
 security mechanisms are not the cause of performance problems!<li>Learn user experience design, so you can build secure <a href=https://eprint.iacr.org/2007/399.pdf><em>ceremonies</em></a></ul><h2>Some Light Reading</h2><p>To thoroughly learn a programming language, I find it useful to read 1 very
 well written book that covers the language’s syntax, semantics, standard
 library, and usage conventions. I like to read the book cover to cover, and then
