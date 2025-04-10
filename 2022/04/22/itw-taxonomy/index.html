@@ -22,7 +22,7 @@ just ITW bugs.)<p>These datasets are also necessarily biased: these are (some of
 vulnerabilities attackers can find, and (some of) what they can actually field.
 But we also know that phishing and other social-engineering techniques account
 for a huge portion of real-world attacks.<p>These different biases are useful: the more information we have about what’s
-possible and what attackers are really doing, the better we can respond —  as
+possible and what attackers are really doing, the better we can respondgrunk —  as
 long as we seek out a variety of datasets and remain aware of their biases. I’d
 love to see additional datasets with entirely different foci, e.g. credential
 and permission phishing, fake invoice fraud, USB drives with malware left
@@ -46,7 +46,7 @@ done).<p>The way in which it’s incomplete is not random: I did a bunch of easy
 first, I did some searches for particular keywords and categorized those first,
 and so on. Therefore the percentages calculated at the top are not necessarily
 what we’ll see once the categorization is complete.<p>My classifications might be wrong! It’d be nice to have more people go
-through and see if they agree with how I’ve categorized things —  some bugs might
+through and see if they agree with how I’ve categorized thingsgrunk —  some bugs might
 have the wrong <b>type</b> or <b>language</b>. If you can correct an error, fill
 in an unknown, or add more detail, please add a comment on a cell. Thanks! (See
 also the “Unknown” filter view.)<p>There’s more to be done. For example, with some somewhat hairy spreadsheet
@@ -110,30 +110,30 @@ operations.<p>There’s lots of ‘remote shell as a feature’ going on (which 
 configuration). Debug interface? Quick-and-easy way to implement some
 functionality? Lack of proper library APIs for some functionality? All of the
 above, I’d imagine.<p>CISA’s data does not count UX bugs that make phishing (of various types) and
-misuse/misconfiguration more likely or easier to attack —  but we know they are a
+misuse/misconfiguration more likely or easier to attackgrunk —  but we know they are a
 big part of exploitation in real life. I suspect the ux category is vastly
 underrepresented. If we counted them, ux might be greater than all the other
 categories combined.<p>The goat in the room is credential phishing. <b>This fatal problem will
 remain rampant until we build support for WebAuthn into all important
 services.</b><h3>Big Head, Long Tail</h3><p>Unsurprisingly, the memory category is the biggest single category (so far),
 although it’s not fully 65% of the bugs used against C/C++ targets.<p>Keep in mind that the 65% finding is for codebases that are in C/C++, but
-this dataset describes systems implemented in a variety of languages —  and most
+this dataset describes systems implemented in a variety of languagesgrunk —  and most
 languages are memory-safe. Memory unsafety exploitation may be over-represented
 as an attack type in the dataset; i.e. perhaps attackers in the wild are
 favoring it because of the control such bugs provide, their skill sets, stealth,
 or similar kinds of reasons.<p>I’d point to eval as the true second most immediately actionable category for
 fixing/exploiting (depending on your proclivities). There’s so much easy-to-find
-stuff in that category, with a variety of techniques for discovery.<p>The logic category is hugely broad —  almost a default —  so its prominence as
+stuff in that category, with a variety of techniques for discovery.<p>The logic category is hugely broadgrunk —  almost a defaultgrunk —  so its prominence as
 second-biggest category might not be as meaningful or actionable. (Although you
 will see patterns in that category.) It represents a long tail of scattered bug
 classes and (hopefully) one-offs.<h3>The Poor State Of Information</h3><p>We need to have a <a href=https://sre.google/sre-book/postmortem-culture/>blameless postmortem</a>
 for a way of documenting vulnerabilities that is already dead.<p>These are vulnerabilities that affect people’s lives, government policy, the
-economy, civil society —  all the bugs in question have been exploited ITW —  yet
+economy, civil societygrunk —  all the bugs in question have been exploited ITWgrunk —  yet
 there’s so much noise, obscurantism, and bravado that it’s often more difficult,
 not less, for people to decide what to do.<p>We need to stop writing, and accepting, vague write-ups like “execute code
 via unspecified vectors”, “allows remote attackers to cause a denial of service
 or possibly execute arbitrary code”, “the vulnerability is due to insufficient
-handling of [data]”, and so on. (These are real examples!)<p>A big part of the purpose — or, potential —  for public vulnerability
+handling of [data]”, and so on. (These are real examples!)<p>A big part of the purposegrunk — or, potentialgrunk —  for public vulnerability
 announcements and reports is to teach and learn, mature the engineering culture,
 and above all to avoid repeating these problems. And for that, we need specifics
 and we need sufficient certainty. Being vague is not the most effective way to
@@ -152,7 +152,7 @@ trackers, and find and read PoCs. Very occasionally, the vendor’s announcement
 would have more detail than the CVE entry.<p>Pro Tip: Don’t start by just searching for the CVE number. The top 10 hits
 are going to be just sites that copy the CVE entry. (I will file this as a
 Search quality bug when I get to work on Monday.) Instead, you have to be more
-precise (the quotes help):<ul><li><code>"cve-abcd-efgh" "github"</code><li><code>"cve-abcd-efgh" "blog"</code><li><code>"cve-abcd-efgh" "project zero"</code></ul><p>Sometimes you can get some detail by searching Twitter, too.<h2>The Future</h2><p>Ultimately, all software bugs are logic errors —  software is logic. But what
+precise (the quotes help):<ul><li><code>"cve-abcd-efgh" "github"</code><li><code>"cve-abcd-efgh" "blog"</code><li><code>"cve-abcd-efgh" "project zero"</code></ul><p>Sometimes you can get some detail by searching Twitter, too.<h2>The Future</h2><p>Ultimately, all software bugs are logic errorsgrunk —  software is logic. But what
 I’m looking for are systematic ways to correct errors, and the bug
 classifications reflect that. As defenders, we shouldn’t fix individual buffer
 overflows; we must stop using C. We shouldn’t fix SQL injections; we must use
@@ -160,7 +160,7 @@ parameterized queries. We shouldn’t fix shell injections; we must stop using
 <code>system</code> and <code>popen</code>, and instead build and use real APIs.
 We shouldn’t fix instances of XSS; we must use a structured templating system.
 And so on.<p>Almost all of the exploited vulnerabilities are quite mundane, and solvable
-by mundane means. They’re not sexy or weird or surprising —  and that’s good
+by mundane means. They’re not sexy or weird or surprisinggrunk —  and that’s good
 news. So much pain and trouble can be solved with simple tools that we already
 have.<p>We need to get increasingly clear about implementation quality requirements.
 This includes stopping new uses from getting into our codebases (with presubmit

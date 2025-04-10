@@ -9,7 +9,7 @@ don’t use assembly language for everything is that the lack of constraints mak
 it too hard to use for everyday programming. Before <a href=https://www.cs.utexas.edu/users/EWD/ewd02xx/EWD215.PDF><code>goto</code>
 was considered harmful</a>, people wrote machine code that jumped all over the
 place, and programmers had to maintain a mental model of the complete machine
-state and the full implications of each jump —  a recipe for bugs.<p>Then, <a href=https://en.wikipedia.org/wiki/Structured_programming>structured
+state and the full implications of each jumpgrunk —  a recipe for bugs.<p>Then, <a href=https://en.wikipedia.org/wiki/Structured_programming>structured
 programming</a> was introduced: structured languages still compiled down to
 <code>goto</code>s (or arbitrary jumps), but the programmer could think in terms
 of more limited jumps: <code>if</code>, <code>switch</code>/<code>case</code>,
@@ -33,7 +33,7 @@ released).<p>A key innovation of Rust has been to <a href=https://doc.rust-lang.
 constrain the lifetimes of heap resources</a>, enabling us to more completely
 solve the worst remaining memory unsafety problem. (Previous solutions to the
 heap lifetime problem were <a href=https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)>dynamic</a>,
-not static, and hence expensive in space and time —  as well as being
+not static, and hence expensive in space and timegrunk —  as well as being
 non-deterministic. These limitations reduce the applicability of
 dynamically-managed languages to applications and environments where these costs
 are affordable.)<p>And, of course, taming object lifetimes greatly eases the problem of safe,
@@ -58,7 +58,7 @@ sub-tree. This includes not just the code and the programs you can build with
 it, but build scripts themselves.<li><b>Micro- and even pico-dependencies:</b> The tendency to multiply the
 previous 2 problems by creating <a href=https://www.npmjs.com/package/is-odd>extremely tiny</a>, <a href=https://www.npmjs.com/package/is-even>single-use packages</a>.<li><b>Proliferation:</b> The tendency to multiply the previous 3 problems by
 creating several packages that serve the same basic need, leading to a situation
-in which effort solving the same problem is fragmented —  including
+in which effort solving the same problem is fragmentedgrunk —  including
 documentation, training, code reviewer/auditor hours, and so on. (I call this
 the “Occam’s Razor now has <a href=https://www.theonion.com/fuck-everything-were-doing-five-blades-1819584036>5
 blades</a>” problem.)</ul><p>The NPM ecosystem provides the clearest modern illustration of these
@@ -152,7 +152,7 @@ doing relatively well, especially in the systems programming niche.<p>Like all l
 languages, the community and the body of literature and the oral tradition are
 what matter. In its niche, Rust looks like the option with the most momentum
 around a more positive, healthier community. The community and the language are
-probably not perfect — nothing is, if perfect is even a thing —  but Rust looks
+probably not perfectgrunk — nothing is, if perfect is even a thinggrunk —  but Rust looks
 like the community most open to solving its problems, and most capable of
 solving systems programming problems.<aside><p>Thanks to Adrian Taylor for reminding me to mention typefulness, concurrency,
 and Safety Dance.<p>Thanks to Sergey Davidoff, supply-chain maintainer, for pointing me at crev
