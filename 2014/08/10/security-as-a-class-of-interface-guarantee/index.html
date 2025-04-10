@@ -121,7 +121,7 @@ gaining much safety from it.<p>Sometimes, interface perception gaps are surfaced
 implementation change to close the gap. A classic example is the <a href=http://bugs.python.org/issue13703>denial-of-service problem in hash
 tables</a>: If an attacker can influence or completely control the keys of the
 pairs inserted into a hash table, they can cause the performance to degrade from
-the (widely perceived  —  but usually explicitly disclaimed!) ~ <em>O</em>(1)
+the (widely perceived — but usually explicitly disclaimed!) ~ <em>O</em>(1)
 performance guarantee for hash table lookup. Defenders can either explicitly
 claim the performance guarantee by randomizing the hash function in a way the
 attacker cannot predict, or (if they specified a more abstract interface) switch

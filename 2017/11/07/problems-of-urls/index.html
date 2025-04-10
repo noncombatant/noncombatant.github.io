@@ -28,13 +28,13 @@ between human-meaningful names and origins or URLs.<p>However, that requires the
 authority, to be trustworthy. This proves difficult:<figure><img src=whatsapp-minefield.jpg width=552 height=459 alt="A
 screenshot of Google Play Store showing search results for “whatsapp”, with
 numerous perfect spoofs." loading=lazy><figcaption>“This is horrible..
-minefield” —  <a href=https://mobile.twitter.com/deathy/status/926861685440249857>Cristian Vat
+minefield” — <a href=https://mobile.twitter.com/deathy/status/926861685440249857>Cristian Vat
 on Twitter</a></figcaption></figure><p>Similarly, a Google search for [ <a href="https://www.google.com/search?q=download+chrome">download chrome</a> ] has
 lots of legitimate and correct results up top, but there are still fakes on the
 first page of results (at least at the time of writing, and for as long as I can
 remember). In fact, we used to have a recurring problem that obvious spoofs were
 at the very top of the results. Google’s search engine could not reliably find
-Google’s browser. In one sense, that indicates trustworthiness —  Google doesn’t
+Google’s browser. In one sense, that indicates trustworthiness — Google doesn’t
 seem to put its thumb on the scale. In another sense... sigh. 🤷🏻‍♂️<p>Perhaps ✨ machine learning ✨ could be useful in identifying spoofs, such as
 by comparing names and icons for similarity and raising them for human review.
 That would speed up the process of finding potential spoofs, potentially
@@ -44,7 +44,7 @@ But ultimately I do not agree that a centralized authority would be better, nor
 that we should switch to one.<p>I think the problem Owen poses can be resolved by investigating this
 question:<blockquote>“Origins are not very user-friendly”</blockquote><p>I fully agree that <strong>URLs</strong> are not usable, but I do believe
 that <strong>origins</strong> (the <a href=https://tools.ietf.org/search/rfc6454>scheme, host, port tuple</a>) are
-or can be made usable —  and that if we succeed at that technical problem, we can
+or can be made usable — and that if we succeed at that technical problem, we can
 reduce some of the pressure to centralize power.<h3>Making Origins Usable</h3><p>I think we can make origins more usable by doing the following things in the
 Location Bar:<ul><li>Show only the hostname. Not the port, not the scheme. If necessary or
 useful, we can also consider showing only the effective TLD + 1 label
@@ -60,7 +60,8 @@ trying out Safari. Brave for desktop also shows only the hostname until you
 focus the Location Bar.<figure><img src=safari-etld.png width=648 height=135 alt="A screenshot of
 Safari showing only the eTLD+1." loading=lazy><figcaption>Glorious, isn’t
 it?</figcaption></figure><p>As a practical matter, eTLD+1 names, hostnames, and copied-and-pasted blobs
-are all people really use in the real world. Very few people use URLs as such —  and that is perfectly fine! To improve URL usability and safety, application
+are all people really use in the real world. Very few people use URLs as such
+— and that is perfectly fine! To improve URL usability and safety, application
 and platform developers need only go with the flow. Let’s.<p>However, some more-or-less tractable problems remain even after we do all of
 the above.<ul><li>Ill-formed hostnames will still be confusing.<ul><li>I believe confusingness is by itself a useful indicator for people, and that
 well-formed hostnames like “facebook.com” and “baidu.com” make good brands.
@@ -177,7 +178,7 @@ say the language is “syntaxy”. If you try to write a URL parser, you’ll fi
 that it has to keep a fair amount of state to know whether this <code>:</code>
 is part of the scheme separator <code>://</code>, or a hextet separator, or the
 port number separator. Similarly, <code>/</code> has at least 2 meanings.<p>Unconsciously perhaps, humans need to build the same state machine in their
-minds to parse URLs —  or fail to, and get confused. Add on top of that the fact
+minds to parse URLs — or fail to, and get confused. Add on top of that the fact
 that many URL schemes are not real words, <code>/</code> looks kind of like
 <code>\</code>, and so on, and and pretty soon people are just plain confused
 about the URL language. It’s not a language people can speak easily.<h2>Goals For A Solution</h2><p>An ideal solution to the URL usability problem would have (at least) the
@@ -223,7 +224,7 @@ other strange IP address representations. They might be used in attacks to
 obscure things somewhat (although even a dotted-quad representation might
 sufficiently obscure the nature of the host). <a href=https://blogs.msdn.microsoft.com/ieinternals/2014/03/06/browser-arcana-ip-literals-in-urls/>Internet
 Explorer once granted special privileges (‘Intranet Zone’) to URLs with no dots
-in the host component</a> —  including URLs using these obscure forms.<p>Other than for attacks, I would bet that nobody uses or wants these address
+in the host component</a> — including URLs using these obscure forms.<p>Other than for attacks, I would bet that nobody uses or wants these address
 forms. Probably at least some people reading this, already a technical audience,
 were surprised to learn that the strange representations exist at all. So let’s
 just get rid of these historical quirks.<h2>Imaginary Approaches</h2><p>These are mitigation approaches that perhaps might be nice to do, but which I
@@ -231,7 +232,7 @@ suspct it’s too late to try. Alas. But still...<h3>Hierarchical Names That Go 
 hierarchical. But textually, they go in opposite directions!<p>In the DNS name www.example.com, com is the parent of example is the parent
 of www. The labels go left to right, child to parent. I’ll call this <a href=https://en.wikipedia.org/wiki/Endianness>little-endian</a> naming.<p>In the pathname /noodles/doodles/poodles.php, noodles is the parent of
 doodles is the parent of poodles.php. The components go left to right, parent to
-child —  the opposite relationship of DNS names. I’ll call this big-endian
+child — the opposite relationship of DNS names. I’ll call this big-endian
 naming.<pre>
 https://www.example.com/noodles/doodles/poodles.php
         --------------- +++++++++++++++++++++++++++

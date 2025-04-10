@@ -11,7 +11,8 @@ every syntactically correct program should give a result or an error message
 that was predictable and comprehensible in terms of the source language program
 itself</blockquote><p>He mentions spatial memory safety in particular, as it is the first and
 unavoidable kind of unsafety we encounter. (I’d say both as individuals, when we
-start learning C and assembly, and also in the history of software development —  programs in the era he is talking about often did not have object lifetimes
+start learning C and assembly, and also in the history of software development
+— programs in the era he is talking about often did not have object lifetimes
 other than static and stack, so temporal safety was less of an issue.)<p>But if we work through the implications of Hoare’s 1st principle, it becomes
 clear that safety must mean (at least) all of spatial and temporal memory
 safety, and also type safety. It’s worth noting that the need for lifetime

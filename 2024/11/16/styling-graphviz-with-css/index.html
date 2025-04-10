@@ -9,7 +9,7 @@ Gourd Season is coming to an end, motherfuckers</a>, this fine graph will soon
 lose its relevance until next year. So it goes.<p>Since I sometimes use Graphviz for articles, and now that I’m trying to make
 this site respect light and dark mode preferences smoothly, I wanted to get my
 graphs to do so as well. In the past, I’ve assumed light mode only, and so my
-graphs look bad in dark mode —  they’re a sudden flash of bright in an otherwise
+graphs look bad in dark mode — they’re a sudden flash of bright in an otherwise
 dark page.<p>To see it in action: If you’re in dark mode, switch to light, and vice-versa.
 (On macOS, for example, you can do this in <b>System Settings</b> →
 <b>Appearance</b>.) If it’s not easy for you to switch back and forth betwixt
@@ -21,7 +21,7 @@ the text, the graph is light on a dark background.</figcaption></figure><p>It to
 so I thought I’d write it down. These are the key things to know:<ul><li>Graphviz can indeed produce Scalable Vector Graphics (SVG) files. Woo
 hoo!<li>You can indeed style SVGs with CSS. (SVG is an application of XML, so things
 work as you’d hope.) As always, <a href=https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/SVG_and_CSS>Mozilla
-Developer Network’s documentation</a> is good.<li>You can embed SVG directly into HTML (!) —  you don’t have to use an
+Developer Network’s documentation</a> is good.<li>You can embed SVG directly into HTML (!) — you don’t have to use an
 <code>img</code> tag.<li>To get this to work easily and consistently, you really want to do the
 direct embedding.</ul><p>Crucial to all this is that the SVG be inline in the HTML, inside a
 <code>div</code>. I found that trying to <a href=https://graphviz.org/docs/attrs/stylesheet/>set the
@@ -82,7 +82,7 @@ digraph {
   pumpkin -&gt; squash
   squash -&gt; decoration
 }
-</pre>Note the <code>bgcolor = transparent</code> —  that’s important.<p>To render it as an SVG, and to get the output SVG to respect our CSS, we use
+</pre>Note the <code>bgcolor = transparent</code> — that’s important.<p>To render it as an SVG, and to get the output SVG to respect our CSS, we use
 this pipeline:<pre>
 % <b>dot -Tsvg test.dot | sed -E -e s'/(fill|stroke)="black"/\1="var(--fg)"/g' &gt; test.svg</b>
 </pre><p>Note that the <code>-E</code> option for <code>sed</code> gives us POSIX
