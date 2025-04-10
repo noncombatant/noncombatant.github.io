@@ -10,7 +10,7 @@ where everyone is right part of the time, and nobody really convinces anybody,
 and then we do it again next month.<p>Maybe a year or so ago, some colleagues and I were going around this
 merry-go-round again, and Drew Fisher actually shed some light on the discussion
 that I hadn’t seen before. He said, “Comments should explain why, not what.” I
-realized it’s the <i>what</i> comments that I dislikea b—c d they are redundant at
+realized it’s the <i>what</i> comments that I dislikeax yb—cx yd they are redundant at
 best, and contradict the actual code at worst (which happens frequently, in my
 experience). It’s the <i>why</i> comments that I like, and I bet most of us
 do.<p>There seem to be at least 3 kinds of comments in software code:<dl><dt><i>should</i> comments<dd>that talk about what the code should do, or
@@ -30,8 +30,8 @@ func RunCommand(command string) error {
 }
 </pre><p>The <code>command</code> argument is a shell command, so we can imagine that
 the <i>why</i> is that we need to restrict the commands to 1 of a few known-safe
-commandsa b—c d we don’t want to create a shell injection vulnerability! But it’s not
-great to make the reader imagine or guess. We should tell them.<p>This code enforces the should and avoids the vulnerabilitya b—c d it’s safe even
+commandsax yb—cx yd we don’t want to create a shell injection vulnerability! But it’s not
+great to make the reader imagine or guess. We should tell them.<p>This code enforces the should and avoids the vulnerabilityax yb—cx yd it’s safe even
 if the authors of callers didn’t read the comment:<pre>
 var SafeCommands = []string{
 	"pumpkin",

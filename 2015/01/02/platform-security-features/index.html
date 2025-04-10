@@ -29,7 +29,7 @@ e.g. a <a href=https://en.wikipedia.org/wiki/Trusted_Platform_Module>TPM</a>.<li
 to the kernel. Chrome OS, Mac OS X, iOS, and someday soon Android, have such
 mechanisms: <a href=https://www.kernel.org/doc/Documentation/prctl/seccomp_filter.txt>Seccomp-BPF</a>
 and <a href=https://developer.apple.com/library/mac/documentation/Security/Conceptual/AppSandboxDesignGuide/AboutAppSandbox/AboutAppSandbox.html>Seatbelt</a>.</ul><p>By contrast, there are security features desktop platforms have that
-mobile platforms lack:<ul><li>Considerably greater owner control over the devicea b—c d debuggers, root and
+mobile platforms lack:<ul><li>Considerably greater owner control over the deviceax yb—cx yd debuggers, root and
 ring 0 access, et c. “Digital rights management” seems to have caught on more
 strongly on mobile platforms. <a href=https://www.chromium.org/chromium-os/poking-around-your-chrome-os-device>Chrome
 OS has a Developer Mode</a>; I wish more closed platforms would follow
@@ -40,7 +40,7 @@ so we do technically have the horsepower to run e.g. Java, C#, F#, Haskell, et
 c. in these devices. In fact, Android, iOS, and the web all make heavy use of
 languages with expensive features like late binding, object orientation,
 run-time type checking, interpreted non-native code, and so on. Yet it has
-proven hard to actually use those expensive features for safetya b—c d people always
+proven hard to actually use those expensive features for safetyax yb—cx yd people always
 want to call into C/C++ code for “efficiency”, and then find out the hard way
 how easy it is to write unsafe C/C++. Developers seem happy to traverse many
 pointers to finally get to a callable method but are not happy to check the
@@ -49,7 +49,7 @@ safe code, at some point we have to draw the line: <em>this</em> is fast enough,
 <em>that</em> is not safe enough.</ul><p>Things we still need on both classes of platform, or which I’m not sure
 we have yet:<ul><li>A <a href=https://en.wikipedia.org/wiki/Secure_attention_key>secure
 attention sequence</a>. iOS’ Home button might actually be one; I don’t know the
-implementation. I am not certain if Control-Alt-Delete still is a SAS on Windowsa b—c dplease email me if you know more. SAS is a simple and powerful idea but it
+implementation. I am not certain if Control-Alt-Delete still is a SAS on Windowsax yb—cx ydplease email me if you know more. SAS is a simple and powerful idea but it
 depends crucially on implementation details that are hard to keep robust as
 products change over time.<li>UI isolation: each application should only be able to “see” its own windows,
 should be able to reliably know when they have the highest z-order, and should
