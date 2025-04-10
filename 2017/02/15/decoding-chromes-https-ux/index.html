@@ -43,7 +43,7 @@ QUIC secure transport protocol." width=659 height=581><figcaption>Chrome’s
 Security tab in Developer Tools shows that inbox uses modern ciphers and the
 QUIC secure transport protocol.</figcaption></figure><p>For sites with sub-resources from several different origins, we can show you
 that, and the security details for each different origin. Sometimes they are not
-all secure. Yikes!<p>(Chrome will not evaluate or execute code — <em>script content</em> — from
+all secure. Yikes!<p>(Chrome will not evaluate or execute code —  <em>script content</em> —  from
 non-secure origins when they are included in a page that is from an origin that
 is otherwise secure. Chrome will, however, show you images and other <em>display
 content</em> from non-secure origins in an a page from a secure origin. It would
@@ -55,7 +55,7 @@ people’s cheese”, and I really feel that because if someone moved my cheese 
 be unpleasantly surprised, too.<p>I feel very strongly about cheese.<p>Most people are mostly happy once they find out that the View Certificate
 button still exists, although there is some understandable grumbling about how
 it now takes more clicks to get to it.<p>We made that trade-off knowingly, on the belief that the PIB is a ‘primary’
-UX surface — it has that juicy permissions control panel, after all — and hence
+UX surface —  it has that juicy permissions control panel, after all  —  and hence
 it should be optimized to serve a more mainstream audience. By contrast, the
 people who want to do things like examine the X.509 certificate details are most
 likely engineers and network administrators, and they’d be better served by a UI
@@ -82,11 +82,11 @@ your screen like “.google.com”, with at most 1 label before the “.google.c
 has 3 labels: “inbox”, “google”, and “com”.)<li>Chrome has verified that the certificate is allowed (by GIA2) to be used
 with the hostname in the URL, which appears on my screen as
 “https://inbox.google.com/”.<li>The certificate you’re viewing is from the browser’s current connection to
-the server — but that can include revalidating a cached resource. It can happen
+the server —  but that can include revalidating a cached resource. It can happen
 that the resource as cached is still live, but that it was previously retrieved
 on a connection validated by a different certificate chain! So although you can
 check the certificate chain for every connection involved in fetching a page’s
-resources, that is super tedious — and it can’t mean what one might hope it
+resources, that is super tedious —  and it can’t mean what one might hope it
 means.</ul><p>And the CV pointedly does <em>not</em> mean a few other things:<ul><li>Not all strings of text that look the same on the screen are actually the
 same byte values underneath. This is terrible and bad, and is due to the fact
 that <a href=https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/>there
@@ -111,7 +111,7 @@ process, that does not actually mean that it is the chain that the true site
 operator intends to use at this time. For example, perhaps 1 of the issuers in
 the chain has been hacked, and attackers are issuing valid but false
 certificates. Or perhaps the certificate chain was valid yesterday, but the site
-operator rotated their keys after a server compromise — and the attacker now
+operator rotated their keys after a server compromise —  and the attacker now
 has, and is using, the old one. Thus, even if you have memorized that
 PayPal.com’s certificate has historically been issued by “Symantec Class 3 EV
 SSL CA - G3”, that doesn’t necessarily mean that’s what PayPal intends
@@ -122,7 +122,7 @@ least the Organization and Country fields.<p>And, on desktop platforms (only �
 in the Location Bar. For example, here is Twitter’s EV certificate:<figure><img loading=lazy src=twitter-ev.png alt="Twitter.com uses an EV
 certificate calling itself “Twitter, Inc. [US]”." width=330 height=139><figcaption>Twitter.com uses an EV certificate calling itself
 “Twitter, Inc. [US]”.</figcaption></figure><p>Surely, this is good? It indicates a stronger relationship between the DNS
-name “twitter.com” and the Delaware corporation “Twitter, Inc.”?<p>Well, yes and no. First, it’s a <em>Delaware</em> corporation — hence the
+name “twitter.com” and the Delaware corporation “Twitter, Inc.”?<p>Well, yes and no. First, it’s a <em>Delaware</em> corporation —  hence the
 “[US]”. In other legal jurisdictions, some other entity may call itself
 “Twitter, Inc.”. So, no guarantees. But also, what are we to think when there is
 no obvious relationship between the DNS name and the Organization name?<figure><img loading=lazy src=yell-ev-hibu.png alt="Yell.com is owned by
@@ -130,7 +130,7 @@ something called “Hibu”, which is located either in the United Kingdom or in
 Great Britain." width=353 height=140><figcaption>Yell.com is owned by
 something called “Hibu”, which is located either in the United Kingdom or in
 Great Britain.</figcaption></figure><p>I enjoy the irony that yell.com is “the UK’s leading online business
-directory” — an organization that should have this name-mapping problem
+directory” —  an organization that should have this name-mapping problem
 solved. Right?<p>In addition to having less-than-ideal security UX implications, EV
 certificates do not create a new technical security boundary. The <a href=https://tools.ietf.org/html/rfc6454>web
 origin</a> is the primary
@@ -158,13 +158,13 @@ that doing so was safe. (It often isn’t. A really secure site will pull in
 resources only from its own origin.)<li>However, as mentioned above, the browser will not execute script from
 non-secure origins on a page that is otherwise secure.<li>And, as always, sites that do not use HTTPS provide no guarantees at all.
 When there is an active attacker on the network — <a href=https://arstechnica.com/tech-policy/2014/09/why-comcasts-javascript-ad-injections-threaten-security-net-neutrality/>and
-when isn’t there, really?</a> — all non-secure sites are essentially evaluated
+when isn’t there, really?</a> —  all non-secure sites are essentially evaluated
 in the same privilege domain: the anonymous, unauthenticated, surveillable
 origin.</ul><p>The good news is that most people have nothing to learn from, and thus no
 need for, the level of technical security detail I’ve described in this post.
 Indeed, all this detail is pretty hard even for experts to interpret. It’s
 pretty much only useful to the people actually developing and deploying the web
-site — which is why we moved it to the Developer Tools.<h2>The Future</h2><p>There is still the problem that phishing is real (even prevalent), and is a
+site —  which is why we moved it to the Developer Tools.<h2>The Future</h2><p>There is still the problem that phishing is real (even prevalent), and is a
 highly effective mode of attack. I’m not convinced, at all, that phishing is a
 problem that we can solve with labels, indicators, or icons in an application’s
 UX. Instead, <a href=https://www.facebook.com/notes/facebook-security/security-key-for-safer-logins-with-a-touch/10154125089265766/>we

@@ -35,9 +35,9 @@ about reliability in a world of accidents, mishaps, and misunderstandings.<p>The
 the application layer must not trust other software, protocols, or
 communications providers; instead, it must treat them as not only unreliable but
 as potential threat actors.<p>But does it make sense to treat the author(s) of the trusted computing base
-(TCB) — your hardware, firmware, operating system, and core application
-frameworks — as untrusted? As threat actors?<p>Landau considers it a “redefinition” of the principle of E2E security to
-trust the TCB. Essentially, she wishes — we all would wish! — for the “ends” to
+(TCB) —  your hardware, firmware, operating system, and core application
+frameworks —  as untrusted? As threat actors?<p>Landau considers it a “redefinition” of the principle of E2E security to
+trust the TCB. Essentially, she wishes —  we all would wish! —  for the “ends” to
 be the application software instances alone, defending themselves against an
 <b>un</b>trusted and potentially hostile computing base:<figure><img src=we-wish.svg alt="A graphic showing Alice, Bob, Alice’s
 device, and Bob’s device, with messaging apps talking to each other and treating
@@ -50,15 +50,14 @@ the device OSs as potenitally hostile but necessarily trusted." title="In fact,
 the device OS is trusted, even though it might be hostile. Bummer, but that’s
 life." loading=lazy width=500 height=289><figcaption>In fact, the device OS
 is trusted, even though it might be hostile. Bummer, but that’s
-life.</figcaption></figure><p>Every TCB, from every vendor, has at least the power — hopefully unused, or
-at least ‘benignly’ — to inspect, modify, tootle with, and otherwise perturb any
+life.</figcaption></figure><p>Every TCB, from every vendor, has at least the power —  hopefully unused, or
+at least ‘benignly’ —  to inspect, modify, tootle with, and otherwise perturb any
 application it hosts. None of Apple, iOS, iMessage are unique in this way. You
 have to trust Ubuntu not to frobulate your Signal Desktop. You have to trust
 Android not to discrombulize your WhatsApp.<p>Whether the trust<b>ed</b> computing base is trust<b>worthy</b> is an
 entirely separate question.<p>Another separate question: Does it make sense to treat the application itself
 as a threat actor, other than by simply rejecting it? Part of Apple’s system(s)
-for CSAM involves, presumably, integration between iOS, iMessage, and iCloud
-— presumably, the system(s) are implemented partially inside iMessage and
+for CSAM involves, presumably, integration between iOS, iMessage, and iCloud —  presumably, the system(s) are implemented partially inside iMessage and
 partially with API hooks between the OS, app, and iCloud. Apple is the author of
 all that software, and runs the services.<p>In theory, at least, any TCB could reach into any application it hosts to do
 the same thing. I’m not saying I think Apple or any other OS vendor will go so

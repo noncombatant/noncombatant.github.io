@@ -32,7 +32,7 @@ corruption vulnerabilities for projects implemented in unsafe languages. Against
 modern targets, exploiting memory corruption is nowhere near as easy as it was
 in the 1990s or the 2000s.<p><a href=https://9to5mac.com/2018/01/19/ios-11-adoption-65-percent/>iOS
 continues to have excellent update adoption</a> (<a href=https://david-smith.org/iosversionstats/>see also</a>), even though it’s
-voluntary — a sign that people perceive the value of the updates. It’s unlikely
+voluntary —  a sign that people perceive the value of the updates. It’s unlikely
 people are making their choice on the basis of security per se, of course. But
 <a href=https://twitter.com/mattblaze/status/1081384425416470528>security and
 privacy are key parts of iOS’ value proposition</a>, and I do think at least
@@ -52,7 +52,7 @@ Model</a>.)<p>Memory tagging, a new (and <a href=https://en.wikipedia.org/wiki/T
 hardware, can help with memory safety problems. <a href=https://llvm.org/devmtg/2018-10/slides/Serebryany-Stepanov-Tsyrklevich-Memory-Tagging-Slides-LLVM-2018.pdf>People
 are working on making it happen on modern systems</a> (<a href=https://arxiv.org/pdf/1802.09517.pdf>paper</a>). I don’t think it’s a
 replacement for fixing bugs in as systemic a way as possible (ideally, in the
-source language), but it has great potential to increase safety.<p>Static checkers — compilers — and dynamic checkers (e.g. <a href=https://clang.llvm.org/docs/AddressSanitizer.html>Address Sanitizer</a>
+source language), but it has great potential to increase safety.<p>Static checkers —  compilers — and dynamic checkers (e.g. <a href=https://clang.llvm.org/docs/AddressSanitizer.html>Address Sanitizer</a>
 and the rest of the LLVM sanitizers) have advanced very far in the past 20
 years. What was once bleeding-edge research now comes for free with
 off-the-shelf compilers. This is fantastic! (Start with <code>-Wall
@@ -86,7 +86,7 @@ creator finds himself on the other side of the community</a> on the issue of
 C++’s growing complexity. Stroustrup correctly identifies C++’s growing
 complexity as a potentially fatal risk for the language.<li><a href="https://bugs.llvm.org/show_bug.cgi?id=34729">The new, safe APIs are
 not safe</a>. (“WONTFIX”.)<li><a href=https://blog.regehr.org/archives/213>C and C++ compilers continue
-to exploit undefined behavior</a> — something that should not exist — for the
+to exploit undefined behavior</a> —  something that should not exist —  for the
 dubious goal of micro-optimizations. (John Regehr: “A compiler that is very
 smart at recognizing and silently destroying Type 3 functions becomes
 effectively evil, from the developer’s point of view.”)<li>C++ is so complicated that <a href=https://groups.google.com/a/chromium.org/forum/#!topic/cxx/2UTgWpM5N0c>expert
@@ -118,12 +118,11 @@ also</a>, <a href=https://en.wikipedia.org/wiki/System_Management_Mode#Problems>
 also</a>). Although those links refer mostly to Intel Architecture systems,
 there’s no reason to think that (e.g.) ARM is inherently safer. In particular,
 the micro-architectural side-channel problems are the natural result of
-designing for maximum performance — which almost every chip designer is trying
+designing for maximum performance —  which almost every chip designer is trying
 to do, because that’s what almost every customer wants.<h2>The Ugly</h2><p>Abuse (the malicious use of legitimate functionality) affects more people’s
 lives in more ways than does the exploitation of bugs. Although hacking can have
 a surprising influence, such as in the form of political fallout or mass data
-breaches, the reasons your friends and family are sad are much more prosaic
-— and harder to solve:<ul><li>Phone scams; <a href=https://en.wikipedia.org/wiki/Technical_support_scam>tech-support
+breaches, the reasons your friends and family are sad are much more prosaic —  and harder to solve:<ul><li>Phone scams; <a href=https://en.wikipedia.org/wiki/Technical_support_scam>tech-support
 scams</a>; <a href=https://medium.com/@nancynakamoto_11949/the-princess-bride-and-the-mystery-of-the-tether-business-model-d76a08c94734>cryptocurrency
 scams</a> and <a href=https://www.howtogeek.com/359129/don%E2%80%99t-fall-for-the-new-cryptoblackmail-scam-here%E2%80%99s-how-to-protect-yourself/>extortion</a>.<li>Malware, crapware, or ‘unwanted software’ that people purposefully install.
 (These are often listed in legitimate stores, shipped with the device drivers of
@@ -132,7 +131,7 @@ and stalkerware</a>.</ul><p><a href=https://www.theguardian.com/technology/2018/
 continues not to work</a> 😵, <a href=https://www.cl.cam.ac.uk/~rnc1/proofwork.pdf>as foretold by prophecy</a>
 😑. The coming decades are going to bring increasing climate, uh, ‘challenges’,
 and all computing systems are going to have to prove their worth relative to the
-sum of <strong>all</strong> their costs — including carbon and e-waste. We won’t
+sum of <strong>all</strong> their costs —  including carbon and e-waste. We won’t
 be able to laugh those off as externalities any longer. Proof-of-work systems
 will continue to be unable to show sufficient value for the cost, and may even
 be the wedge for regulation (if they don’t starve themselves or crash
@@ -150,7 +149,7 @@ definitely not: every browser has a very good Dev Tools console, and there is no
 excuse for not using it.<p>Dependency slurping systems like NPM, CPAN, <code>go get</code>, and so on
 continue to freak me out. They might potentially be more dangerous than manual
 dependency management, despite the huge risks of that practice, precisely
-because they make it ‘easy’ to grow your project’s dependency graph — and hence
+because they make it ‘easy’ to grow your project’s dependency graph —  and hence
 the number of individuals and organizations that you implicitly trust. (And <a href=https://www.theregister.co.uk/2018/11/26/npm_repo_bitcoin_stealer/>their
 trustworthiness can suddenly change for the worse</a>.) When there are
 significant gaps in a language’s standard library, third-party developers will
@@ -173,8 +172,8 @@ answer that question.<h2>The Future</h2><p>Unfortunately for me, I want to work 
 fun time in 2018 working on defense at a low-level (<a href=/2018/07/19/application-principals/>just one of many adventures</a>), and
 there’s still plenty of work to be done there. (There’s lots of ambient
 privilege still crying out to be reduced!) It has been rewarding to play my
-small part in helping get HTTPS where it needs to be.<p>And unfortunately, the problems that I find the most vexing — the abuse
-category generally — are not in my area of greatest expertise. My heart is
+small part in helping get HTTPS where it needs to be.<p>And unfortunately, the problems that I find the most vexing —  the abuse
+category generally —  are not in my area of greatest expertise. My heart is
 really in the language problem: meaningful interfaces, ergonomic and safe
 libraries, memory safety, and type safety. But it’s the abuse that makes my
 heart sick.<p>Still, I see people really shipping software improvements that seemed
