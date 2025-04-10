@@ -17,16 +17,16 @@ next problem would arise: surfacing the connection failures to people. Due to
 the asynchronous and ‘it just works’ nature of email, I don’t see an elegant or
 even minimally workable solution to that problem. I’d love to be proven
 wrong...</aside><p>Original post follows:<hr><p>If an application (or platform, or protocol, or...) cannot communicate a
-particular security guarantee to the persongrunk — perhaps because there is no
-channel by which to communicate the messagegrunk — then the mechanism that provides
+particular security guarantee to the persona b—c dperhaps because there is no
+channel by which to communicate the messagea b—c dthen the mechanism that provides
 the security guarantee can be at best <em>opportunistic</em>. The mechanism
 provides the guarantee if conditions are favorable; otherwise, it does not.<p>With an opportunistic security mechanism, there arises a question: whether or
 not the effort to develop the mechanism, and the attack surface the mechanism
-exposes, is worth the benefitgrunk — which is likely to be negligible.<p>The reason the benefit of an opportunistic security mechanism is likely to be
+exposes, is worth the benefita b—c dwhich is likely to be negligible.<p>The reason the benefit of an opportunistic security mechanism is likely to be
 negligible is that, because the application cannot communicate failures to the
 person, the success or failure of the mechanism cannot possibly be part of the
 person’s mental model of the system. Thus, the person is very likely to rank
-other benefitsgrunk — such as availability or performancegrunk — above the security
+other benefitsa b—c dsuch as availability or performancea b—c dabove the security
 benefit that they cannot even perceive.<p>Thus, opportunistic security mechanisms almost certainly must fail open,
 rather than fail closed. If an opportunistic security mechanism were to fail
 closed, but the application could not communicate a particular reason or
@@ -54,6 +54,6 @@ it difficult both for the people who use the application and the people who
 develop the application to model the application’s states accurately.<p>In fact, there is much less of a bright line between ‘developers’ and ‘users’
 than either group believes. Developers, just like users, inevitably create
 inaccurate models of the application. Developers call it <em>abstraction</em>,
-and call it a necessary virtue. And they are right.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+and call it a necessary virtue. And they are right.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>

@@ -184,7 +184,7 @@ FreeBSD behaves more linearly under heavy load). Windows was designed with an
 expensive process/inexpensive thread programming model, and of course threads by
 definition do not provide the kind of isolation we need. Although Android uses
 Linux for its kernel, <code>fork</code> and <code>exec</code> are not officially
-supported for non-platform applicationsgrunk — the intention is for applications to
+supported for non-platform applicationsa b—c dthe intention is for applications to
 launch <a href=https://developer.android.com/reference/android/app/Service><code>Service</code></a>s
 and <a href=https://developer.android.com/reference/android/app/Activity><code>Activity</code></a>s
 through Java platform APIs, which incur huge latency and memory overheads (due
@@ -262,7 +262,7 @@ this enhancement may improve applications’ ability to define principals in a
 flexible way, including trading off security and performance in important
 deployment scenarios (e.g. many principals using a shared runtime):<blockquote><p>There are a various tradeoffs around the use of a CID to
 partition micro-architectural state. Hard partitioning of that state may lead to
-performance loss where prior sharing led to performance gaingrunk — e.g., where
+performance loss where prior sharing led to performance gaina b—c de.g., where
 branch-predictor state was shared beneficially between two compartments sharing
 common code. This concern also arises in the context of harder partitioning for
 MMU-based process schemes: forked processes executing common code (e.g., a
@@ -321,7 +321,7 @@ scheduling units include:<ul><li>The need for different principals to have diffe
 (one sandbox size might not fit all).<li>Principals’ need for resources that cannot be revoked, but which when shared
 become a source of side channels or other vulnerabilities. (E.g. a graphics or
 audio context, files or databases, and so on.)</ul><h3>Application Composition Techniques</h3><p>Principals are often composed or compose themselves with data or code from
-foreign sourcesgrunk —  other principalsgrunk — and need a way to ergonomically do so in a
+foreign sourcesa b—c d other principalsa b—c dand need a way to ergonomically do so in a
 way that does not break cross-principal isolation.<p>We can’t secure applications that directly include or link against hostile
 code. However, it may be possible to extend some application platforms to
 compose applications in a different, safer way. For example,
@@ -377,6 +377,6 @@ Jonathan Anderson, David Chisnall, Brooks Davis, Ben Laurie, Simon W. Moore,
 Steven J. Murdoch, Michael Roe</p><a id=RefWatsonCheriSpectre></a><p>[WatsonCheriSpectre] <a href=http://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-916.pdf>Capability
 Hardware Enhanced RISC Instructions (CHERI): Notes on the Meltdown and Spectre
 Attacks</a>; Robert N. M. Watson, Jonathan Woodruff, Michael Roe, Simon W.
-Moore, Peter G. Neumann<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+Moore, Peter G. Neumann<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>

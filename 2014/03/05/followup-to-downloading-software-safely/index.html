@@ -14,7 +14,7 @@ Microsoft, Lenovo, and any number of Lenovo’s business partners intended for i
 to have.” Our goal as security engineers is to limit the size of the TCB. It is,
 after all, quite goaty already...<li><p>The TCB includes the set of X.509 trust anchors for our TLS
 library.<li><p>Yes, I harp on and on about HTTPS. That is because authenticating the
-delivery channelgrunk — while not necessarily sufficient to indicate code integritygrunk — is the bare minimum effort we should require from our software sources.
+delivery channela b—c dwhile not necessarily sufficient to indicate code integritya b—c dis the bare minimum effort we should require from our software sources.
 Especially for software that is related to cryptography and security. Here is
 GnuPG’s bug tracker; would you want to log into it or report security-sensitive
 bugs using it? :</ul><figure><img alt="GnuPG’s bug tracker: Not inspiring confidence." src=gnupg-bug-tracker.png width=787 height=518 loading=lazy><figcaption>Not inspiring confidence.</figcaption></figure><ul><li><p>Also note that there are at least 2 different problems with HTTPS in that
@@ -22,14 +22,14 @@ post: HTTPS not being available, and the HTTPS site differing in contents from
 the HTTP site. Again, for a software distribution site, we’d like <a href=http://noncombatant.org/2014/01/16/security-smells-for-modern-software/>something
 that smells a bit better</a>.<li><p>Some people claim that PGP keyservers don’t need to use HTTPS, because
 the keys authenticate themselves with the <a href=http://en.wikipedia.org/wiki/Web_of_trust>web of trust</a>. And it’s
-true, the WoT does allow us to fairly easily distinguish <a href="http://pgp.mit.edu/pks/lookup?op=vindex&search=0x47518EC82F1123AD">this
-fake key</a> from <a href="http://pgp.mit.edu/pks/lookup?op=vindex&search=0xC11B36DC9C7DD150">this
+true, the WoT does allow us to fairly easily distinguish <a href="http://pgp.mit.edu/pks/lookup?op=vindex&amp;search=0x47518EC82F1123AD">this
+fake key</a> from <a href="http://pgp.mit.edu/pks/lookup?op=vindex&amp;search=0xC11B36DC9C7DD150">this
 real key</a> for EFF’s Seth Schoen. But,<ul><li><p>Seth is one of the most well-connected people in the WoT, so a key with
 only 1 signature stands out as odd. Would a fake key for a normal person stand
 out so well? The WoT is not as good an authentication mechanism as we might hope
 it to be. As nice as it is, verifying software packages based on PGP keys we
 grab from key servers is thus not a slam-dunk alternative to or replacement for
-HTTPSgrunk — and nevermind the usability delta between HTTPS and PGP.<li><p>By now, we understand that metadata for communications is at least as
+HTTPSa b—c dand nevermind the usability delta between HTTPS and PGP.<li><p>By now, we understand that metadata for communications is at least as
 valuable as the contents, in many cases. Shouldn’t PGP users have
 confidentiality in their directory lookups? Yes.</ul><li><p>Yes, as many commentators noted, we should use something like <a href=http://technet.microsoft.com/en-us/library/cc750035.aspx>Authenticode</a>:
 binaries should be signed, and their signatures checked at run- or install-time.
@@ -43,7 +43,7 @@ the problem uphill.<li><p>A big part of the solution is to isolate sources of co
 cryptographic identity. This is how Android works, and it is how the open web
 works (when you use HTTPS or other authenticated origins). I’m not very
 knowledgeable about iOS, but I understand they also rely on code-signing and on
-sandboxing. If the isolation is strong, much of the risk is reducedgrunk — remember,
+sandboxing. If the isolation is strong, much of the risk is reduceda b—c dremember,
 a big part of my problem was that PuTTY (or any program) runs with the full
 privilege of my user account on the platform. Reduce the privilege, reduce the
 problem.<ul><li>If course, now the problem is exposing a privilege-granting UI to users so
@@ -59,6 +59,6 @@ challenge-response protocols, and so on are in for a heartbreak. But still,
 there are potentially good applications for cryptographic algorithms exposed to
 JavaScript, and native code does not have a privileged place in crypto. If
 anything, due to the lack of privilege separation in legacy platforms, native
-code is a worse place to put powerful code.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+code is a worse place to put powerful code.</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>

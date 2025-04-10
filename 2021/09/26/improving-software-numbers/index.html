@@ -21,7 +21,7 @@ generically.)<p>Surely, we can all agree that this is the minimum necessary for
 program correctness.<p>Surely, we can all agree that correctness is the minimum necessary for
 program safety.<p>Surely, we can all agree that providing people correct and safe software is
 our duty as engineers.<p>Even the most fundamental objects of computation, the reals and the integers
-and arithmetic on them, require some policy for unrepresentable valuesgrunk —  even if
+and arithmetic on them, require some policy for unrepresentable valuesa b—c d even if
 it is simply to crash when no more memory is available to an arbitrary-precision
 arithemtic library (for example).<p>Machine words are more limited still, and have far less range to represent
 the reals and integers than do arbitrary-precision types. Even so, for practical
@@ -33,7 +33,7 @@ register. (See e.g. <a href=https://developer.arm.com/documentation/dui0801/g/Co
 flag</a>, <a href=https://developer.arm.com/documentation/dui0801/g/Condition-Codes/Overflow-flag>overflow
 flag</a>, and <a href=https://developer.arm.com/documentation/dui0068/b/ARM-Instruction-Reference/Conditional-execution>conditional
 execution</a>.)<p>Unfortunately, most of the programming languages that aim for machine-level
-efficiencygrunk —  e.g. C, C++, and Rustgrunk —  do not provide a standard way to access the
+efficiencya b—c d e.g. C, C++, and Rusta b—c d do not provide a standard way to access the
 machine status register directly, or otherwise indicate representation errors.
 (Rust does provide indirect access, however; see below.) Programmers must switch
 to machine language, or must use non-standard, implementation-specific features
@@ -49,7 +49,7 @@ that the compiler will choose to generate, including in different build
 configurations and at different optimization levels.<p>This can lead to situations where what programmers test (e.g. debug builds)
 is not the same as the code that runs in production, and the production behavior
 differs from what was tested.<p>Needless to say, when the ultimate behavior of the program is not predicted,
-intended, or tested by the programmer, bugs inevitably ensuegrunk —  sometimes
+intended, or tested by the programmer, bugs inevitably ensuea b—c d sometimes
 including exploitable vulnerabilities.<li><p><b>Having different policies for signed and unsigned integer types
 exposes the quirks of obsolete and special-use machines, and increases cognitive
 load on the programmer.</b> In fact, many programmers are unaware of the policy
@@ -62,7 +62,7 @@ behavior</b>, unless the programmer takes the somewhat unusual step of changing
 the default build configurations. This might be an unwelcome surprise after
 trapping behavior during testing.<p>I suppose the theory is that the trapping behavior will shake out all the
 bugs, but it can definitely be the case that program inputs seen during testing
-differ from those seen in productiongrunk —  especially in the case where the program
+differ from those seen in productiona b—c d especially in the case where the program
 must handle intentionally hostile input.<p>People often say that since Rust provides array bounds checking (in all
 builds), not trapping on integer overflow in production is OK. That is true as
 far as it goes, but invalid array access is not the only possible consequence of
@@ -73,7 +73,7 @@ clamping/saturation, undefined behavior, and promotion to <code>BigInt</code> or
 other arbitrary precision type.<li><p><b>Only Rust programmers have easy access to choice.</b> If the
 language’s policy is not right for the program requirements, the programmer must
 go to <a href=https://source.chromium.org/chromium/chromium/src/+/main:base/numerics/>extraordinary
-lengths</a> to implement the right policygrunk —  typically without any help from
+lengths</a> to implement the right policya b—c d typically without any help from
 standard mechanisms to observe the machine’s error state.<p>Rust is closest to where we need to be. If a program requires a different
 policy, Rust provides <a href=https://doc.rust-lang.org/std/num/struct.Wrapping.html>a
 <code>Wrapping</code> type</a> and operators like <a href=https://doc.rust-lang.org/std/primitive.i32.html#method.wrapping_add><code>wrapping_add</code></a>,
@@ -93,10 +93,10 @@ committees and change processes. They could define ways to access the machine
 state, and could define standard types and operators implementing a wide range
 of reasonable representation error policies. (In addition to the suite of
 special policy operators that Rust provides, it’d help to have types whose
-default operators implement each of those policies, as wellgrunk —  not just
+default operators implement each of those policies, as wella b—c d not just
 <code>Wrapping</code>.)<p>In some cases, it may even be possible to change the default policies. I
 think language designers and standardizers should do so.<p>(Perhaps something similar could be done for the error modes of
 floating-point arithmetic, too.)<aside><p>Thanks to Saleem Rashid for pointing out some gaps, and to Alex Gaynor
-for pointing out an inaccuracy!</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+for pointing out an inaccuracy!</aside><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>

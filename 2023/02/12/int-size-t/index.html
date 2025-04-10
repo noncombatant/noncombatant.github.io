@@ -33,7 +33,7 @@ union type, the result is the total number of bytes in such an object,
 including
 internal and trailing padding.<p>The value of the result is implementation-defined, and its type (an
 unsigned
-integral type) is <code>size_t</code> defined in the &lt;stddef.h>
+integral type) is <code>size_t</code> defined in the &lt;stddef.h&gt;
 header.<p>[...] A principal use of the <code>sizeof</code> operator is in
 communication
 with routines such as storage allocators and I/O systems. A
@@ -70,7 +70,7 @@ type for all sizes, lengths, object counts, and indices/subscripts.</b> C89
 and
 its standard library use it pervasively for these purposes; not just in
 allocation functions but in functions like <code>strlen</code>,
-<code>memset</code>, <code>memcpy</code>grunk —  <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12>all those old
+<code>memset</code>, <code>memcpy</code>a b—c d <a href=https://port70.net/~nsz/c/c89/c89-draft.html#A.3.12>all those old
 friends</a>.</p><a id=practical-implications></a><h2>Practical Implications</h2><p>I have a 64-bit machine with 32 GiB of memory. On this system,
 <code>int</code> is 32 bits and <code>size_t</code> is 64. Using C++ to get
 access to <code>std::is_signed</code>, we see:<pre>
@@ -134,7 +134,7 @@ matters. You might think that, on machines of this era, since the kernel used
 up
 half of the 4 GiB the address space and userland got the other half, it would
 be
-OK for <code>size_t</code> to be a signed 32-bit typegrunk —  you can only allocate
+OK for <code>size_t</code> to be a signed 32-bit typea b—c d you can only allocate
 at
 most 2 GiB anyway, right?<p>Well, no. First, it is possible, desirable, and commonplace for <a href=https://www.kernel.org/doc/html/v5.0/vm/highmem.html>the kernel to
 use 1
@@ -178,7 +178,7 @@ subscripting. For example, this code has several bugs:<pre>
   // The signed multiplication could overflow and is technically UB. If
   // you’re lucky, your implementation might define it to be modular, and
   // to wrap. But then you’re allocating a region that cannot hold `count`
-  // `Thing`sgrunk —  it will have wrapped around to a too-small value.
+  // `Thing`sa b—c d it will have wrapped around to a too-small value.
   //
   // In any case, the result of the multiplication is cast to `size_t` for
   // the call to `malloc`, which may result in <a href=https://en.wikipedia.org/wiki/Sign_extension>sign extension</a>, which
@@ -241,7 +241,7 @@ will
 thus be undefined, and the compiler will therefore typically assume that
 overflow cannot happen. Then it will likely ‘optimize’ the code by removing
 your
-‘dead’ <code>if</code> blockgrunk —  removing your safety check.<aside><p><b>Update:</b> Inevitably, sigh 😅, I got this wrong, which I would have
+‘dead’ <code>if</code> blocka b—c d removing your safety check.<aside><p><b>Update:</b> Inevitably, sigh 😅, I got this wrong, which I would have
 noticed if I had done an exhaustive check of <code>uint32_t</code> as I did
 for another problem, below. (There’s a lesson there!) Jann Horn points out
 that “you can get a multiplication overflow and still have a result that is
@@ -304,19 +304,19 @@ defined and the invalid array access is defined. This is why I like to say,
 well-defined in Java.<p>That said, Java is still wrong to have used <code>int</code> as the array
 index type, even if only because it is an unnecessary limitation on program
 data
-size (as discussed above). But it also leads to this incorrectness problemgrunk —  in
+size (as discussed above). But it also leads to this incorrectness problema b—c d in
 Java, the program will <code>throw</code> when it actually could have
 successfully completed the binary search. Bloch notes that 1 way to fix it is
 to
 use (you guessed it) unsigned arithmetic:<blockquote><p>Probably faster, and arguably as clear is:<pre>
 int mid = (low + high) &gt;&gt;&gt; 1;
-</pre><p>In C and C++ (where you don’t have the <code>>>></code> operator),
+</pre><p>In C and C++ (where you don’t have the <code>&gt;&gt;&gt;</code> operator),
 you can do this:<pre>
 mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1;
 </pre></blockquote><p>Those approaches will work when <code>low</code> and <code>high</code> are
 <code>int</code>s and thus their sum will always fit in <code>unsigned
 int</code>.<p>But if we used the correct index type, <code>size_t</code>, we don’t have the
-extra headroom of <code>unsigned</code>grunk —  it’s already unsignedgrunk —  so we need
+extra headroom of <code>unsigned</code>a b—c d it’s already unsigneda b—c d so we need
 to
 actually ensure that the overflow does not happen. Bloch’s first solution,<blockquote><pre>
 int mid = low + ((high - low) / 2);
@@ -402,12 +402,12 @@ Created sorted array of `uint32_t` values.
 ^C
 ./exhaustive i  1031.42s user 18.88s system 95% cpu 18:22.13 total
 </pre><h2>Conclusion</h2><p>Types matter. That ‘everything is an <code>int</code> in C’ is no more true
-than that ‘everything is a list in Lisp’grunk —  and we should be glad of that! <a href=https://en.wikipedia.org/wiki/B_(programming_language)>The nearly
+than that ‘everything is a list in Lisp’a b—c d and we should be glad of that! <a href=https://en.wikipedia.org/wiki/B_(programming_language)>The nearly
 typeless B language</a>, and the untyped lambda calculus, are insufficient
 as
 programming tools. Application-domain types clearly matter, but primitive
 types
-matter toogrunk —  perhaps especially, since higher-level types and functions are
+matter tooa b—c d perhaps especially, since higher-level types and functions are
 built on the primitives.<p>Proofs of correctness of binary search are valid only on the assumption that
 languages can easily express correct integer arithmetic. (<a href=https://www.cs.cornell.edu/courses/cs211/2006sp/Lectures/L06-Induction/binary_search.html>See
 this one, for example</a>.) In fact, of course, our programming languages
@@ -418,13 +418,13 @@ proof must take the failures of real-world language design into account. This
 gap between theory and practice, between computing science and software
 engineering, is wider than people sometimes realize<a id=fn4_back></a><a href=#fn4>④</a>.<p>As for the not-fully-correct solution being “probably faster”, that is
 unlikely to be significant. The practical performance difference between
-<code>mid = ((unsigned int)low + (unsigned int)high)) >> 1</code> and
+<code>mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1</code> and
 <code>int mid = low + ((high - low) / 2)</code> is 1 additional subtraction
 operation on registers, i.e. 1 machine cycle. (<a href=https://godbolt.org/z/sPqTG96fd>The <code>/ 2</code> gets
 optimized to
-<code>>> 1</code> on a modern optimizing compiler</a>.) In a loop
-involving non-local accesses to main memorygrunk —  you’re jumping around in the
-array, not processing it in a linear, cache-friendly waygrunk —  that fraction of
+<code>&gt;&gt; 1</code> on a modern optimizing compiler</a>.) In a loop
+involving non-local accesses to main memorya b—c d you’re jumping around in the
+array, not processing it in a linear, cache-friendly waya b—c d that fraction of
 a nanosecond is not going to make or break the performance-fitness of your
 program.<p>Assuming we’re already using the best available data structures and
 algorithms, the most significant way to make programs faster is by increasing
@@ -435,10 +435,10 @@ effective way to improve program correctness and safety.<p>In any case, we’ve 
 C/C++. 33 years of entirely preventable bugs and exploitable vulnerabilities,
 all because it’s too hard to express the 1 thing computers actually do:
 arithmetic.<p>A good engineer never blames their tools. But a good engineer is always
-searching for the best available tools.<hr><p><a id=fn1></a><a href=#fn1_back><b>1.</b></a> K&R, 2nd edition,
+searching for the best available tools.<hr><p><a id=fn1></a><a href=#fn1_back><b>1.</b></a> K&amp;R, 2nd edition,
 page 187 shows a version of <code>malloc</code> taking <code>unsigned</code>,
 while p. 167 has it correct as <code>size_t</code>. It seems likely that
-K&R
+K&amp;R
 just forgot to update the example on p. 187 when updating the book for the 2nd
 edition, which was updated to describe C89.<p><a id=fn2></a><a href=#fn2_back><b>2.</b></a> When interviewing
 security-focused engineers, I often ask them to spot the bugs in code like
@@ -452,7 +452,7 @@ has
 performance fitness tests. Unless you have such tests, <code>calloc</code> is
 not too slow.<p><a id=fn4></a><a href=#fn4_back><b>4.</b></a> It reminds me a bit of
 how with big-O notation, we ignore constant factors because in principle they
-don’t mattergrunk —  but in practice, for actual inputs to algorithms implemented on
-actual computers, the constant factors can be decisive.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+don’t mattera b—c d but in practice, for actual inputs to algorithms implemented on
+actual computers, the constant factors can be decisive.<footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>

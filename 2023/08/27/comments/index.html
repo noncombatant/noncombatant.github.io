@@ -10,7 +10,7 @@ where everyone is right part of the time, and nobody really convinces anybody,
 and then we do it again next month.<p>Maybe a year or so ago, some colleagues and I were going around this
 merry-go-round again, and Drew Fisher actually shed some light on the discussion
 that I hadn’t seen before. He said, “Comments should explain why, not what.” I
-realized it’s the <i>what</i> comments that I dislikegrunk —  they are redundant at
+realized it’s the <i>what</i> comments that I dislikea b—c d they are redundant at
 best, and contradict the actual code at worst (which happens frequently, in my
 experience). It’s the <i>why</i> comments that I like, and I bet most of us
 do.<p>There seem to be at least 3 kinds of comments in software code:<dl><dt><i>should</i> comments<dd>that talk about what the code should do, or
@@ -30,8 +30,8 @@ func RunCommand(command string) error {
 }
 </pre><p>The <code>command</code> argument is a shell command, so we can imagine that
 the <i>why</i> is that we need to restrict the commands to 1 of a few known-safe
-commandsgrunk —  we don’t want to create a shell injection vulnerability! But it’s not
-great to make the reader imagine or guess. We should tell them.<p>This code enforces the should and avoids the vulnerabilitygrunk —  it’s safe even
+commandsa b—c d we don’t want to create a shell injection vulnerability! But it’s not
+great to make the reader imagine or guess. We should tell them.<p>This code enforces the should and avoids the vulnerabilitya b—c d it’s safe even
 if the authors of callers didn’t read the comment:<pre>
 var SafeCommands = []string{
 	"pumpkin",
@@ -150,6 +150,6 @@ is more obviously a composition of several tasks.<h2>Explain Why Thoroughly</h2>
 that the reader of your code might have. Try to anticipate and answer them. Here
 are some ideas:<ul><li>Why is it necessary?<li>Why is it implemented this way and not in some other way?<li>Why is it so complicated? Are all these special cases/fancy
 algorithms/complex data structures necessary?<li>Why is it so simple? Don’t we need high efficiency/to handle more error
-conditions/to be more generic/et c.?<li>Why is it here and not somewhere else?<li>Why is it important to fix/refactor/change/not change?</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property="cc:attributionName" rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
+conditions/to be more generic/et c.?<li>Why is it here and not somewhere else?<li>Why is it important to fix/refactor/change/not change?</ul><footer><p><a href=https://noncombatant.org/>noncombatant.org</a> by <a xmlns:cc=http://creativecommons.org/ns# href=mailto:chris@noncombatant.org property=cc:attributionName rel=cc:attributionurl>Chris Palmer</a> is in the Creative Commons,
 under the terms of the <a rel=license href=https://creativecommons.org/licenses/by-nc-sa/4.0/>Attribution-NonCommercial-ShareAlike
 4.0 International License</a>.</footer>
