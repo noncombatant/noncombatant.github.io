@@ -18,7 +18,6 @@ body {
     font-family: Georgia, serif;
     text-wrap: pretty;
     font-variant-numeric: tabular-nums;
-    /*margin-block: 1lh;*/
 
     /* High, but not eyeball-vibrating, contrast: */
     color: var(--fg);
@@ -35,6 +34,10 @@ body {
   hyphenate-limit-lines: 2;
   hyphenate-limit-zone: 8%;
   hyphenate-limit-last: always;*/
+}
+
+p {
+    margin-block: 1lh;
 }
 
 /* If the screen is wide enough, give some space on the leading edge (left, for
