@@ -33,7 +33,7 @@ union type, the result is the total number of bytes in such an object,
 including
 internal and trailing padding.<p>The value of the result is implementation-defined, and its type (an
 unsigned
-integral type) is <code>size_t</code> defined in the &lt;stddef.h&gt;
+integral type) is <code>size_t</code> defined in the &lt;stddef.h>
 header.<p>[...] A principal use of the <code>sizeof</code> operator is in
 communication
 with routines such as storage allocators and I/O systems. A
@@ -310,7 +310,7 @@ successfully completed the binary search. Bloch notes that 1 way to fix it is
 to
 use (you guessed it) unsigned arithmetic:<blockquote><p>Probably faster, and arguably as clear is:<pre>
 int mid = (low + high) &gt;&gt;&gt; 1;
-</pre><p>In C and C++ (where you don’t have the <code>&gt;&gt;&gt;</code> operator),
+</pre><p>In C and C++ (where you don’t have the <code>>>></code> operator),
 you can do this:<pre>
 mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1;
 </pre></blockquote><p>Those approaches will work when <code>low</code> and <code>high</code> are
@@ -418,11 +418,11 @@ proof must take the failures of real-world language design into account. This
 gap between theory and practice, between computing science and software
 engineering, is wider than people sometimes realize<a id=fn4_back></a><a href=#fn4>④</a>.<p>As for the not-fully-correct solution being “probably faster”, that is
 unlikely to be significant. The practical performance difference between
-<code>mid = ((unsigned int)low + (unsigned int)high)) &gt;&gt; 1</code> and
+<code>mid = ((unsigned int)low + (unsigned int)high)) >> 1</code> and
 <code>int mid = low + ((high - low) / 2)</code> is 1 additional subtraction
 operation on registers, i.e. 1 machine cycle. (<a href=https://godbolt.org/z/sPqTG96fd>The <code>/ 2</code> gets
 optimized to
-<code>&gt;&gt; 1</code> on a modern optimizing compiler</a>.) In a loop
+<code>>> 1</code> on a modern optimizing compiler</a>.) In a loop
 involving non-local accesses to main memory —  you’re jumping around in the
 array, not processing it in a linear, cache-friendly way —  that fraction of
 a nanosecond is not going to make or break the performance-fitness of your

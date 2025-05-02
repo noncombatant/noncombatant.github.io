@@ -99,8 +99,8 @@ browsers do enforce limits on 3rd-party resource consumption</a>, but they are
 too generous. These interventions require the browser to be able to recognize 3P
 resources as such, which is not always possible. A common practice on the web is
 to pull the 3rd-party content into the first party itself: what should be
-<code>&lt;iframe src="https://ads.com/ad"&gt;&lt;/iframe&gt;</code> becomes
-<code>&lt;script src="https://ads.com/ad"&gt;&lt;/script&gt;</code>. At that
+<code>&lt;iframe src="https://ads.com/ad">&lt;/iframe></code> becomes
+<code>&lt;script src="https://ads.com/ad">&lt;/script></code>. At that
 point, the browser can’t reliably recognize the 3P script as 3P, and thus to
 impose limits on its performance and functionality would be even more
 contentious than it already is.<li><p>The JS standard library is too small, and that encourages the development of
