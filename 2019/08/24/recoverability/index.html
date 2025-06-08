@@ -1,8 +1,7 @@
 <!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>Recoverability</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href=/favicon.svg type=image/svg+xml><link rel=stylesheet href=/style.css><nav><a href=/>Noncombatant</a>
 🙂&nbsp;<a href=/about/>About</a>
 ✍️&nbsp;<a href=/publications/>Other Writing</a>
-🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a>
-💻&nbsp;<a href=https://github.com/noncombatant>GitHub</a></nav><h1>Recoverability</h1><p><time>24 August 2019</time><aside><p>Update 25 Aug: Removed 2 paragraphs that made more sense in an older
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a></nav><h1>Recoverability</h1><p><time>24 August 2019</time><aside><p>Update 25 Aug: Removed 2 paragraphs that made more sense in an older
 draft than in the post as finally published.</aside><div id=toc></div><p><i>Recoverability</i> is my word for a desirable computer safety property:
 The ability to fully assert ownership and control over the machine and all its
 operations. (This includes the ability to fully <i>relinquish</i> control of the
@@ -11,8 +10,8 @@ machines from the help desk, et c.).<li>When decommissioning the machine, you wa
 entirely clean of your data — including sensitive documents and files, but also
 access tokens and credentials.<li>When borrowing the computer (from a friend, at the copy shop, at the public
 library, et c.).<li>After an attacker has compromised the machine.<li>When people (e.g. family members, roommates) share a computer or phone.
-(This scenario can involve hostility, e.g. intimate partner surveillance and
-abuse. We have to adopt and work to solve for this threat model!)</ul><p>You can see that recoverability really is an everyday problem, for everyone,
+(This scenario can be adversarial, e.g. intimate partner surveillance and
+abuse. We have to adopt, and work to solve for, this threat model!)</ul><p>You can see that recoverability really is an everyday problem, for everyone,
 when you consider how many kinds of devices require recoverability. A
 sampling:<ul><li>traditional computers: servers, desktops, laptops<li>phones<li>kiosk and point-of-sale computers<li>printers, scanners, fax machines<li>cars (<a href=https://www.usatoday.com/story/money/cars/2018/01/30/car-renters-beware-bluetooth-use-can-reveal-your-private-data/1080225001/>ever
 found someone else’s contacts in your rental?</a>)<li>Alexas, Google Homes, Apple HomePods, et c.<li>most kinds of data storage devices (USB drives, SSDs, spinning disks, et
@@ -73,12 +72,12 @@ relevant attack surface but also a potential persistence mechanism —  bre
 recoverability. We have to assume the worst in case of actual compromise. But
 depending on the hardware and firmware design, we may not have a way to recover
 all the firmwares. This includes those in the storage devices, which can break
-our ability even to recover the primary OS.<p>Thus recoverability is an unsolved privacy, usability, economic, and even
+our ability even to recover the primary OS.<p>Thus, recoverability is an unsolved privacy, usability, economic, and even
 environmental problem. It’s a fun and important problem for these reasons and
 (especially to me) because solving it requires a holistic, general view of
 computer systems. It’ll never be enough to ‘just’ design a good update protocol,
 or kernel, or UX, or memory subsystem. All those pieces (and more) must fit
-together in a coherent narrative and ceremony that people can observe, believe,
+together in a coherent narrative and ceremony that people can observe, believe in,
 and rely on every day.<hr><aside><p>Mara Tam reminded me in conversation that the shared device use case
 demonstrates a particularly acute need for recoverability and relinquishment.
 Any other errors or omissions are mine, of course.<p>Someday I’d like to write at greater length about this use case. My

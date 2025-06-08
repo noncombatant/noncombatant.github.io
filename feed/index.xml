@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Wed, 28 May 2025 11:03:49 -0700</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Sun, 08 Jun 2025 10:59:33 -0700</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
 
 &lt;p>&lt;time>18 December 2024&lt;/time>&lt;/p>
 
@@ -3337,7 +3337,7 @@ iconic sticker saying “Kill Your Television”" />
  abomination that steals our time, our attention, our autonomy, and our souls. It
  stops us from doing productive work.&lt;/p>
 
-&lt;p>We should resist email, and prefer most other form of communications. But
+&lt;p>We should resist email, and prefer most other forms of communications. But
  until we kill the concept of email, we have to live with it. Here is how I kill
  my email before it kills me.&lt;/p>
 
@@ -5302,8 +5302,8 @@ commitment and love. After all, love has angles.”&lt;/p>
  &lt;li>After an attacker has compromised the machine.&lt;/li>
 
  &lt;li>When people (e.g. family members, roommates) share a computer or phone.
- (This scenario can involve hostility, e.g. intimate partner surveillance and
- abuse. We have to adopt and work to solve for this threat model!)&lt;/li>
+ (This scenario can be adversarial, e.g. intimate partner surveillance and
+ abuse. We have to adopt, and work to solve for, this threat model!)&lt;/li>
 
 &lt;/ul>
 
@@ -5468,12 +5468,12 @@ widely-available ‘testing’ frameworks&lt;/a>.&lt;/p>
  all the firmwares. This includes those in the storage devices, which can break
  our ability even to recover the primary OS.&lt;/p>
 
-&lt;p>Thus recoverability is an unsolved privacy, usability, economic, and even
+&lt;p>Thus, recoverability is an unsolved privacy, usability, economic, and even
  environmental problem. It’s a fun and important problem for these reasons and
  (especially to me) because solving it requires a holistic, general view of
  computer systems. It’ll never be enough to ‘just’ design a good update protocol,
  or kernel, or UX, or memory subsystem. All those pieces (and more) must fit
- together in a coherent narrative and ceremony that people can observe, believe,
+ together in a coherent narrative and ceremony that people can observe, believe in,
  and rely on every day.&lt;/p>
 
 &lt;hr />
