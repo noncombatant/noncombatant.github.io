@@ -3,7 +3,7 @@
 ✍️&nbsp;<a href=/publications/>Other Writing</a>
 🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a></nav><main><article><h1>What Is A ‘Permission’?</h1><p><time>27 October 2015</time><aside><p>Updated 28 October 2015 to clarify a bit, and to elaborate on what
 choosers provide.</aside><p>Every application platform needs to decide on 1 or more <em>protection
-mechanisms</em> to protect <em>principals</em> from each other — and thereby to
+mechanisms</em> to protect <em>principals</em> from each other — and thereby to
 protect the <em>assets</em> that the principals operate on. (If you are
 wondering what those words mean, start by reading the classic <a href=http://www.cs.virginia.edu/~evans/cs551/saltzer/>“The Protection Of
 Information In Computer Systems”</a> by Saltzer and Schroeder.)<p>Of course, platforms don’t <em>need</em> to provide a protection mechanism; I
@@ -34,14 +34,15 @@ that in the rest of this post.<p>I use the term <em>capability</em> in the sense
 protection mechanism</a> (as opposed to an <a href=https://en.wikipedia.org/wiki/Access_control_list>access
 control
 list-based protection mechanism</a>). (In other contexts ‘capability’ can mean
-other things — naming things remains a Hard Problem in computing science.)<p>The key features of capabilities are:<ul><li><strong>Unforgeability</strong>: A process cannot falsely claim to hold a
+other things — naming things remains a Hard Problem in computing science.)<p>The key features of capabilities are:<ul><li><strong>Unforgeability</strong>: A process cannot falsely claim to hold a
 capability. The system will detect and reject false claims.<li><strong>Transferability</strong>: A process can (generally) pass a
 capability on to another process. In some systems (‘pure’ capability systems),
 this may be the only way any process ever gets any capabilities.<li><strong>Inherent authorization</strong>: A process that holds a capability
 is <em>by that fact alone</em> known to be authorized to use the capability.<blockquote>In some systems, that is not true, or sometimes not true. <a href=http://blogs.technet.com/b/markrussinovich/archive/2005/10/19/the-bypass-traverse-checking-or-is-it-the-change-notify-privilege.aspx>Windows
 includes an option to re-check that the bearer of a capability is still
-authorized on each access</a>. This setting is almost always disabled — except
-in Chrome’s sandboxed renderer processes! Weird but true.</blockquote><li><strong>Opacity</strong>: A capability is some kind of opaque reference — the value of the reference has no special meaning to its holder. Different
+authorized on each access</a>. This setting is almost always disabled — except
+in Chrome’s sandboxed renderer processes! Weird but true.</blockquote><li><strong>Opacity</strong>: A capability is some kind of opaque reference —
+the value of the reference has no special meaning to its holder. Different
 processes holding the same capability might possibly have different opaque
 representations of a reference to the same underlying object. (Compare e.g. a
 pointer in C, on which the ++ operator is meaningful, to a POSIX file
@@ -125,10 +126,10 @@ need folders in the file system where they can write temporary files or
 application data. In the case of Protected Mode Internet Explorer, the Temporary
 Internet File folder in the user’s profile is used. How can a low application
 write to a file system folder? The folder must be assigned an explicit mandatory
-label that permits write access from a low integrity process.” — <a href=https://msdn.microsoft.com/en-us/library/bb625963.aspx>MSDN, “Windows
+label that permits write access from a low integrity process.” — <a href=https://msdn.microsoft.com/en-us/library/bb625963.aspx>MSDN, “Windows
 Integrity Mechanism Design”</a></blockquote><p>ACLs (especially highly <a href="https://technet.microsoft.com/en-us/library/cc781716(v=ws.10).aspx">complex
 ACLs like in Windows</a>) have proved to be hard to use. By contrast, choosers
-are so easy to use they are now nearly invisible — even engineers often don’t
+are so easy to use they are now nearly invisible — even engineers often don’t
 realize how large of a problem they handily solve.<h2>Ephemeral vs. Persistent Capabilities</h2><p>Normally, “capability” means <em>object capability</em> (such as a POSIX file
 descriptor, a Windows <code>HANDLE</code>, a Python object reference, et c.).
 However, in the context of the web platform, we often need to persist
@@ -144,7 +145,7 @@ the only way to achieve this.<blockquote>Cryptographic capabilities are another 
 process can bootstrap into an object cap; for example, consider encrypted and
 integrity protected HTTP cookies that store the session state. In effect, this
 cookie is an opaque, transferable reference to the next continuation in the
-session — a persistent capability that requires no ACL to bootstrap. — <a href=https://en.wikipedia.org/wiki/Capability-based_security#Sharing_of_capabilities_between_processes>Wikipedia,
+session — a persistent capability that requires no ACL to bootstrap. — <a href=https://en.wikipedia.org/wiki/Capability-based_security#Sharing_of_capabilities_between_processes>Wikipedia,
 “Capability-based security”</a></blockquote><p>In Chrome, we persist capabilities as symbolic caps coupled with a simple
 form of ACL. In this picture, the <strong>Hostname Pattern</strong> names a
 (group of) origins, and the <strong>Behavior</strong> describes the access
@@ -156,11 +157,11 @@ need the bootstrapping step, and we could have all object caps all the time.
 When booting up, the operating system would resuscitate a live object graph from
 non-volatile storage into working memory, and all object capabilities would be
 live. That would be nice and fancy, but it’s not strictly necessary. ACLs can be
-a perfectly good way to bootstrap caps — <em>if and only if bootstrapping is the
+a perfectly good way to bootstrap caps — <em>if and only if bootstrapping is the
 only action that uses ACLs</em>. (Consider the design of POSIX, which has both
 <code>stat</code> and <code>fstat</code>, <code>open</code> and
 <code>openat</code>, <code>unlink</code> but not <code>funlink</code>, and so
-on. It would be better — “more cappy” — if POSIX provided only
+on. It would be better — “more cappy” — if POSIX provided only
 <code>openat</code>, <code>fstat</code>, <code>funlink</code>, and so on.) For
 example, all sorts of <a href=https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use>time-of-check/time-of-use</a>
 (TOCTOU) and other vulnerable race conditions are a direct result of operations

@@ -12,7 +12,7 @@ client.<ol><li>Do a web search for <a href="https://www.google.com/search?q=wind
 windows ssh client ]</a>.<li>Follow the first hit to <a href=http://www.putty.org/>http://www.putty.org/</a>. Now, since you want
 to get the good and true PuTTY that Simon Tatham wrote, and not some
 unauthenticated malware, you check for the lock icon and the “https://” URL
-scheme. It’s not there — worrying, considering that Tatham is supposedly an
+scheme. It’s not there — worrying, considering that Tatham is supposedly an
 encryption software developer.<li>No need to worry, though; <a href=http://www.whois.com/whois/putty.org>putty.org is not even owned by
 Tatham</a>. It’s currently owned by someone named “denis bider”, who
 presumably just likes to domain-squat on other people’s product names and
@@ -21,7 +21,7 @@ Ahh, this has Tatham’s name right in the path part of the URL, so... wait,
 is that good? Actually, no; only the hostname can indicate site
 ownership. <a href=http://www.whois.com/whois/greenend.org.uk>Richard
 Kettlewell currently owns greenend.org.uk</a>.<li>Look for, and fail to find, the lock icon and the “https://” URL scheme.
-Again, shouldn’t cryptography and security software — like all software — be
+Again, shouldn’t cryptography and security software — like all software — be
 delivered always and only via an authenticated service?<li>Manually add the “https://”. Note that the site does not respond to
 HTTPS. Begin to doubt that this is the right site.<br><figure><img alt="Screenshot showing that PuTTY is not available via HTTPS." src=no-https-putty.png width=733 height=461 loading=lazy><figcaption>PuTTY is not available via
 HTTPS.</figcaption></figure><li>Not to worry! Scroll down and note that Tatham offers links to RSA and
@@ -29,7 +29,7 @@ DSA cryptographic signatures of the binaries, e.g. <a href=http://the.earth.li/
 Note that <a href=http://www.whois.com/whois/earth.li>earth.li is
 currently owned by Jonathan McDowell</a>. When you click the link to the
 signature, you do indeed get an RSA signature of something, but there is no
-way to know for sure who the signer was or what they signed — any attacker
+way to know for sure who the signer was or what they signed — any attacker
 who could have compromised the site to poison the executable PuTTY programs
 (or performed a man-in-the-middle attack on your connection to the site)
 could also just as easily have compromised the signatures.<li>Attempt to download the signature via HTTPS instead, <a href=https://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA>https://the.earth.li/~sgtatham/putty/latest/x86/putty.exe.RSA</a>,

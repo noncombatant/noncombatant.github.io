@@ -8,7 +8,8 @@ every syntactically correct program should give a result or an error message
 that was predictable and comprehensible in terms of the source language program
 itself</blockquote><p>He mentions spatial memory safety in particular, as it is the first and
 unavoidable kind of unsafety we encounter. (I’d say both as individuals, when we
-start learning C and assembly, and also in the history of software development —  programs in the era he is talking about often did not have object lifetimes
+start learning C and assembly, and also in the history of software development
+— programs in the era he is talking about often did not have object lifetimes
 other than static and stack, so temporal safety was less of an issue.)<p>But if we work through the implications of Hoare’s 1st principle, it becomes
 clear that safety must mean (at least) all of spatial and temporal memory
 safety, and also type safety. It’s worth noting that the need for lifetime
@@ -29,7 +30,8 @@ inconsistent
 APIs</a>, becomes hostile to safety, utility, efficiency, <a href=https://www.acm.org/code-of-ethics>our
 ethical duty</a>, and cost.</p><a id=law><p>11 years after Hoare, some people in New Jersey would also go on
 to implement another dialect of Algol. But they ignored this 1st principle of
-system design. For 51 years, we have accepted extremely — and increasingly! — weird and unnecessarily complex machines as normal. It’s hard to overstate how
+system design. For 51 years, we have accepted extremely — and increasingly! —
+weird and unnecessarily complex machines as normal. It’s hard to overstate how
 much software engineering regressed in the 1970s. 50 years later, we have not
 dug ourselves out of the pit. There are people who benefit from this state of
 affairs. Hoare had a spicy take on that:<blockquote>In any respectable branch of engineering, failure to observe such
@@ -39,7 +41,7 @@ this. In any case, the seemingly in-the-weeds topic of memory safety is now <a h
 topic of policy discussion</a>. (See also <a href=https://www.atlanticcouncil.org/content-series/buying-down-risk/home/>the
 whole Buying Down Risk series</a>.)<p>Hoare’s 2nd principle of language design is in the same vein. I’ll take the
 liberty of re-phrasing it a bit, for emphasis: Efficiency (particularly
-space-efficiency) is critical — both for its own sake, <i>but also so that you
+space-efficiency) is critical — both for its own sake, <i>but also so that you
 can use the headroom to further improve reliability</i>. He even goes as far as
 to say “rugged”, which is such a beautiful vision for software.<p>3rd and 4th are developer experience principles: Composition must be
 efficient, so that we can use it heavily; and, the write/test/debug loop must be

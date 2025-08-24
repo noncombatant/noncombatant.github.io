@@ -6,7 +6,7 @@ culture generally. Many people believe that “defense is impossible”, that
 “security is a losing battle”, that nothing can be done, that we should stop
 trying and divert resources spent on security to other worthy things like
 features and performance. There is even nihilism in the security community
-itself — although, I suspect, moreso from the offensive side.<p>I disagree that defensive security is impossible. Yes, the software
+itself — although, I suspect, moreso from the offensive side.<p>I disagree that defensive security is impossible. Yes, the software
 equivalent of this:</p><iframe width=420 height=315 src=https://www.youtube.com/embed/j-zczJXSxnw frameborder=0 allowfullscreen loading=lazy></iframe><p>does happen often. However, software engineering, and software security
 engineering in particular, are very young engineering disciplines. Imagine how
 bad bridge building was in year 70; then imagine how bad it was given that
@@ -29,7 +29,7 @@ variable was on every occasion checked at run time against both the upper
 and the lower declared bounds of the array. Many years later we asked our
 customers whether they wished us to provide an option to switch off these
 checks in the interests of efficiency on production runs. Unanimously, they
-urged us not to — they already knew how frequently subscript errors occur on
+urged us not to — they already knew how frequently subscript errors occur on
 production runs where failure to detect them could be disastrous. I note
 with fear and horror that even in 1980, language designers and users have
 not learned this lesson. In any respectable branch of engineering, failure
@@ -39,9 +39,9 @@ are unsafe.<p>The Big Problem in security engineering is not that it’s impossi
 argue that some sound techniques are not even (technically) difficult. Often,
 the problems are economic, political, and even inter-personal.<p>I also often find that software engineers are simply unaware of sound
 security techniques. Even simple things like <a href=https://golang.org/pkg/html/template/>HTML templating libraries that
-automatically defang HTML metacharacters</a> — which are now common and
+automatically defang HTML metacharacters</a> — which are now common and
 widely-available, and which enable developers to get a solid handle on the XSS
-problem — are unknown to many working programmers (!).<h2>Things We Know Work</h2><ul><li><a href=http://www.lucacardelli.name/Papers/TypefulProg.pdf>Typeful
+problem — are unknown to many working programmers (!).<h2>Things We Know Work</h2><ul><li><a href=http://www.lucacardelli.name/Papers/TypefulProg.pdf>Typeful
 programming</a>, and <a href=http://homepages.inf.ed.ac.uk/wadler/papers/propositions-as-types/propositions-as-types.pdf>propositions
 as types</a><li><a href=https://en.wikipedia.org/wiki/Unit_testing>Unit testing</a> for
 propositions we can’t easily represent as types<li><a href=https://en.wikipedia.org/wiki/Privilege_separation>Privilege
