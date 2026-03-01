@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Fri, 31 Oct 2025 19:52:08 -0700</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Sun, 01 Mar 2026 11:21:06 -0800</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
 
 &lt;p>&lt;time>18 December 2024&lt;/time>&lt;/p>
 
@@ -2358,307 +2358,296 @@ the NIST CVSS calculator showing the hypothetical bug with a score of 6.0" loadi
 
 &lt;p>&lt;time>11 June 2022&lt;/time>&lt;/p>
 
-&lt;p>In response to &lt;a href="https://concerned.tech/">the Letter in Support of
- Responsible Fintech Policy&lt;/a>, a factual and reasonable call for Congress to
- resist intense lobbying from crypto-speculators and venture capitalists&lt;a href="#fn1" id="fn1_back">①&lt;/a>,
- cryptographer Matthew Green has responded
- with a blog post &lt;a href="https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/">In
- defense of crypto(currency)&lt;/a> that doesn’t effectively rebut the letter to
- Congress. Instead, he confirms most of their points.&lt;/p>
+&lt;p>In response to &lt;a
+href="https://web.archive.org/web/20221230221724/https://concerned.tech/">the
+Letter in Support of Responsible Fintech Policy&lt;/a>, a factual and reasonable
+call for Congress to resist intense lobbying from crypto-speculators and venture
+capitalists&lt;a href="#fn1" id="fn1_back">①&lt;/a>, cryptographer Matthew Green has
+responded with a blog post &lt;a
+href="https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/">In
+defense of crypto(currency)&lt;/a> that doesn’t effectively rebut the letter to
+Congress. Instead, he confirms most of their points.&lt;/p>
 
 &lt;p>(I say &lt;i>cryptoassets&lt;/i>, not &lt;i>cryptocurrencies&lt;/i>, because they’re not
- viable as currencies: they’re designed to be &lt;a href="https://en.wikipedia.org/wiki/Deflation">deflationary&lt;/a> and
- have proven
- &lt;a href="https://www.coindesk.com/price/bitcoin/">absurdly volatile&lt;/a>. Of
- course, &lt;a href="https://en.wikipedia.org/wiki/Greater_fool_theory">the greater
- fool&lt;/a> left holding the bag will find they’re not assets in the colloquial
- sense, either.)
-&lt;/p>
+viable as currencies: they’re designed to be &lt;a
+href="https://en.wikipedia.org/wiki/Deflation">deflationary&lt;/a> and have proven
+&lt;a href="https://www.coindesk.com/price/bitcoin/">absurdly volatile&lt;/a>. Of
+course, &lt;a href="https://en.wikipedia.org/wiki/Greater_fool_theory">the greater
+fool&lt;/a> left holding the bag will find they’re not assets in the colloquial
+sense, either.)&lt;/p>
 
 &lt;p>I wouldn’t normally bother writing about cryptoassets, because they’re absurd
- and &lt;a href="https://web3isgoinggreat.com/">immediately discredit themselves&lt;/a>
- better than I could. However, Green’s defense is interesting because he has
- significant credentials and experience in cryptography. He is also a
- co-developer of a leading privacy-protective (&lt;a href="https://www.coindesk.com/price/zcash/">and deflationary&lt;/a>)
- cryptoasset,
- &lt;a href="https://z.cash/">Zcash&lt;/a>. So we can reasonably hope for
- better-informed and coherent arguments than we normally see from
- crypto-boosters.
-&lt;/p>
+and &lt;a href="https://web3isgoinggreat.com/">immediately discredit themselves&lt;/a>
+better than I could. However, Green’s defense is interesting because he has
+significant credentials and experience in cryptography. He is also a
+co-developer of a leading privacy-protective (&lt;a
+href="https://www.coindesk.com/price/zcash/">and deflationary&lt;/a>) cryptoasset,
+&lt;a href="https://z.cash/">Zcash&lt;/a>. So we can reasonably hope for
+better-informed and coherent arguments than we normally see from
+crypto-boosters.&lt;/p>
 
 &lt;p>But the fact that a uniquely-qualified expert in the field is not able to
- rebut legitimate concerns, including the ones he raises, is interesting enough
- to comment on. Like Green, I’m sure I’ll regret this.&lt;/p>
+rebut legitimate concerns, including the ones he raises, is interesting enough
+to comment on. Like Green, I’m sure I’ll regret this.&lt;/p>
 
-&lt;blockquote>
- &lt;h2>Objection: “Cryptocurrency is terrible for the
- environment”&lt;/h2>
-&lt;/blockquote>
+&lt;blockquote>&lt;strong>Objection: “Cryptocurrency is terrible for the
+environment”&lt;/strong>&lt;/blockquote>
 
-&lt;p>Green cedes this point. His rebuttal is that we can fix that with
- what he agrees is oligarchy:&lt;/p>
+&lt;p>Green cedes this point. His rebuttal is that we can fix that with what he
+agrees is oligarchy:&lt;/p>
 
 &lt;blockquote>Proof-of-stake systems are not perfect: they still lead to some
- centralization of power, since in this paradigm the rich tend to get richer.
- However it’s hard to claim that the result will be worse than the
- semi-centralized mess that proof-of-work mining has turned into.&lt;/blockquote>
+centralization of power, since in this paradigm the rich tend to get richer.
+However it’s hard to claim that the result will be worse than the
+semi-centralized mess that proof-of-work mining has turned into.&lt;/blockquote>
 
 &lt;p>While &lt;a href="https://ethereum.org/en/energy-consumption/">boosters estimate
- that proof-of-stake will reduce energy consumption by 3 orders of magnitude&lt;/a>,
- it’s worth noting that oligarchy is very bad, actually&lt;a href="#fn2" id="fn2_back">②&lt;/a>. It’s something we should
- be looking to solve, not
- exacerbate. People who don’t like centralization should, in theory, agree; but,
- of course, most anarcho-capitalists believe that &lt;b>they&lt;/b> will get to be &lt;a
- href="https://madmax.fandom.com/wiki/Immortan_Joe">Immortan Joe&lt;/a>. When you
- scratch the surface of anarcho-capitalism you typically find feudalism, as we do
- here.&lt;/p>
+that proof-of-stake will reduce energy consumption by 3 orders of magnitude&lt;/a>,
+it’s worth noting that oligarchy is very bad, actually&lt;a href="#fn2"
+id="fn2_back">②&lt;/a>. It’s something we should be looking to solve, not
+exacerbate. People who don’t like centralization should, in theory, agree; but,
+of course, most anarcho-capitalists believe that &lt;b>they&lt;/b> will get to be &lt;a
+href="https://madmax.fandom.com/wiki/Immortan_Joe">Immortan Joe&lt;/a>. When you
+scratch the surface of anarcho-capitalism you typically find feudalism, as we do
+here.&lt;/p>
 
-&lt;p>So we don’t seem to have any solution to the theoretical&lt;a href="#fn3" id="fn3_back">③&lt;/a> computing science
- problem of distributed consensus that
- isn’t also hugely destructive to the world in some way. Green presents no
- argument that the best way to solve “the semi-centralized mess that
- proof-of-work mining has turned into” is anything other than simply not doing
- PoW or PoS.&lt;/p>
+&lt;p>So we don’t seem to have any solution to the theoretical&lt;a href="#fn3"
+id="fn3_back">③&lt;/a> computing science problem of distributed consensus that
+isn’t also hugely destructive to the world in some way. Green presents no
+argument that the best way to solve “the semi-centralized mess that
+proof-of-work mining has turned into” is anything other than simply not doing
+PoW or PoS.&lt;/p>
 
 &lt;p>To round this section out, Green repeats the punchline that Ethereum 2 is
- coming &lt;a href="https://www.coindesk.com/business/2022/04/13/ethereum-merge-no-longer-expected-in-june/">Real
- Soon Now&lt;/a>, and mentions in passing that &lt;a
- href="https://foreignpolicy.com/2021/05/23/cryptocurrency-chia-waste-resources-bitcoin/">wasting
- hard drives&lt;/a> is also an option.&lt;/p>
+coming &lt;a
+href="https://www.coindesk.com/business/2022/04/13/ethereum-merge-no-longer-expected-in-june/">Real
+Soon Now&lt;/a>, and mentions in passing that &lt;a
+href="https://foreignpolicy.com/2021/05/23/cryptocurrency-chia-waste-resources-bitcoin/">wasting
+hard drives&lt;/a> is also an option.&lt;/p>
 
-&lt;blockquote>
- &lt;h2>Objection: “Public blockchains can never support banking
- features like transaction reversal.”&lt;/h2>
-&lt;/blockquote>
+&lt;blockquote>&lt;strong>Objection: “Public blockchains can never support banking
+features like transaction reversal.”&lt;/strong>&lt;/blockquote>
 
 &lt;p>Green’s rebuttal seems to be twofold: (1) stablecoins are centralized and
- hence can freeze or burn money; and (2) smart contracts could say anything,
- including provisions for reversal.&lt;/p>
+hence can freeze or burn money; and (2) smart contracts could say anything,
+including provisions for reversal.&lt;/p>
 
 &lt;p>In the cryptoasset ideology, centralization is The Big Problem That Must Be
- Solved (Unless We Get To Be The Feudal Lords, In Which Case Centralization Is
- Awesome). So presenting centralization as a solution is not functional as a
- rebuttal.&lt;/p>
+Solved (Unless We Get To Be The Feudal Lords, In Which Case Centralization Is
+Awesome). So presenting centralization as a solution is not functional as a
+rebuttal.&lt;/p>
 
-&lt;p>There’s also the small matter that &lt;a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3888752">stablecoins
- are basically a rebirth of the ‘wildcat’ banks of the 19th century&lt;/a> — hardly
- a compelling vision for the future.&lt;/p>
+&lt;p>There’s also the small matter that &lt;a
+href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3888752">stablecoins
+are basically a rebirth of the ‘wildcat’ banks of the 19th century&lt;/a> — hardly
+a compelling vision for the future.&lt;/p>
 
 &lt;p>It might be true that smart contracts could have provisions for reversal, but
- the reality on the ground today is that ‘code is law’, those ‘laws’ don’t
- typically have reversal provisions, and they end up being &lt;a
- href="https://news.ycombinator.com/item?id=27665297">“self-funding bug
- bounties”&lt;/a> that just destroy people’s ‘assets’ in an automated way.&lt;/p>
+the reality on the ground today is that ‘code is law’, those ‘laws’ don’t
+typically have reversal provisions, and they end up being &lt;a
+href="https://news.ycombinator.com/item?id=27665297">“self-funding bug
+bounties”&lt;/a> that just destroy people’s ‘assets’ in an automated way.&lt;/p>
 
 &lt;p>Green does not mention that stablecoins have a history of being &lt;a
- href="https://crypto-anonymous-2021.medium.com/the-bit-short-inside-cryptos-doomsday-machine-f8dcf78a64d3">fantastically
- crimey&lt;/a> and/or &lt;a
- href="https://www.cnet.com/personal-finance/crypto/luna-crypto-crash-how-ust-broke-and-whats-next-for-terra/">not
- even a little bit stable&lt;/a>.&lt;/p>
+href="https://crypto-anonymous-2021.medium.com/the-bit-short-inside-cryptos-doomsday-machine-f8dcf78a64d3">fantastically
+crimey&lt;/a> and/or &lt;a
+href="https://www.cnet.com/personal-finance/crypto/luna-crypto-crash-how-ust-broke-and-whats-next-for-terra/">not
+even a little bit stable&lt;/a>.&lt;/p>
 
 &lt;p>So perhaps the letter authors are wrong that public blockchains can “never”
- support transaction reversal. Anyway, the combination of reversible +
- decentralized doesn’t exist now. Perhaps there will be a flurry of innovation in
- the area of smart contracts that enable refunds, but we’d still face the
- question of why that’s better than regular bank databases.&lt;/p>
+support transaction reversal. Anyway, the combination of reversible +
+decentralized doesn’t exist now. Perhaps there will be a flurry of innovation in
+the area of smart contracts that enable refunds, but we’d still face the
+question of why that’s better than regular bank databases.&lt;/p>
 
-&lt;blockquote>
- &lt;h2>Objection: “Cryptocurrency doesn’t scale [or the fees are too
- damned high]”&lt;/h2>
-&lt;/blockquote>
+&lt;blockquote>&lt;strong>Objection: “Cryptocurrency doesn’t scale [or the fees are
+too damned high]”&lt;/strong>&lt;/blockquote>
 
 &lt;p>Again, Green starts out by confirming the critics’ point. He reassures us
- that the problem is &lt;a href="https://wiki.c2.com/?SimpleMatterOfProgramming">A
- Simple Matter Of Programming&lt;/a>, but cautions us that while the ideal speed-up
- would be 100x — within an order of magnitude of what Visa can handle on a
- non-holiday now with 1970s technology, so maybe borderline feasible — the
- reality won’t be that big.&lt;/p>
+that the problem is &lt;a href="https://wiki.c2.com/?SimpleMatterOfProgramming">A
+Simple Matter Of Programming&lt;/a>, but cautions us that while the ideal speed-up
+would be 100x — within an order of magnitude of what Visa can handle on a
+non-holiday now with 1970s technology, so maybe borderline feasible — the
+reality won’t be that big.&lt;/p>
 
 &lt;p>Nicholas Weaver, one of the lead signers of the letter, has &lt;a
- href="https://www.usenix.org/publications/loginonline/web3-fraud">a different
- back-of-the-envelope calculation&lt;/a>:&lt;/p>
+href="https://www.usenix.org/publications/loginonline/web3-fraud">a different
+back-of-the-envelope calculation&lt;/a>:&lt;/p>
 
 &lt;blockquote>
 
- &lt;p>Estimating the cost (measured in ‘gas’) of an arbitrary computation is
- complex but let’s assume that we are only interested in the most simple
- operation: 256 bit integer addition. Each addition costs 3 gas each. So on a
- worldwide basis this system rates at 600,000 adds per second.&lt;/p>
+&lt;p>Estimating the cost (measured in ‘gas’) of an arbitrary computation is
+complex but let’s assume that we are only interested in the most simple
+operation: 256 bit integer addition. Each addition costs 3 gas each. So on a
+worldwide basis this system rates at 600,000 adds per second.&lt;/p>
 
- &lt;p>Compare this amount of compute to a Raspberry Pi 4, a $45 single-board
- computer which has four processors running at 1.5 GHz. Each core has 2 ALUs and
- it will take 4 instructions to perform a 256 bit addition, as the basic unit for
- the Raspberry Pi (and most other modern computers) is 64 bits. So each core has
- a peak performance of 750,000,000 adds per second for a total peak of
- 3,000,000,000 adds per second. Put bluntly, the Ethereum “world computer” has
- roughly 1/5,000 of the compute power of a Raspberry Pi 4!&lt;/p>
+&lt;p>Compare this amount of compute to a Raspberry Pi 4, a $45 single-board
+computer which has four processors running at 1.5 GHz. Each core has 2 ALUs and
+it will take 4 instructions to perform a 256 bit addition, as the basic unit for
+the Raspberry Pi (and most other modern computers) is 64 bits. So each core has
+a peak performance of 750,000,000 adds per second for a total peak of
+3,000,000,000 adds per second. Put bluntly, the Ethereum “world computer” has
+roughly 1/5,000 of the compute power of a Raspberry Pi 4!&lt;/p>
 
 &lt;/blockquote>
 
 &lt;p>By Weaver’s critical estimate, even the big dream of a 100x speed-up is not
- enough to make the Ethereum network a good use of the planet’s computational
- resources. Nor would the Ethereum Foundation’s claim of a 2000x speed-up enable
- the Ethereum network to outpace a Raspberry Pi.&lt;/p>
+enough to make the Ethereum network a good use of the planet’s computational
+resources. Nor would the Ethereum Foundation’s claim of a 2000x speed-up enable
+the Ethereum network to outpace a Raspberry Pi.&lt;/p>
 
 &lt;p>Green also confirms that&lt;/p>
 
 &lt;blockquote>Many defenders have tried to paint the electricity consumption of
- Bitcoin and other PoW currencies as “green” or define it as a form of energy
- storage. This is dishonest nonsense: estimates hold that at east 60% of mining
- energy consumption still comes from fossil sources.&lt;/blockquote>
+Bitcoin and other PoW currencies as “green” or define it as a form of energy
+storage. This is dishonest nonsense: estimates hold that at east 60% of mining
+energy consumption still comes from fossil sources.&lt;/blockquote>
 
 &lt;p>Perhaps some other defense of cryptocurrencies will hold. Let’s see:&lt;/p>
 
-&lt;blockquote>
- &lt;h2>Objection: “There is no privacy on blockchains (or there is too
- much privacy)”&lt;/h2>
-&lt;/blockquote>
+&lt;blockquote>&lt;strong>Objection: “There is no privacy on blockchains (or there is
+too much privacy)”&lt;/strong>&lt;/blockquote>
 
 &lt;p>There has, in fact, been innovation in cryptoasset privacy, and Green’s own
- work demonstrates that.&lt;/p>
+work demonstrates that.&lt;/p>
 
 &lt;p>Unfortunately, that’s very bad, even if also potentially good in some way. &lt;a
- href="https://cryptonews.com/exclusives/blockchain-and-the-utopia-of-a-anarcho-capitalist-society-2763.htm">The
- anarcho-capitalist dream of cryptoassets&lt;/a> — i.e. &lt;a
- href="https://www.antipope.org/charlie/blog-static/2013/12/why-i-want-bitcoin-to-die-in-a.html">tax
- evasion and money-laundering&lt;/a> — is one of the only parts of the cryptoasset
- dream that reliably comes true in practice. The cryptoasset economy has been a
- huge ‘success’ in enabling &lt;a
- href="https://blog.chainalysis.com/reports/2022-crypto-crime-report-preview-ransomware/">ransomware&lt;/a>,
- &lt;a href="https://blog.chainalysis.com/reports/law-enforcement-agencies-cryptocurrency/">CSAM&lt;/a>,
- and &lt;a
- href="https://www.reuters.com/technology/us-ties-north-korean-hacker-group-lazarus-huge-cryptocurrency-theft-2022-04-14/">Kim
- Jong Un’s nuclear program&lt;/a> (on top of the more mundane phenomenon of regular
- people losing their money).
+href="https://cryptonews.com/exclusives/blockchain-and-the-utopia-of-a-anarcho-capitalist-society-2763.htm">The
+anarcho-capitalist dream of cryptoassets&lt;/a> — i.e. &lt;a
+href="https://www.antipope.org/charlie/blog-static/2013/12/why-i-want-bitcoin-to-die-in-a.html">tax
+evasion and money-laundering&lt;/a> — is one of the only parts of the cryptoasset
+dream that reliably comes true in practice. The cryptoasset economy has been a
+huge ‘success’ in enabling &lt;a
+href="https://blog.chainalysis.com/reports/2022-crypto-crime-report-preview-ransomware/">ransomware&lt;/a>,
+&lt;a href="https://blog.chainalysis.com/reports/law-enforcement-agencies-cryptocurrency/">CSAM&lt;/a>,
+and &lt;a
+href="https://www.reuters.com/technology/us-ties-north-korean-hacker-group-lazarus-huge-cryptocurrency-theft-2022-04-14/">Kim
+Jong Un’s nuclear program&lt;/a> (on top of the more mundane phenomenon of regular
+people losing their money).
 &lt;/p>
 
 &lt;p>It’s not clear why people who want functioning government, un-abused
- children, and fewer nuclear weapons would welcome a more-private cryptoasset.
- Perhaps there is an argument that the potential benefits would outweigh the
- actual harms we endure right now, but Green doesn’t make it in this article, and
- doesn’t contend with the harms.&lt;/p>
+children, and fewer nuclear weapons would welcome a more-private cryptoasset.
+Perhaps there is an argument that the potential benefits would outweigh the
+actual harms we endure right now, but Green doesn’t make it in this article, and
+doesn’t contend with the harms.&lt;/p>
 
 &lt;p>Green attempts to paint the status quo as equivalently risky as the current
- systems of exchange:&lt;/p>
+systems of exchange:&lt;/p>
 
 &lt;blockquote>But at very least they’ll be better than our current
- collect-it-all-and-then-hand-it-to-hackers approach, which certainly has not
- done us very many favors.&lt;/blockquote>
+collect-it-all-and-then-hand-it-to-hackers approach, which certainly has not
+done us very many favors.&lt;/blockquote>
 
 &lt;p>but it’s hard not to see cryptoassets as even more accurately described as
- “handing it to hackers”.&lt;/p>
+“handing it to hackers”.&lt;/p>
 
-&lt;blockquote>
- &lt;h2>So why do I care about any of this?&lt;/h2>
-&lt;/blockquote>
+&lt;blockquote>&lt;strong>So why do I care about any of this?&lt;/strong>&lt;/blockquote>
 
 &lt;p>In this section, Green presents the problems that cryptoassets should
- supposedly solve, and which should motivate a long blog post to defend
- cryptoassets. Buried the lede, tbh, but:&lt;/p>
+supposedly solve, and which should motivate a long blog post to defend
+cryptoassets. Buried the lede, tbh, but:&lt;/p>
 
 &lt;ul>
 
- &lt;li>Credit card fees are too high&lt;/li>
- &lt;li>Credit cards are still prone to the same kinds of fraud as in 1995&lt;/li>
- &lt;li>We don’t have privacy in our payments&lt;/li>
- &lt;li>You can’t pay with your phone unless you want to give control to
- corporations&lt;/li>
- &lt;li>Regulatory capture&lt;/li>
+&lt;li>Credit card fees are too high&lt;/li>
+&lt;li>Credit cards are still prone to the same kinds of fraud as in 1995&lt;/li>
+&lt;li>We don’t have privacy in our payments&lt;/li>
+&lt;li>You can’t pay with your phone unless you want to give control to
+corporations&lt;/li>
+&lt;li>Regulatory capture&lt;/li>
 
 &lt;/ul>
 
 &lt;p>After 4,000 words in defense of cryptoassets, this is the
- &lt;s>lede&lt;/s>conclusion:
-&lt;/p>
+&lt;s>lede&lt;/s>conclusion:&lt;/p>
 
 &lt;blockquote>
 
- &lt;p>I don’t know if blockchains are the solution to this problem. [...]&lt;/p>
+&lt;p>I don’t know if blockchains are the solution to this problem. [...]&lt;/p>
 
- &lt;p>So while I don’t know if cryptocurrency will be the answer, I’m just hopeful
- that something will be.&lt;/p>
+&lt;p>So while I don’t know if cryptocurrency will be the answer, I’m just hopeful
+that something will be.&lt;/p>
 
 &lt;/blockquote>
 
 &lt;p>So at the end of what could be a strong defense of cryptoassets, we find that
- they are not in fact defensible, and that the letter to Congress is basically
- right on every point.&lt;/p>
+they are not in fact defensible, and that the letter to Congress is basically
+right on every point.&lt;/p>
 
 &lt;p>But, the problems Green identifies are real, and it would be good to solve
- them. So let’s consider how cryptoassets deal with these problems.&lt;/p>
+them. So let’s consider how cryptoassets deal with these problems.&lt;/p>
 
 &lt;p>Credit card fees are too high: As Green notes, cryptoasset fees are not
- exactly low. &lt;a
- href="https://www.theverge.com/2021/11/24/22800995/constitutiondao-refund-progress-steep-gas-fees-cryptocurrency">In
- some cases, they’re a deal-breaker&lt;/a>. They are also far more volatile. And
- there is no viable solution at hand, in Green’s post or elsewhere.&lt;/p>
+exactly low. &lt;a
+href="https://www.theverge.com/2021/11/24/22800995/constitutiondao-refund-progress-steep-gas-fees-cryptocurrency">In
+some cases, they’re a deal-breaker&lt;/a>. They are also far more volatile. And
+there is no viable solution at hand, in Green’s post or elsewhere.&lt;/p>
 
 &lt;p>Credit cards are still prone to fraud: Clearly, this is as true today as it
- was in 1995. Unfortunately, cryptoassets have not only not reduced fraud but
- have brought us new and exciting additional forms of fraud. “Back in my day,”
- I’ll say, “we had fewer forms of financial fraud!” The grandkids roll their eyes
- in disbelief.&lt;/p>
+was in 1995. Unfortunately, cryptoassets have not only not reduced fraud but
+have brought us new and exciting additional forms of fraud. “Back in my day,”
+I’ll say, “we had fewer forms of financial fraud!” The grandkids roll their eyes
+in disbelief.&lt;/p>
 
 &lt;p>We don’t have privacy in our payments: As above, this is a policy debate that
- we can and should have. Whatever approach to payment privacy we take, it will
- have to do something to mitigate the severe harms that sort-of-private and
- pseudonymous cryptocurrencies have enabled and exacerbated.&lt;/p>
+we can and should have. Whatever approach to payment privacy we take, it will
+have to do something to mitigate the severe harms that sort-of-private and
+pseudonymous cryptocurrencies have enabled and exacerbated.&lt;/p>
 
 &lt;p>And it will require a nuanced construction of privacy, which is often
- presented as — but which is not — a simple binary condition. (It’s not even as
- simple as a spectrum along a single axis.) There does not yet appear to be a
- plausible approach on the table that provides people privacy (however defined)
- and yet stops at least some large-scale, society-damaging crime. Maybe
- someday.&lt;/p>
+presented as — but which is not — a simple binary condition. (It’s not even as
+simple as a spectrum along a single axis.) There does not yet appear to be a
+plausible approach on the table that provides people privacy (however defined)
+and yet stops at least some large-scale, society-damaging crime. Maybe
+someday.&lt;/p>
 
 &lt;p>You can’t pay with your phone without giving control to corporations: That
- does seem to be true, whether it’s to Apple, Google, Safaricom (which operates
- M-Pesa in Kenya), PayPal, Zelle, or various state-capital corporations in China.
- Since Green dismisses existing state and government solutions, I take it he
- would only be satisfied by currency purely run on distributed consensus. Thus he
- appears to embrace the anarcho-capitalist dream, but doesn’t have anything to
- say (in this article) about what would check and balance capital power &lt;a
- href="https://www.washingtonpost.com/opinions/2020/04/10/when-you-drown-government-bathtub-people-die/">once
- government is “drowned in the bathtub”&lt;/a>.&lt;/p>
+does seem to be true, whether it’s to Apple, Google, Safaricom (which operates
+M-Pesa in Kenya), PayPal, Zelle, or various state-capital corporations in China.
+Since Green dismisses existing state and government solutions, I take it he
+would only be satisfied by currency purely run on distributed consensus. Thus he
+appears to embrace the anarcho-capitalist dream, but doesn’t have anything to
+say (in this article) about what would check and balance capital power &lt;a
+href="https://www.washingtonpost.com/opinions/2020/04/10/when-you-drown-government-bathtub-people-die/">once
+government is “drowned in the bathtub”&lt;/a>.&lt;/p>
 
 &lt;p>Regulatory capture: Recall that the letter to Congress was from concerned
- experts &lt;b>warning legislators to be wary of regulatory capture by speculators
- and VCs&lt;/b> — and, again, Green says he broadly agrees with the lead signers’
- spirit — so it’s hard to see how cryptoassets are a solution to regulatory
- capture. In fact that’s the problem at hand!&lt;/p>
+experts &lt;b>warning legislators to be wary of regulatory capture by speculators
+and VCs&lt;/b> — and, again, Green says he broadly agrees with the lead signers’
+spirit — so it’s hard to see how cryptoassets are a solution to regulatory
+capture. In fact that’s the problem at hand!&lt;/p>
 
 &lt;h2>Conclusion&lt;/h2>
 
 &lt;p>Green’s defense of cryptoassets is no more coherent than what we’ve seen
- before. But it does have the virtue of honesty, which inevitably makes it a very
- weak defense of cryptoassets.&lt;/p>
+before. But it does have the virtue of honesty, which inevitably makes it a very
+weak defense of cryptoassets.&lt;/p>
 
 &lt;p>The Letter in Support of Responsible Fintech Policy stands as reasonable
- advice to legislators, and cryptoassets still look like &lt;a href="https://webcomicname.com/post/152958755984">a
- change for the
- worse&lt;/a>.&lt;/p>
+advice to legislators, and cryptoassets still look like &lt;a
+href="https://webcomicname.com/post/152958755984">a change for the
+worse&lt;/a>.&lt;/p>
 
 &lt;hr />
 
 &lt;p>&lt;a id="fn1">&lt;/a>
- &lt;a href="#fn1_back">&lt;b>1.&lt;/b>&lt;/a> I also signed it, but
- was not a lead signer nor an author of it. I was not involved in any way; I just
- think the authors are right.
-&lt;/p>
+&lt;a href="#fn1_back">&lt;b>1.&lt;/b>&lt;/a> I also signed it, but was not a lead signer
+nor an author of it. I was not involved in any way; I just think the authors are
+right.&lt;/p>
 
 &lt;p>&lt;a id="fn2">&lt;/a>
- &lt;a href="#fn2_back">&lt;b>2.&lt;/b>&lt;/a> If I could just
- interject for a moment, what people typically refer to as PoS is, in fact,
- proof-of-oligarchy, or as I’ve recently taken to calling it, PoO.
-&lt;/p>
+&lt;a href="#fn2_back">&lt;b>2.&lt;/b>&lt;/a> If I could just interject for a moment, what
+people typically refer to as PoS is, in fact, proof-of-oligarchy, or as I’ve
+recently taken to calling it, PoO.&lt;/p>
 
 &lt;p>&lt;a id="fn3">&lt;/a>
- &lt;a href="#fn3_back">&lt;b>3.&lt;/b>&lt;/a> I mean
- &lt;i>theoretical&lt;/i> in the technical sense, not in a colloquial sense of
- “unimportant”. It would be useful to have a solution to the distributed
- consensus problem. But we don’t need a solution so badly that burning the Earth
- is a good idea, and we don’t need one that furthers anarcho-capitalism.
-&lt;/p></description><author>Chris Palmer</author><guid>2022/06/11/still-waiting-for-defense-cryptoassets/index.html</guid><pubDate>Sat, 11 Jun 2022 00:00:00 +0000</pubDate></item><item><title>Getting A Bit More From The Minor Pentatonic</title><link>https://noncombatant.org/2022/06/01/a-bit-more-from-the-minor-pentatonic/index.content</link><description>&lt;h1>Getting A Bit More From The Minor Pentatonic&lt;/h1>
+
+&lt;a href="#fn3_back">&lt;b>3.&lt;/b>&lt;/a> I mean
+&lt;i>theoretical&lt;/i> in the technical sense, not in a colloquial sense of
+“unimportant”. It would be useful to have a solution to the distributed
+consensus problem. But we don’t need a solution so badly that burning the Earth
+is a good idea, and we don’t need one that furthers anarcho-capitalism.&lt;/p></description><author>Chris Palmer</author><guid>2022/06/11/still-waiting-for-defense-cryptoassets/index.html</guid><pubDate>Sat, 11 Jun 2022 00:00:00 +0000</pubDate></item><item><title>Getting A Bit More From The Minor Pentatonic</title><link>https://noncombatant.org/2022/06/01/a-bit-more-from-the-minor-pentatonic/index.content</link><description>&lt;h1>Getting A Bit More From The Minor Pentatonic&lt;/h1>
 
 &lt;p>&lt;time>1 June 2022&lt;/time>&lt;/p>
 
