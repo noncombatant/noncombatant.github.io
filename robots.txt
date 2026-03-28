@@ -1,3 +1,5 @@
+Sitemap: https://noncombatant.org/sitemap.txt
+
 User-agent: ChatGPT-User
 User-agent: GPTBot
 User-agent: Google-Extended
