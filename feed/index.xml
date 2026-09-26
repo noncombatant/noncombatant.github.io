@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Tue, 01 Sep 2026 13:51:36 -0700</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Noncombatant</title><link>https://noncombatant.org/feed/</link><description>A blog about software engineering, music, and feelings</description><managingEditor>chris@noncombatant.org (Chris Palmer)</managingEditor><pubDate>Sat, 24 Jan 2004 00:00:00 +0000</pubDate><lastBuildDate>Sat, 26 Sep 2026 14:02:43 -0700</lastBuildDate><item><title>Florilegium</title><link>https://noncombatant.org/2024/12/18/florilegium/index.content</link><description>&lt;h1>&lt;i>Florilegium&lt;/i>&lt;/h1>
 
 &lt;p>&lt;time>18 December 2024&lt;/time>&lt;/p>
 
@@ -1859,7 +1859,7 @@ Created sorted array of `uint32_t` values.
  syntactically incorrect program should be rejected by the compiler and that
  every syntactically correct program should give a result or an error message
  that was predictable and comprehensible in terms of the source language program
- itself&lt;/blockquote>
+ itself.&lt;/blockquote>
 
 &lt;p>He mentions spatial memory safety in particular, as it is the first and
  unavoidable kind of unsafety we encounter. (I’d say both as individuals, when we
@@ -10772,23 +10772,23 @@ interfaces:&lt;/p>
 
 &lt;ul>
 
-&lt;li>&lt;p>The function &lt;code>bool isValidEmailAddress(String address, Set
+&lt;li>The function &lt;code>bool isValidEmailAddress(String address, Set
 knownTLDs)&lt;/code> returns true if the email address is syntactically valid for
 SMTP addresses according to RFC 3696, and if the domain part is in a known
-top-level domain.&lt;/p>&lt;/li>
+top-level domain.&lt;/li>
 
-&lt;li>&lt;p>All array accesses are checked at run time; an attempt to use an index
-that is less than zero or greater than or equal to the length of the array
-causes an &lt;code>ArrayIndexOutOfBoundsException&lt;/code> to be thrown. (From the &lt;a
+&lt;li>All array accesses are checked at run time; an attempt to use an index that
+is less than zero or greater than or equal to the length of the array causes
+an &lt;code>ArrayIndexOutOfBoundsException&lt;/code> to be thrown. (From the &lt;a
 href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-10.html#jls-10.4">Java
-Language Specification&lt;/a>.)&lt;/p>&lt;/li>
+Language Specification&lt;/a>.)&lt;/li>
 
-&lt;li>&lt;p>DNS queries and responses can be read, copied, deleted, altered, and
-forged by an attacker on any network segment between client and server.&lt;/p>&lt;/li>
+&lt;li>DNS queries and responses can be read, copied, deleted, altered, and forged
+by an attacker on any network segment between client and server.&lt;/li>
 
-&lt;li>&lt;p>Within a single goroutine, the happens-before order is the order
-expressed by the program. (From the &lt;a href="http://golang.org/ref/mem">Go
-language documentation&lt;/a>.)&lt;/p>&lt;/li>
+&lt;li>Within a single goroutine, the happens-before order is the order expressed
+by the program. (From the &lt;a href="http://golang.org/ref/mem">Go language
+documentation&lt;/a>.)&lt;/li>
 
 &lt;/ul>
 
@@ -10801,26 +10801,26 @@ less-awful term. The gap could exist for many reasons, including at least:&lt;/
 
 &lt;ul>
 
-&lt;li>&lt;p>the guarantee is implicit (i.e. not in the interface definition)&lt;/p>&lt;/li>
+&lt;li>the guarantee is implicit (i.e. not in the interface definition)&lt;/li>
 
-&lt;li>&lt;p>the guarantee is explicit, but the caller did not read or understand the
-interface definition&lt;/p>
+&lt;li>the guarantee is explicit, but the caller did not read or understand the
+interface definition
 
 &lt;ul>
 
-&lt;li>&lt;p>possibly because the interface definition is too complex for the caller
-to understand&lt;/p>&lt;/li>
+&lt;li>possibly because the interface definition is too complex for the caller to
+understand&lt;/li>
 
-&lt;li>&lt;p>possibly because the guarantee is not in the caller’s mental model of the
-interface or of the caller’s own requirements&lt;/p>&lt;/li>
+&lt;li>possibly because the guarantee is not in the caller’s mental model of the
+interface or of the caller’s own requirements&lt;/li>
 
 &lt;/ul>
 &lt;/li>
 
-&lt;li>&lt;p>the interface misuses terms in its own definition&lt;/p>&lt;/li>
+&lt;li>the interface misuses terms in its own definition&lt;/li>
 
-&lt;li>&lt;p>the interface definition is so poor that the caller must imagine their
-own implicit definition&lt;/p>&lt;/li>
+&lt;li>the interface definition is so poor that the caller must imagine their own
+implicit definition&lt;/li>
 
 &lt;/ul>
 
@@ -10840,10 +10840,10 @@ least:&lt;/p>
 
 &lt;ul>
 
-&lt;li>&lt;p>ASLR was a new technical guarantee retrofitted into the interface
-perception gap of pre-existing executable loaders that had to be &lt;em>compatible
-with existing code&lt;/em>, and thus not all program components could be randomized
-with a high degree of entropy.&lt;/p>
+&lt;li>ASLR was a new technical guarantee retrofitted into the interface perception
+gap of pre-existing executable loaders that had to be &lt;em>compatible with
+existing code&lt;/em>, and thus not all program components could be randomized with
+a high degree of entropy.
 
 &lt;ul>
 
@@ -10854,15 +10854,15 @@ exploitation there.&lt;/li>
 &lt;/ul>
 &lt;/li>
 
-&lt;li>&lt;p>Programs generally must be recompiled with new options, or at least with
-old options previously thought of as being exclusively for dynamically-loadable
+&lt;li>Programs generally must be recompiled with new options, or at least with old
+options previously thought of as being exclusively for dynamically-loadable
 library code — that is, there wasn’t &lt;em>enough&lt;/em> of a perception gap in the
 toolchains’ interfaces! As a result, the guarantee of ASLR is still not
-ubiquitous, more than a decade later.&lt;/p>&lt;/li>
+ubiquitous, more than a decade later.&lt;/li>
 
-&lt;li>&lt;p>Many program errors are still exploitable due to the limited granularity
-of what program parts can be efficiently randomized — there is an implicit
-guarantee of run-time efficiency that extreme ASLR could violate.&lt;/p>
+&lt;li>Many program errors are still exploitable due to the limited granularity of
+what program parts can be efficiently randomized — there is an implicit
+guarantee of run-time efficiency that extreme ASLR could violate.
 
 &lt;ul>
 
@@ -10872,20 +10872,19 @@ requirements.&lt;/li>
 &lt;/ul>
 &lt;/li>
 
-&lt;li>&lt;p>In applications that give attackers significant but not
-directly malicious control over run-time behavior — for example, as any dynamic
-programming environment like a web browser &lt;em>must&lt;/em> do — the &lt;a
+&lt;li>In applications that give attackers significant but not directly malicious
+control over run-time behavior — for example, as any dynamic programming
+environment like a web browser &lt;em>must&lt;/em> do — the &lt;a
 href="https://www.blackhat.com/presentations/bh-europe-07/Sotirov/Presentation/bh-eu-07-sotirov-apr19.pdf">attacker
 can significantly reduce the effective entropy of ASLR&lt;/a>, thus weakening the
-already-weak guarantee.&lt;/p>&lt;/li>
+already-weak guarantee.&lt;/li>
 
-&lt;li>&lt;p>Previously low-severity bugs, like single-word out-of-bounds read errors,
+&lt;li>Previously low-severity bugs, like single-word out-of-bounds read errors,
 become information leaks that can undo all the benefits of ASLR and enable an
 attacker to craft a reliable exploit. The implied ‘interface’ of an
 out-of-bounds read primitive changes: while an OOB read should be guaranteed not
 to happen, the ‘guarantee’ changes from “likely possible but mostly harmless” to
-”there goes ASLR... now all those ROP exploits are back in scope.”
-Oops.&lt;/p>&lt;/li>
+”there goes ASLR... now all those ROP exploits are back in scope.” Oops.&lt;/li>
 
 &lt;/ul>
 
@@ -11004,13 +11003,13 @@ context:&lt;/p>
 
 &lt;ul>
 
-&lt;li>&lt;p>the compiler might find a way to optimize the function;&lt;/p>&lt;/li>
+&lt;li>the compiler might find a way to optimize the function;&lt;/li>
 
-&lt;li>&lt;p>the CPU’s &lt;code>XOR&lt;/code> instruction might not take the same amount of
-time to compute all inputs; or&lt;/p>&lt;/li>
+&lt;li>the CPU’s &lt;code>XOR&lt;/code> instruction might not take the same amount of
+time to compute all inputs; or&lt;/li>
 
-&lt;li>&lt;p>the machine (real, or virtual!) might even transform and optimize the
-code before running it.&lt;/p>
+&lt;li>the machine (real, or virtual!) might even transform and optimize the code
+before running it.
 
 &lt;ul>
 
@@ -11066,26 +11065,25 @@ complicate or render infeasible.&lt;/p>
 
 &lt;ul>
 
-&lt;li>&lt;p>If you &lt;a
-href="http://linux.die.net/man/3/realloc">&lt;code>realloc&lt;/code>&lt;/a> memory, the
-userland run-time or the kernel might make a copy that you can no longer
-reliably reference (so you can’t reliably clear it).&lt;/p>&lt;/li>
+&lt;li>If you &lt;a href="http://linux.die.net/man/3/realloc">&lt;code>realloc&lt;/code>&lt;/a>
+memory, the userland run-time or the kernel might make a copy that you can no
+longer reliably reference (so you can’t reliably clear it).&lt;/li>
 
-&lt;li>&lt;p>When you free memory, the kernel might not zero the pages out until the
-last second before giving them to the next requestor. Thus, the time window in
-which they are prone to discovery by the forensic attacker increases.&lt;/p>&lt;/li>
+&lt;li>When you free memory, the kernel might not zero the pages out until the last
+second before giving them to the next requestor. Thus, the time window in which
+they are prone to discovery by the forensic attacker increases.&lt;/li>
 
-&lt;li>&lt;p>Kernel APIs like &lt;a
+&lt;li>Kernel APIs like &lt;a
 href="https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man2/mlock.2.html">&lt;code>mlock&lt;/code>&lt;/a>,
 which purport to lock memory into physical RAM pages (stopping the pages from
 being swapped out to disk), do not necessarily work the way you expect, or even
-at all.&lt;/p>&lt;/li>
+at all.&lt;/li>
 
-&lt;li>&lt;p>In a garbage-collected run-time, essentially any amount of copying,
-moving, and reallocating is possible. There can be no guarantee that a piece of
-data is stored in exactly 1 location in RAM, and that you can clear it.&lt;/p>&lt;/li>
+&lt;li>In a garbage-collected run-time, essentially any amount of copying, moving,
+and reallocating is possible. There can be no guarantee that a piece of data is
+stored in exactly 1 location in RAM, and that you can clear it.&lt;/li>
 
-&lt;li>&lt;p>The same holds for virtual machines, of course.&lt;/p>&lt;/li>
+&lt;li>The same holds for virtual machines, of course.&lt;/li>
 
 &lt;/ul>
 

@@ -60,23 +60,23 @@ not always) defend themselves against untrustworthy callees and callers
 (respectively) in various ways that depend on the circumstances and on the
 nature of caller and callee. In this sense an interface is an <a href=http://en.wikipedia.org/wiki/Attack_surface>attack surface</a> — but
 properly constructed, it can also be a <strong>defense surface</strong>.<p>Here are some example security guarantees in hypothetical and real
-interfaces:<ul><li><p>The function <code>bool isValidEmailAddress(String address, Set
+interfaces:<ul><li>The function <code>bool isValidEmailAddress(String address, Set
 knownTLDs)</code> returns true if the email address is syntactically valid for
 SMTP addresses according to RFC 3696, and if the domain part is in a known
-top-level domain.<li><p>All array accesses are checked at run time; an attempt to use an index
-that is less than zero or greater than or equal to the length of the array
-causes an <code>ArrayIndexOutOfBoundsException</code> to be thrown. (From the <a href=http://docs.oracle.com/javase/specs/jls/se8/html/jls-10.html#jls-10.4>Java
-Language Specification</a>.)<li><p>DNS queries and responses can be read, copied, deleted, altered, and
-forged by an attacker on any network segment between client and server.<li><p>Within a single goroutine, the happens-before order is the order
-expressed by the program. (From the <a href=http://golang.org/ref/mem>Go
-language documentation</a>.)</ul><h2>The Interface Perception Gap</h2><p>The true technical security guarantee that an interface’s implementation
+top-level domain.<li>All array accesses are checked at run time; an attempt to use an index that
+is less than zero or greater than or equal to the length of the array causes
+an <code>ArrayIndexOutOfBoundsException</code> to be thrown. (From the <a href=http://docs.oracle.com/javase/specs/jls/se8/html/jls-10.html#jls-10.4>Java
+Language Specification</a>.)<li>DNS queries and responses can be read, copied, deleted, altered, and forged
+by an attacker on any network segment between client and server.<li>Within a single goroutine, the happens-before order is the order expressed
+by the program. (From the <a href=http://golang.org/ref/mem>Go language
+documentation</a>.)</ul><h2>The Interface Perception Gap</h2><p>The true technical security guarantee that an interface’s implementation
 provides is not necessarily the same as the guarantee the caller perceives. I’ll
 call this the <strong>interface perception gap</strong>, for lack of a
-less-awful term. The gap could exist for many reasons, including at least:<ul><li><p>the guarantee is implicit (i.e. not in the interface definition)<li><p>the guarantee is explicit, but the caller did not read or understand the
-interface definition<ul><li><p>possibly because the interface definition is too complex for the caller
-to understand<li><p>possibly because the guarantee is not in the caller’s mental model of the
-interface or of the caller’s own requirements</ul><li><p>the interface misuses terms in its own definition<li><p>the interface definition is so poor that the caller must imagine their
-own implicit definition</ul><p>Gaps in contracts tend, over time, to become implicit guarantees and
+less-awful term. The gap could exist for many reasons, including at least:<ul><li>the guarantee is implicit (i.e. not in the interface definition)<li>the guarantee is explicit, but the caller did not read or understand the
+interface definition<ul><li>possibly because the interface definition is too complex for the caller to
+understand<li>possibly because the guarantee is not in the caller’s mental model of the
+interface or of the caller’s own requirements</ul><li>the interface misuses terms in its own definition<li>the interface definition is so poor that the caller must imagine their own
+implicit definition</ul><p>Gaps in contracts tend, over time, to become implicit guarantees and
 non-guarantees. It can be possible to assert new technical guarantees in the
 gaps. Consider <a href=http://en.wikipedia.org/wiki/Address_space_layout_randomization>address
 space layout randomization</a> (ASLR). The executable loaders of operating
@@ -87,29 +87,28 @@ invented, ASLR was a decent way to buy some time (a couple years at most) for
 the authors of programs written in unsafe languages to fix their bugs or port to
 safe languages. However, it was never going to be possible for ASLR to fully
 solve the problems of unsafe languages, for many reasons, including at
-least:<ul><li><p>ASLR was a new technical guarantee retrofitted into the interface
-perception gap of pre-existing executable loaders that had to be <em>compatible
-with existing code</em>, and thus not all program components could be randomized
-with a high degree of entropy.<ul><li>And ASLR is an all-or-nothing affair: If the attacker can reliably locate
+least:<ul><li>ASLR was a new technical guarantee retrofitted into the interface perception
+gap of pre-existing executable loaders that had to be <em>compatible with
+existing code</em>, and thus not all program components could be randomized with
+a high degree of entropy.<ul><li>And ASLR is an all-or-nothing affair: If the attacker can reliably locate
 <em>any</em> executable code, they can almost certainly find gadgets useful for
-exploitation there.</ul><li><p>Programs generally must be recompiled with new options, or at least with
-old options previously thought of as being exclusively for dynamically-loadable
+exploitation there.</ul><li>Programs generally must be recompiled with new options, or at least with old
+options previously thought of as being exclusively for dynamically-loadable
 library code — that is, there wasn’t <em>enough</em> of a perception gap in the
 toolchains’ interfaces! As a result, the guarantee of ASLR is still not
-ubiquitous, more than a decade later.<li><p>Many program errors are still exploitable due to the limited granularity
-of what program parts can be efficiently randomized — there is an implicit
+ubiquitous, more than a decade later.<li>Many program errors are still exploitable due to the limited granularity of
+what program parts can be efficiently randomized — there is an implicit
 guarantee of run-time efficiency that extreme ASLR could violate.<ul><li>Sometimes even coarse-grained ASLR violates certain extreme performance
-requirements.</ul><li><p>In applications that give attackers significant but not
-directly malicious control over run-time behavior — for example, as any dynamic
-programming environment like a web browser <em>must</em> do — the <a href=https://www.blackhat.com/presentations/bh-europe-07/Sotirov/Presentation/bh-eu-07-sotirov-apr19.pdf>attacker
+requirements.</ul><li>In applications that give attackers significant but not directly malicious
+control over run-time behavior — for example, as any dynamic programming
+environment like a web browser <em>must</em> do — the <a href=https://www.blackhat.com/presentations/bh-europe-07/Sotirov/Presentation/bh-eu-07-sotirov-apr19.pdf>attacker
 can significantly reduce the effective entropy of ASLR</a>, thus weakening the
-already-weak guarantee.<li><p>Previously low-severity bugs, like single-word out-of-bounds read errors,
+already-weak guarantee.<li>Previously low-severity bugs, like single-word out-of-bounds read errors,
 become information leaks that can undo all the benefits of ASLR and enable an
 attacker to craft a reliable exploit. The implied ‘interface’ of an
 out-of-bounds read primitive changes: while an OOB read should be guaranteed not
 to happen, the ‘guarantee’ changes from “likely possible but mostly harmless” to
-”there goes ASLR... now all those ROP exploits are back in scope.”
-Oops.</ul><p>Perhaps because ASLR was not (to my knowledge) clearly documented as a
+”there goes ASLR... now all those ROP exploits are back in scope.” Oops.</ul><p>Perhaps because ASLR was not (to my knowledge) clearly documented as a
 temporary cat-and-mouse game, engineers have come to rely on it as being the
 thing that makes the continued use of unsafe languages acceptable. Unsafe (and
 untyped) languages will always be guaranteed to be unsafe, and we should have
@@ -185,9 +184,9 @@ time, rather than returning as soon as it finds a mismatch.<p>The trouble with t
 there is no interface guaranteeing that the code will indeed take the same
 amount of time on all inputs. Several things are permissible, given the
 documented interfaces between the programmer and the ultimate execution
-context:<ul><li><p>the compiler might find a way to optimize the function;<li><p>the CPU’s <code>XOR</code> instruction might not take the same amount of
-time to compute all inputs; or<li><p>the machine (real, or virtual!) might even transform and optimize the
-code before running it.<ul><li>For example, some processor cores accept code from one instruction set as
+context:<ul><li>the compiler might find a way to optimize the function;<li>the CPU’s <code>XOR</code> instruction might not take the same amount of
+time to compute all inputs; or<li>the machine (real, or virtual!) might even transform and optimize the code
+before running it.<ul><li>For example, some processor cores accept code from one instruction set as
 input, but transform it to another instruction set before running it in the
 processor core.</ul></ul><p>Does the expected timing guarantee still hold, given these interfaces and
 their non-guarantee? As Lawson says, the solution is fragile and you have to
@@ -219,16 +218,16 @@ memory managers of modern operating systems, and the dynamic heap allocators of
 modern language run-times, in fact guarantee very little in the way of memory
 layout or deterministic behavior. Instead they provide guarantees of
 more-or-less high performance, which additional security guarantees could
-complicate or render infeasible.<ul><li><p>If you <a href=http://linux.die.net/man/3/realloc><code>realloc</code></a> memory, the
-userland run-time or the kernel might make a copy that you can no longer
-reliably reference (so you can’t reliably clear it).<li><p>When you free memory, the kernel might not zero the pages out until the
-last second before giving them to the next requestor. Thus, the time window in
-which they are prone to discovery by the forensic attacker increases.<li><p>Kernel APIs like <a href=https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man2/mlock.2.html><code>mlock</code></a>,
+complicate or render infeasible.<ul><li>If you <a href=http://linux.die.net/man/3/realloc><code>realloc</code></a>
+memory, the userland run-time or the kernel might make a copy that you can no
+longer reliably reference (so you can’t reliably clear it).<li>When you free memory, the kernel might not zero the pages out until the last
+second before giving them to the next requestor. Thus, the time window in which
+they are prone to discovery by the forensic attacker increases.<li>Kernel APIs like <a href=https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man2/mlock.2.html><code>mlock</code></a>,
 which purport to lock memory into physical RAM pages (stopping the pages from
 being swapped out to disk), do not necessarily work the way you expect, or even
-at all.<li><p>In a garbage-collected run-time, essentially any amount of copying,
-moving, and reallocating is possible. There can be no guarantee that a piece of
-data is stored in exactly 1 location in RAM, and that you can clear it.<li><p>The same holds for virtual machines, of course.</ul><p>Essentially, there can be no guarantee that a high-capability forensic
+at all.<li>In a garbage-collected run-time, essentially any amount of copying, moving,
+and reallocating is possible. There can be no guarantee that a piece of data is
+stored in exactly 1 location in RAM, and that you can clear it.<li>The same holds for virtual machines, of course.</ul><p>Essentially, there can be no guarantee that a high-capability forensic
 attacker cannot find secrets in RAM or swapped-out process memory; the more
 complex the operating system and run-time, the less likely it is that you can
 even probabilistically defeat such an attacker.<p>The most you can realistically do in the general case is mitigate the
