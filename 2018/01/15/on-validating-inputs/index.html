@@ -1,11 +1,10 @@
 <!doctype html><html lang=en-us><meta charset=utf-8><meta name=viewport content="width=device-width"><meta name=author content="Chris Palmer"><meta name=robots content="noai, noimageai"><title>On Validating Inputs · Noncombatant</title><link rel=alternate type=application/rss+xml href=/feed/ title=Noncombatant><link rel=icon href=/favicon.svg type=image/svg+xml><link rel=stylesheet href=/style.css><nav>🏡&nbsp;<a href=/>Noncombatant</a>
 🙂&nbsp;<a href=/about/>About</a>
 ✍️&nbsp;<a href=/publications/>Other Writing</a>
-🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a></nav><main><article><h1>On Validating Inputs</h1><p><time>15 January 2018</time><div id=toc></div><h2>Introduction</h2><p>A principle of secure software development is that only the callee (sometimes
-called the <em>relying party</em>, RP) should trust itself to validate an input.
-Typically, the callee has a higher degree of privilege than the caller, and will
-use its privilege to perform some task for the caller if and only if the input
-is valid.<p>Allowing the caller to assert that an input is valid is unsafe: <em>of
+🎵&nbsp;<a href=https://noncombatant.bandcamp.com/>Bandcamp</a></nav><main><article><h1>On Validating Inputs</h1><p><time>15 January 2018</time><div id=toc></div><h2>Introduction</h2><p>A principle of secure software development is that only the callee should
+trust itself to validate an input. Typically, the callee has a higher degree of
+privilege than the caller, and will use its privilege to perform some task for
+the caller if and only if the input is valid.<p>Allowing the caller to assert that an input is valid is unsafe: <em>of
 course</em> a malicious caller will claim the input is valid. A classic example
 of this mistake is when a web server trusts client-side validation in
 JavaScript.<h2>The Problem</h2><p>However, input validation functions are attack surface. Validating inputs is
@@ -30,17 +29,17 @@ floating point values to represent numbers. JavaScript can correctly represent
 <a href=https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger>only
 53-bit integers</a>.</dl><h3>The Paradox Of Validation</h3><p>If the input language is sufficiently complex — <a href=https://en.wikipedia.org/wiki/XML>which is all too likely in the real
 world</a> — it might be impossible to write a safe validator. In this case, we
-have a paradox: the RP can only trust itself to validate its inputs, but cannot
-safely do so. For example, consider a web server that needs to validate XML
-inputs, or <a href=http://www.c7zero.info/stuff/ASN1_parsing_issues_in_crypto_Latincrypt2015.pdf>applications
+have a paradox: the callee can only trust itself to validate its inputs, but
+cannot safely do so. For example, consider a web server that needs to validate
+XML inputs, or <a href=http://www.c7zero.info/stuff/ASN1_parsing_issues_in_crypto_Latincrypt2015.pdf>applications
 that handle ASN.1</a>.<h2>What Could Go Wrong?</h2><p>There are (at least) 2 different kinds of complexity that create (at least) 2
 different kinds of potential problems during input validation.<dl><dt>Grammatical complexity, and subsequent semantic complexity.<dd><p>Part of the language-theoretic security goal is to have inputs come from
 languages low on the <a href=https://en.wikipedia.org/wiki/Chomsky_hierarchy>Chomsky hierarchy</a>.
 This reduces the complexity of validators for such inputs, which increases the
 likelihood that they will be correct.<p>Even if the validator is not compromised or exploited during validation,
 there is still the problem of correct semantic interpretation. Complex languages
-are harder to interpret correctly, giving rise to the problem that the RP might
-misinterpret a correct and correctly-validated input.<dt>Side-effect complexity.<dd><p>There is also a question as to the complexity of side-effects that an
+are harder to interpret correctly, giving rise to the problem that the callee
+might misinterpret a correct and correctly-validated input.<dt>Side-effect complexity.<dd><p>There is also a question as to the complexity of side-effects that an
 input language is designed to cause on the operating environment when
 interpreted. Side-effect complexity is orthogonal to grammatical complexity;
 even a trivial input language can be used to cause unsafe or undesired
@@ -64,10 +63,10 @@ def is_valid_command(command):
   return command in AllowedCommands
 </pre><p>(Presumably, the designers of the application have accepted the risks of
 exposing the outputs of those commands to callers, presumably authenticated and
-authorized somehow.)</dl><h3>What About Sandboxing?</h3><p>What do we gain if the RP delegates validation to a privilege-reduced
+authorized somehow.)</dl><h3>What About Sandboxing?</h3><p>What do we gain if the callee delegates validation to a privilege-reduced
 validator (PRV; e.g. a sandboxed parser), and then trusts the PRV’s result? If
 the PRV was compromised during validation, its result is no more trustworthy
-than without sandboxing. But at least the RP would not itself have been
+than without sandboxing. But at least the callee would not itself have been
 compromised.<p>Sandboxing can reduce the range of potential side-effects that the validator
 can perform, ensuring that only intended side-effects take place (if any), even
 if the validator is compromised.<p>Sandboxing does nothing for grammatical or semantic complexity, however, and

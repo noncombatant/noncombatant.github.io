@@ -176,8 +176,8 @@ array comparison</a> to defeat <a href=http://en.wikipedia.org/wiki/Timing_attac
 attacks</a>. Consider for example the HMAC defense against CSRF: <code>token =
 HMAC_SHA256(secret_key, session_token + action_name)</code>. It should be
 computationally infeasible for the attacker to ever guess or learn the token
-value, but a timing side-channel, such as that introduced by a naïve byte array
-comparison allows the attacker to guess the token in a feasible amount of time
+value, but a timing side-channel (such as that introduced by a naïve byte array
+comparison) allows the attacker to guess the token in a feasible amount of time
 and attempts (proportional to N = number of bits in token). A canonical solution
 is to use an array comparison function that always takes the same amount of
 time, rather than returning as soon as it finds a mismatch.<p>The trouble with this is that, apart from the code being slightly subtle,
@@ -185,11 +185,11 @@ there is no interface guaranteeing that the code will indeed take the same
 amount of time on all inputs. Several things are permissible, given the
 documented interfaces between the programmer and the ultimate execution
 context:<ul><li>the compiler might find a way to optimize the function;<li>the CPU’s <code>XOR</code> instruction might not take the same amount of
-time to compute all inputs; or<li>the machine (real, or virtual!) might even transform and optimize the code
+time to compute all inputs; or<li>the machine (real, or virtual) might even transform and optimize the code
 before running it.<ul><li>For example, some processor cores accept code from one instruction set as
 input, but transform it to another instruction set before running it in the
 processor core.</ul></ul><p>Does the expected timing guarantee still hold, given these interfaces and
-their non-guarantee? As Lawson says, the solution is fragile and you have to
+their non-guarantees? As Lawson says, the solution is fragile and you have to
 test it every time the execution environment changes.<p>An additional, essentially fatal problem is that many real-world applications
 are implemented in very high-level languages like Python and Java, where there
 are even more layers of abstraction and therefore even less of a constant-time
